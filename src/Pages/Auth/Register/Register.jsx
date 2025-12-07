@@ -1,23 +1,41 @@
-import React, { use } from "react";
+import React, { useState } from "react";
 import { useForm } from "react-hook-form";
-import useAuth from "../../../hooks/useAuth";
-import { FcGoogle } from "react-icons/fc";
+import { motion } from "framer-motion";
 import { Link, useLocation, useNavigate } from "react-router";
-import axios from "axios";
+import { FcGoogle } from "react-icons/fc";
+import { Mail, Lock, Eye, EyeOff, User, Upload } from "lucide-react";
+import useAuth from "../../../hooks/useAuth";
 import useAxiosSecure from "../../../hooks/useAxiosSecure";
+import { useTheme } from "../../../components/ThemeContext";
+import RegisterImg from "../../../assets/RegisterImg.png";
+import Swal from "sweetalert2";
+import axios from "axios";
+
 
 const Register = () => {
+  // ========== HOOKS & CONTEXT ==========
   const navigate = useNavigate();
   const location = useLocation();
   const axiosSecure = useAxiosSecure();
+  const { isDark } = useTheme();
+  const { registerUser, updateUserProfile, signInGoogle } = useAuth();
+
+  // ========== FORM STATE ==========
   const {
     register,
     handleSubmit,
     formState: { errors },
   } = useForm();
-  const { registerUser, updateUserProfile } = useAuth();
+
+  // ========== LOCAL STATE ==========
+  const [showPassword, setShowPassword] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
+  const [selectedFileName, setSelectedFileName] = useState("");
+
+  // ========== HANDLERS ==========
   const handleRegistration = (data) => {
     const profileImg = data.photo[0];
+    console.log(profileImg)
 
     registerUser(data.email, data.password)
       .then(() => {
@@ -43,7 +61,6 @@ const Register = () => {
         .then((res) => {
           if(res.data.insertedId){
             console.log('new user added to database', res.data);
-            navigate(location?.state || '/' );
           }
         })
         
@@ -63,171 +80,396 @@ const Register = () => {
       });
   };
 
-  const { signInGoogle } = useAuth();
   const handleGoogleSignIn = () => {
     signInGoogle()
       .then((result) => {
         console.log(result.user);
+
+        Swal.fire({
+          icon: "success",
+          title: "Login Successful!",
+          text: "Welcome back",
+          confirmButtonColor: "#1E3A8A",
+          timer: 1500,
+          showConfirmButton: false,
+        });
+
+        navigate("/");
       })
       .catch((error) => {
         console.log(error);
+        Swal.fire({
+          icon: "error",
+          title: "Google Sign-in Failed",
+          text: error.message,
+          confirmButtonColor: "#DC2626",
+        });
       });
-    console.log("Google login clicked");
   };
+
+  const handleFileChange = (e) => {
+    const file = e.target.files[0];
+    if (file) {
+      setSelectedFileName(file.name);
+    }
+  };
+
   return (
-    <div>
-      <form onSubmit={handleSubmit(handleRegistration)}>
-        <fieldset className="space-y-4">
-          <div>
-            <h2 className="text-3xl font-bold text-gray-900 mb-2">
-              Create an Account
-            </h2>
-            <p className="text-gray-600">Register with goParcel</p>
-          </div>
+    <div
+      className={`min-h-screen flex items-center justify-center py-32 px-4 sm:px-6 lg:px-8
+      ${
+        isDark ? "bg-slate-900" : "bg-slate-50"
+      } transition-colors duration-300`}
+    >
+      <div className="w-full max-w-6xl">
+        <div className="grid lg:grid-cols-2 gap-8 items-center">
+          {/* ========== LEFT SIDE - BRANDING ========== */}
+          <motion.div
+            initial={{ opacity: 0, x: -30 }}
+            animate={{ opacity: 1, x: 0 }}
+            transition={{ duration: 0.6 }}
+            className="hidden lg:block"
+          >
+            <img src={RegisterImg} alt="" />
+          </motion.div>
 
-           {/* Name */}
-          <div className="space-y-1">
-            <label className="block text-sm font-medium text-gray-700">
-              Name
-            </label>
-            <input
-              type="text"
-              {...register("text", { required: true })}
-              className="w-full px-4 py-3 border border-gray-300 rounded-lg"
-              placeholder="Enter your name"
-            />
-            {errors.text?.type === "required" && (
-              <p className="text-red-500 text-sm mt-1">Name is required</p>
-            )}
-          </div>
-
-          {/* photo */}
-          <div className="space-y-1">
-            <label className="block text-sm font-medium text-gray-700">
-              Photo
-            </label>
-            <input
-              type="file"
-              {...register("photo", { required: true })}
-              className="file-input h-14 w-full px-4 py-3 border border-gray-300 rounded-lg"
-              placeholder="Enter your photo"
-            />
-            {errors.text?.type === "required" && (
-              <p className="text-red-500 text-sm mt-1">Photo is required</p>
-            )}
-          </div>
-         
-          {/* Email */}
-          <div className="space-y-1">
-            <label className="block text-sm font-medium text-gray-700">
-              Email
-            </label>
-            <input
-              type="email"
-              {...register("email", { required: true })}
-              className="w-full px-4 py-3 border border-gray-300 rounded-lg"
-              placeholder="Enter your email"
-            />
-            {errors.email?.type === "required" && (
-              <p className="text-red-500 text-sm mt-1">Email is required</p>
-            )}
-          </div>
-
-          {/* Password */}
-          <div className="space-y-2">
-            <label className="block text-sm font-medium text-gray-700">
-              Password
-            </label>
-            <input
-              type="password"
-              {...register("password", {
-                required: true,
-                minLength: 6,
-                pattern:
-                  /^(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*()_+\-={}[\]|:;"'<>,.?/]).{6,}$/,
-              })}
-              className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 transition-colors duration-200"
-              placeholder="Enter your password"
-            />
-            {errors.password?.type === "required" && (
-              <p className="text-red-500 text-sm mt-1">Password is required</p>
-            )}
-            {errors.password?.type === "minLength" && (
-              <p className="text-red-500 text-sm mt-1">
-                Password must be 6 characters or longer.
-              </p>
-            )}
-            {errors.password?.type === "pattern" && (
-              <p className="text-red-500">
-                Password must have atlleast one uppercase, one number, one
-                special characters.
-              </p>
-            )}
-          </div>
-
-          {/* Remember Me & Forgot Password */}
-          <div className="flex items-center justify-between">
-            <div className="flex items-center">
-              <input
-                id="remember-me"
-                type="checkbox"
-                {...register("rememberMe")}
-                className="h-4 w-4 text-emerald-600 focus:ring-emerald-500 border-gray-300 rounded cursor-pointer"
-              />
-              <label
-                htmlFor="remember-me"
-                className="ml-2 block text-sm text-gray-700 cursor-pointer"
-              >
-                Remember me
-              </label>
-            </div>
-            <Link
-              to="/forgot-password"
-              className="text-sm text-emerald-600 hover:text-emerald-500 font-medium cursor-pointer transition-colors duration-200"
+          {/* ========== RIGHT SIDE - REGISTRATION FORM ========== */}
+          <motion.div
+            initial={{ opacity: 0, x: 30 }}
+            animate={{ opacity: 1, x: 0 }}
+            transition={{ duration: 0.6 }}
+          >
+            <div
+              className={`rounded-2xl p-8 sm:p-10 border-2 shadow-xl
+              ${
+                isDark
+                  ? "bg-slate-800 border-slate-700"
+                  : "bg-white border-slate-200"
+              }`}
             >
-              Forgot password?
-            </Link>
-          </div>
-          {/* Login Button */}
-          <button
-            type="submit"
-            className="w-full py-3 px-4 primary-btn shadow-md"
-          >
-            Register
-          </button>
+              {/* Header */}
+              <div className="mb-6">
+                <h2
+                  className={`text-3xl font-bold mb-2 ${
+                    isDark ? "text-white" : "text-slate-900"
+                  }`}
+                >
+                  Create an Account
+                </h2>
+                <p className={isDark ? "text-slate-400" : "text-slate-600"}>
+                  Register with Grameen Loan
+                </p>
+              </div>
 
-          {/* Divider */}
-          <div className="relative flex items-center">
-            <div className="flex-grow border-t border-gray-300"></div>
-            <span className="flex-shrink mx-4 text-gray-500 text-sm">or</span>
-            <div className="flex-grow border-t border-gray-300"></div>
-          </div>
-
-          {/* Google Login Button */}
-          <button
-            type="button"
-            onClick={handleGoogleSignIn}
-            className="w-full flex items-center justify-center gap-3 px-4 py-3 border-2 border-gray-300 rounded-lg hover:bg-gray-50 transition-colors duration-200 font-medium text-gray-700"
-          >
-            <FcGoogle className="text-2xl" />
-            Register with Google
-          </button>
-
-          {/* Sign Up Link */}
-          <div className="text-center">
-            <p className="text-sm text-gray-600">
-              Already have an account?{" "}
-              <Link
-              state={location.state}
-                to="/login"
-                className="text-emerald-600 hover:text-emerald-500 font-semibold transition-colors duration-200"
+              {/* Form */}
+              <form
+                onSubmit={handleSubmit(handleRegistration)}
+                className="space-y-4"
               >
-                Login
-              </Link>
-            </p>
-          </div>
-        </fieldset>
-      </form>
+                <div className="space-y-3">
+                  {/* Name Field */}
+                  <div className="space-y-2">
+                    <label
+                      className={`block text-sm font-semibold ${
+                        isDark ? "text-slate-300" : "text-slate-700"
+                      }`}
+                    >
+                      Full Name
+                    </label>
+                    <div className="relative">
+                      <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
+                        <User
+                          className={
+                            isDark ? "text-slate-500" : "text-slate-400"
+                          }
+                          size={20}
+                        />
+                      </div>
+                      <input
+                        type="text"
+                        {...register("name", { required: true })}
+                        className={`w-full pl-12 pr-4 py-3 rounded-lg border-2 transition-all
+                          ${
+                            isDark
+                              ? "bg-slate-900 border-slate-700 text-white placeholder-slate-500 focus:border-blue-500"
+                              : "bg-slate-50 border-slate-300 text-slate-900 placeholder-slate-400 focus:border-blue-600"
+                          } focus:outline-none focus:ring-2 focus:ring-blue-500/20`}
+                        placeholder="Enter your full name"
+                      />
+                    </div>
+                    {errors.name && (
+                      <p className="text-red-500 text-sm flex items-center gap-1">
+                        <span className="text-xs">⚠</span> Name is required
+                      </p>
+                    )}
+                  </div>
+
+                  {/* Role Dropdown - ADDED */}
+                  <div className="space-y-2">
+                    <label
+                      className={`block text-sm font-semibold ${
+                        isDark ? "text-slate-300" : "text-slate-700"
+                      }`}
+                    >
+                      Role
+                    </label>
+                    <select
+                      {...register("role", { required: true })}
+                      className={`w-full px-4 py-3 rounded-lg border-2 transition-all
+                        ${
+                          isDark
+                            ? "bg-slate-900 border-slate-700 text-white focus:border-blue-500"
+                            : "bg-slate-50 border-slate-300 text-slate-900 focus:border-blue-600"
+                        } focus:outline-none focus:ring-2 focus:ring-blue-500/20`}
+                    >
+                      <option value="">Select Role</option>
+                      <option value="borrower">Borrower</option>
+                      <option value="manager">Manager</option>
+                    </select>
+                    {errors.role && (
+                      <p className="text-red-500 text-sm flex items-center gap-1">
+                        <span className="text-xs">⚠</span> Role is required
+                      </p>
+                    )}
+                  </div>
+
+  {/* Photo Upload Field */}
+                  <div className="space-y-2">
+                    <label className={`block text-sm font-semibold ${isDark ? 'text-slate-300' : 'text-slate-700'}`}>
+                      Profile Photo
+                    </label>
+                    <div className="relative">
+                      <input
+                        type="file"
+                        {...register("photo", { required: true })}
+                        accept="image/*"
+                        className={`w-full px-4 py-3 rounded-lg border-2 transition-all file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:font-semibold file:cursor-pointer
+                          ${isDark 
+                            ? 'bg-slate-900 border-slate-700 text-slate-400 file:bg-blue-900/30 file:text-blue-400 ' 
+                            : 'bg-slate-50 border-slate-300 text-slate-600 file:bg-blue-100 file:text-blue-600'
+                          }`}
+                        id="photo-upload"
+                      />
+                    </div>
+                    {errors.photo?.type === "required" && (
+                      <p className="text-red-500 text-sm flex items-center gap-1">
+                        <span className="text-xs">⚠</span> Photo is required
+                      </p>
+                    )}
+                  </div>
+
+                  {/* Email Field */}
+                  <div className="space-y-2">
+                    <label
+                      className={`block text-sm font-semibold ${
+                        isDark ? "text-slate-300" : "text-slate-700"
+                      }`}
+                    >
+                      Email Address
+                    </label>
+                    <div className="relative">
+                      <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
+                        <Mail
+                          className={
+                            isDark ? "text-slate-500" : "text-slate-400"
+                          }
+                          size={20}
+                        />
+                      </div>
+                      <input
+                        type="email"
+                        {...register("email", { required: true })}
+                        className={`w-full pl-12 pr-4 py-3 rounded-lg border-2 transition-all
+                          ${
+                            isDark
+                              ? "bg-slate-900 border-slate-700 text-white placeholder-slate-500 focus:border-blue-500"
+                              : "bg-slate-50 border-slate-300 text-slate-900 placeholder-slate-400 focus:border-blue-600"
+                          } focus:outline-none focus:ring-2 focus:ring-blue-500/20`}
+                        placeholder="your.email@example.com"
+                      />
+                    </div>
+                    {errors.email && (
+                      <p className="text-red-500 text-sm flex items-center gap-1">
+                        <span className="text-xs">⚠</span> Email is required
+                      </p>
+                    )}
+                  </div>
+
+                  {/* Password Field */}
+                  <div className="space-y-2">
+                    <label
+                      className={`block text-sm font-semibold ${
+                        isDark ? "text-slate-300" : "text-slate-700"
+                      }`}
+                    >
+                      Password
+                    </label>
+                    <div className="relative">
+                      <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
+                        <Lock
+                          className={
+                            isDark ? "text-slate-500" : "text-slate-400"
+                          }
+                          size={20}
+                        />
+                      </div>
+                      <input
+                        type={showPassword ? "text" : "password"}
+                        {...register("password", {
+                          required: true,
+                          minLength: 6,
+                          pattern:
+                            /^(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*()_+\-={}[\]|:;"'<>,.?/]).{6,}$/,
+                        })}
+                        className={`w-full pl-12 pr-12 py-3 rounded-lg border-2 transition-all
+                          ${
+                            isDark
+                              ? "bg-slate-900 border-slate-700 text-white placeholder-slate-500 focus:border-blue-500"
+                              : "bg-slate-50 border-slate-300 text-slate-900 placeholder-slate-400 focus:border-blue-600"
+                          } focus:outline-none focus:ring-2 focus:ring-blue-500/20`}
+                        placeholder="Create a strong password"
+                      />
+                      <button
+                        type="button"
+                        onClick={() => setShowPassword(!showPassword)}
+                        className="absolute inset-y-0 right-0 pr-4 flex items-center"
+                      >
+                        {showPassword ? (
+                          <EyeOff
+                            className={
+                              isDark ? "text-slate-500" : "text-slate-400"
+                            }
+                            size={20}
+                          />
+                        ) : (
+                          <Eye
+                            className={
+                              isDark ? "text-slate-500" : "text-slate-400"
+                            }
+                            size={20}
+                          />
+                        )}
+                      </button>
+                    </div>
+                    {errors.password?.type === "required" && (
+                      <p className="text-red-500 text-sm flex items-center gap-1">
+                        <span className="text-xs">⚠</span> Password is required
+                      </p>
+                    )}
+                    {errors.password?.type === "minLength" && (
+                      <p className="text-red-500 text-sm flex items-center gap-1">
+                        <span className="text-xs">⚠</span> Password must be 6
+                        characters or longer
+                      </p>
+                    )}
+                    {errors.password?.type === "pattern" && (
+                      <p className="text-red-500 text-sm flex items-center gap-1">
+                        <span className="text-xs">⚠</span> Password must have
+                        uppercase, number & special character
+                      </p>
+                    )}
+                  </div>
+
+                  {/* Register Button */}
+                  <motion.button
+                    type="submit"
+                    disabled={isLoading}
+                    whileHover={{ scale: 1.02 }}
+                    whileTap={{ scale: 0.98 }}
+                    className={`w-full py-4 rounded-lg font-bold text-lg shadow-lg transition-all text-white
+                      ${
+                        isLoading
+                          ? "bg-slate-400 cursor-not-allowed"
+                          : "bg-blue-900 hover:bg-blue-800 hover:shadow-xl"
+                      }`}
+                  >
+                    {isLoading ? (
+                      <span className="flex items-center justify-center gap-2">
+                        <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
+                        Creating account...
+                      </span>
+                    ) : (
+                      "Register"
+                    )}
+                  </motion.button>
+
+                  {/* Divider */}
+                  <div className="relative flex items-center py-2">
+                    <div
+                      className={`flex-grow border-t ${
+                        isDark ? "border-slate-700" : "border-slate-300"
+                      }`}
+                    ></div>
+                    <span
+                      className={`flex-shrink mx-4 text-sm ${
+                        isDark ? "text-slate-500" : "text-slate-500"
+                      }`}
+                    >
+                      or
+                    </span>
+                    <div
+                      className={`flex-grow border-t ${
+                        isDark ? "border-slate-700" : "border-slate-300"
+                      }`}
+                    ></div>
+                  </div>
+
+                  {/* Google Register Button */}
+                  <motion.button
+                    type="button"
+                    onClick={handleGoogleSignIn}
+                    whileHover={{ scale: 1.02 }}
+                    whileTap={{ scale: 0.98 }}
+                    className={`w-full flex items-center justify-center gap-3 px-4 py-3 border-2 rounded-lg font-semibold transition-all
+                      ${
+                        isDark
+                          ? "border-slate-700 text-slate-300 hover:bg-slate-700"
+                          : "border-slate-300 text-slate-700 hover:bg-slate-50"
+                      }`}
+                  >
+                    <FcGoogle className="text-2xl" />
+                    Register with Google
+                  </motion.button>
+
+                  {/* Login Link */}
+                  <div className="text-center pt-4">
+                    <p
+                      className={`text-sm ${
+                        isDark ? "text-slate-400" : "text-slate-600"
+                      }`}
+                    >
+                      Already have an account?{" "}
+                      <Link
+                        state={location.state}
+                        to="/login"
+                        className={`font-bold transition-colors
+                          ${
+                            isDark
+                              ? "text-blue-400 hover:text-blue-300"
+                              : "text-blue-600 hover:text-blue-700"
+                          }`}
+                      >
+                        Login
+                      </Link>
+                    </p>
+                  </div>
+                </div>
+              </form>
+            </div>
+
+            {/* Trust Badge */}
+            <div className="mt-6 text-center">
+              <p
+                className={`text-xs ${
+                  isDark ? "text-slate-500" : "text-slate-500"
+                }`}
+              >
+                🔒 Your information is protected with bank-level security
+              </p>
+            </div>
+          </motion.div>
+        </div>
+      </div>
     </div>
   );
 };

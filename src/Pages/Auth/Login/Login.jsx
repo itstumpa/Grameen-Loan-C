@@ -55,11 +55,10 @@ const Login = () => {
     console.log("Google login clicked");
   };
 
-  return (
-    <div className={`min-h-screen flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8
-      ${isDark ? 'bg-slate-900' : 'bg-slate-50'} transition-colors duration-300`}
-    >
-      <div className="w-full max-w-6xl">
+return (
+  <div className={`min-h-screen ${isDark ? 'bg-slate-900' : 'bg-slate-50'} transition-colors duration-300`}>
+    <div className="min-h-screen flex items-center justify-center px-4 py-12 lg:py-38">
+      <div className="w-full max-w-5xl">
         <div className="grid lg:grid-cols-2 gap-8 items-center">
           
           {/* ========== LEFT SIDE - BRANDING ========== */}
@@ -103,6 +102,7 @@ const Login = () => {
                   'Bank-grade 256-bit encryption',
                   'Instant loan status updates',
                   'Secure document management',
+                  'Simple Verification Process',
                   '24/7 account access'
                 ].map((feature, idx) => (
                   <div key={idx} className="flex items-center gap-3">
@@ -113,7 +113,14 @@ const Login = () => {
                       {feature}
                     </span>
                   </div>
+                  
                 ))}
+                 {/* Trust Badge */}
+            <div className="mt-8 text-center ">
+              <p className={`text-xs ${isDark ? 'text-slate-500' : 'text-slate-500'}`}>
+                🔒 Your information is protected with bank-level security
+              </p>
+            </div>
               </div>
             </div>
           </motion.div>
@@ -307,15 +314,16 @@ const Login = () => {
             </div>
 
             {/* Trust Badge */}
-            <div className="mt-6 text-center">
+            {/* <div className="mt-6 text-center">
               <p className={`text-xs ${isDark ? 'text-slate-500' : 'text-slate-500'}`}>
                 🔒 Your information is protected with bank-level security
               </p>
-            </div>
+            </div> */}
           </motion.div>
 
         </div>
       </div>
+    </div>
     </div>
   );
 };

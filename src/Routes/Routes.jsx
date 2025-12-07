@@ -3,7 +3,7 @@ import { createBrowserRouter, Navigate } from "react-router";
 import PrivateRoute from "./PrivateRoute.jsx";
 
 // Layouts
-import AuthLayout from "../components/Layout/AuthLayout";
+// import AuthLayout from "../components/Layout/AuthLayout";
 import MainLayouts from "../components/Layout/MainLayouts";
 
 // Pages
@@ -50,6 +50,8 @@ const router = createBrowserRouter([
       { path: "/faqs", element: <FAQ /> },
       { path: "/why-choose-us", element: <WhyChooseUs /> },
       { path: "/contact", element: <Contact /> },
+      { path: "/login", element: <Login /> },
+      { path: "/register", element: <Register /> },
       {
         path: "/coverage",
         element: <Coverage />,
@@ -91,16 +93,16 @@ const router = createBrowserRouter([
   },
 
   // Auth routes group
-  {
-    path: "/",
-    Component: AuthLayout,
-    children: [
-      { path: "login", element: <Login /> },
-      { path: "register", element: <Register /> },
-      { path: "forgot-password", element: <ForgotPassword /> },
-      { path: "reset-password", element: <ResetPassword /> },
-    ],
-  },
+  // {
+  //   path: "/",
+  //   Component: AuthLayout,
+  //   children: [
+  //     { path: "login", element: <Login /> },
+  //     { path: "register", element: <Register /> },
+  //     { path: "forgot-password", element: <ForgotPassword /> },
+  //     { path: "reset-password", element: <ResetPassword /> },
+  //   ],
+  // },
 
   // Dashboard routes
   {
