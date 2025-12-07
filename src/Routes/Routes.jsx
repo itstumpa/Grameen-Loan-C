@@ -33,6 +33,7 @@ import CookiesPolicy from "../components/Footer/CookiesPolicy.jsx";
 import FAQ from "../Pages/Home/Sections/FAQ.jsx";
 import WhyChooseUs from "../Pages/Home/Sections/WhyChooseUs.jsx";
 import Contact from "../Pages/Contact/Contact.jsx";
+import AllLoans from "../Pages/AllLoans/AllLoans.jsx";
 
 // Route definitions // Public routes
 const router = createBrowserRouter([
@@ -68,6 +69,16 @@ const router = createBrowserRouter([
           </PrivateRoute>
         ),
          loader: () => fetch("/serviceCenters.json").then((res) => res.json()),
+      
+      },
+      {
+        path: "all-loans",
+        element: (
+          <PrivateRoute>
+            <AllLoans />
+          </PrivateRoute>
+        ),
+        //  loader: () => fetch("/serviceCenters.json").then((res) => res.json()),
       
       },
 

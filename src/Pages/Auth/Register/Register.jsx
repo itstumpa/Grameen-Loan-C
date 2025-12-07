@@ -37,49 +37,84 @@ const Register = () => {
     const profileImg = data.photo[0];
     console.log(profileImg)
 
+    setIsLoading(true);
     registerUser(data.email, data.password)
       .then(() => {
         // store the image in form data
         const formData = new FormData();
         formData.append("image", profileImg);
 
-        // send thr photo to imgbb and get the photo url
+        // send the photo to imgbb and get the photo url
         const image_API_URL = `https://api.imgbb.com/1/upload?key=${
           import.meta.env.VITE_image_host_key
         }`;
-        axios.post(image_API_URL, formData).then((res) => {
+        return axios.post(image_API_URL, formData);
+      })
+      .then((res) => {
         const photoURL = res.data.data.url;
 
+        // update user profile to firebase
+        const userProfile = {
+          displayName: data.name,
+          photoURL: photoURL,
+        };
+        return updateUserProfile(userProfile).then(() => photoURL);
+      })
+      .then((photoURL) => {
         // create a user object to store in mongodb database 
         const userInfo = {
           name: data.name,
           email: data.email,
           photoURL: photoURL,
-          role: 'user'
-        }
-        axiosSecure.post('/users', userInfo)
-        .then((res) => {
-          if(res.data.insertedId){
-            console.log('new user added to database', res.data);
-          }
-        })
-        
-        // update user profile to firebase
-          const userProfile = {
-            displayName: data.name,
-            photoURL: photoURL,
-          };
-          updateUserProfile(userProfile).then(() => {
-            console.log("user profie updated");
-            navigate(location?.state || '/' );
+          role: data.role // use selected role from form
+        };
+        return axiosSecure.post('/users', userInfo);
+      })
+      .then((res) => {
+        if (res.data.insertedId) {
+          console.log('new user added to database', res.data);
+
+          // SUCCESS ALERT
+          Swal.fire({
+            icon: 'success',
+            title: 'Registration Successful!',
+            text: 'Welcome to LoanLink',
+            confirmButtonColor: '#1E3A8A',
+            confirmButtonText: 'Continue'
+          }).then(() => {
+            navigate('/'); // Navigate to home after success
           });
-        });
+        }
       })
       .catch((error) => {
-        console.log(error);
-      });
-  };
+        // Handle errors from any of the above steps
+        console.log('Registration Error:', error);
+        let title = 'Registration Failed';
+        let text = error.message || 'Could not create account. Please try again.';
 
+        // Custom error messages for specific steps
+        if (error.response && error.response.data && error.response.data.error) {
+          title = 'Image Upload Failed';
+          text = 'Could not upload profile photo. Please try again.';
+        } else if (error.code === 'auth/update-profile') {
+          title = 'Profile Update Failed';
+          text = 'Could not update profile. Please try again.';
+        } else if (error.response && error.response.config && error.response.config.url && error.response.config.url.includes('/users')) {
+          title = 'Database Error';
+          text = 'Failed to save user information';
+        }
+
+        Swal.fire({
+          icon: 'error',
+          title,
+          text,
+          confirmButtonColor: '#DC2626'
+        });
+      })
+      .finally(() => {
+        setIsLoading(false); // Stop loading
+      });
+};
   const handleGoogleSignIn = () => {
     signInGoogle()
       .then((result) => {
@@ -107,12 +142,12 @@ const Register = () => {
       });
   };
 
-  const handleFileChange = (e) => {
-    const file = e.target.files[0];
-    if (file) {
-      setSelectedFileName(file.name);
-    }
-  };
+  // const handleFileChange = (e) => {
+  //   const file = e.target.files[0];
+  //   if (file) {
+  //     setSelectedFileName(file.name);
+  //   }
+  // };
 
   return (
     <div

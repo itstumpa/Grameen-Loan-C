@@ -6,6 +6,7 @@ import { FcGoogle } from "react-icons/fc";
 import { Mail, Lock, Eye, EyeOff, Shield } from 'lucide-react';
 import useAuth from "../../../hooks/useAuth";
 import { useTheme } from '../../../components/ThemeContext';
+import Swal from "sweetalert2";
 
 const Login = () => {
   // ========== HOOKS & CONTEXT ==========
@@ -33,10 +34,24 @@ const Login = () => {
     signInUser(data.email, data.password)
       .then((result) => {
         console.log(result.user);
-        navigate(location?.state || '/');
+         Swal.fire({
+                      icon: 'success',
+                      title: 'Registration Successful!',
+                      text: 'Welcome to Grameen Loan',
+                      confirmButtonColor: '#1E3A8A',
+                      confirmButtonText: 'Continue'
+                    }).then(() => {
+                      navigate(location?.state || '/');
+                    });
       })
       .catch((error) => {
-        console.log(error);
+         console.log('Login Error:', error);
+      Swal.fire({
+        icon: 'error',
+        title: 'Login Failed',
+        text: error.message || 'Could not Login. Please try again.',
+        confirmButtonColor: '#DC2626'
+      });
       })
       .finally(() => {
         setIsLoading(false);
