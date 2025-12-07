@@ -1,151 +1,354 @@
-// import React from 'react';
-// import { useRouteError } from 'react-router';
-// import Navbar from '../components/Navbar/Navbar';
-// import Footer from '../components/Footer/Footer';
-// import Home from "../Pages/Home/Home.jsx";
-// import img404 from "../assets/img404.png"
-// const Error = () => {
-
-// const error = useRouteError()
-//   return (
-//     <>
-//     <Navbar/>
-//     <div className='flex justify-center mt-20 items-center lg:flex-row  md:flex-col'>
-//       <img className='md:w-[400px] w-[300px] h-[300px] md:h-[400px] md:flex items-center hidden mt-8' src={img404} alt="" />
-//                   <section className="flex items-center  h-full p-16  dark:text-gray-800">
-// 	<div className="container flex flex-col items-center justify-center px-5 mx-auto my-8">
-// 		<div className="max-w-md text-center">
-// 			<h2 className="mb-8 font-extrabold text-9xl dark:text-gray-400">
-// 				<span className="sr-only">Error</span>404
-// 			</h2>
-// 			<p className="text-2xl font-semibold md:text-3xl">Sorry, we couldn't find this page.</p>
-// 			<p className="mt-4 mb-8 dark:text-gray-600">But dont worry, you can find plenty of other things on our homepage.</p>
-// 			<a rel="noopener noreferrer" href="/" className="px-8 py-3 font-semibold rounded primary-btn dark:text-gray-50">Back to homepage</a>
-// 		</div>
-// 	</div>
-// </section>
-//     </div>
-//                   <Footer />
-//   </>
-  
-//   )
-// }
-
-// export default Error;
-
-
-
-
-
-
-
-
+// Error.jsx
 import React from 'react';
-import { useRouteError } from 'react-router';
+import { useRouteError, useNavigate } from 'react-router';
+import { motion } from 'framer-motion';
+import { Home, Mail, ArrowLeft, AlertCircle, Search, TrendingUp } from 'lucide-react';
 import Navbar from '../components/Navbar/Navbar';
 import Footer from '../components/Footer/Footer';
-import errorImg from '../assets/404-Error.png' 
-const Error = (useRouteError) => {
+
+const Error = () => {
+  const error = useRouteError();
+  const navigate = useNavigate();
+
   return (
-    <div className='bg-[]'>
+    <div style={{ backgroundColor: 'var(--bg)', minHeight: '100vh' }}>
+      <Navbar />
+      
+      <div className="min-h-screen flex items-center justify-center px-4 py-20">
+        <div className="max-w-5xl mx-auto">
+          <div className="grid lg:grid-cols-2 gap-12 items-center">
+            
+            {/* Left Side - Illustration */}
+            <motion.div
+              initial={{ opacity: 0, x: -50 }}
+              animate={{ opacity: 1, x: 0 }}
+              transition={{ duration: 0.6 }}
+              className="relative"
+            >
+              <svg viewBox="0 0 400 400" className="w-full h-full max-w-md mx-auto">
+                {/* Main 404 Circle Background */}
+                <motion.circle
+                  cx="200"
+                  cy="200"
+                  r="180"
+                  fill="none"
+                  stroke="var(--border)"
+                  strokeWidth="2"
+                  strokeDasharray="8 8"
+                  initial={{ rotate: 0 }}
+                  animate={{ rotate: 360 }}
+                  transition={{ duration: 20, repeat: Infinity, ease: "linear" }}
+                  style={{ transformOrigin: '200px 200px' }}
+                />
 
-    <Navbar/>
-    
-    <div className="min-h-screen flex items-center justify-center px-4">
-      <div className="text-center">
-        <div className='max-w-[500px] items-center flex justify-center mx-auto'>
+                {/* Inner rotating circle */}
+                <motion.circle
+                  cx="200"
+                  cy="200"
+                  r="150"
+                  fill="none"
+                  stroke="var(--primary)"
+                  strokeWidth="1"
+                  strokeDasharray="4 4"
+                  opacity="0.3"
+                  initial={{ rotate: 0 }}
+                  animate={{ rotate: -360 }}
+                  transition={{ duration: 15, repeat: Infinity, ease: "linear" }}
+                  style={{ transformOrigin: '200px 200px' }}
+                />
 
-        <img src={errorImg} alt="" />
-        </div>
+                {/* Dollar Sign - Left "4" */}
+                <motion.g
+                  animate={{ y: [0, -10, 0] }}
+                  transition={{ duration: 2, repeat: Infinity, ease: "easeInOut" }}
+                >
+                  <circle cx="120" cy="200" r="50" fill="var(--primary)" opacity="0.1"/>
+                  <text 
+                    x="120" 
+                    y="220" 
+                    fontSize="70" 
+                    fontWeight="black" 
+                    fill="var(--primary)" 
+                    textAnchor="middle"
+                  >
+                    4
+                  </text>
+                </motion.g>
 
-        {/* Text Content */}
-        <h1 className="text-6xl font-bold text-gray-900 mb-4">
-          Oops! Page Not Found
-        </h1>
-        <p className="text-xl text-gray-600 mb-8 max-w-md mx-auto">
-          The page you're looking for seems to have gone on a delivery route. Let's get you back on track!
-        </p>
-        
-        {/* CTA Buttons */}
-        <div className="flex flex-wrap gap-4 justify-center">
-          <button className="px-8 py-3 bg-emerald-400 hover:bg-emerald-500 text-white font-semibold rounded-full transition-all duration-300 hover:shadow-lg hover:scale-105">
-            Go to Homepage
-          </button>
-          <button className="px-8 py-3 bg-transparent hover:bg-gray-100 text-gray-700 font-semibold rounded-full border-2 border-gray-300 hover:border-emerald-400 transition-all duration-300">
-            Contact Support
-          </button>
+                {/* Alert Circle - Middle "0" */}
+                <motion.g
+                  animate={{ scale: [1, 1.1, 1] }}
+                  transition={{ duration: 2, repeat: Infinity, ease: "easeInOut", delay: 0.3 }}
+                >
+                  <circle cx="200" cy="200" r="55" fill="var(--accent)" opacity="0.1"/>
+                  <circle 
+                    cx="200" 
+                    cy="200" 
+                    r="45" 
+                    fill="none" 
+                    stroke="var(--accent)" 
+                    strokeWidth="6"
+                  />
+                  <motion.path
+                    d="M 200 180 L 200 210"
+                    stroke="var(--accent)"
+                    strokeWidth="6"
+                    strokeLinecap="round"
+                    animate={{ opacity: [1, 0.3, 1] }}
+                    transition={{ duration: 1.5, repeat: Infinity }}
+                  />
+                  <circle cx="200" cy="225" r="4" fill="var(--accent)"/>
+                </motion.g>
+
+                {/* Money/Document - Right "4" */}
+                <motion.g
+                  animate={{ y: [0, -10, 0] }}
+                  transition={{ duration: 2, repeat: Infinity, ease: "easeInOut", delay: 0.6 }}
+                >
+                  <circle cx="280" cy="200" r="50" fill="var(--secondary)" opacity="0.1"/>
+                  <text 
+                    x="280" 
+                    y="220" 
+                    fontSize="70" 
+                    fontWeight="black" 
+                    fill="var(--secondary)" 
+                    textAnchor="middle"
+                  >
+                    4
+                  </text>
+                </motion.g>
+
+                {/* Floating coins */}
+                {[...Array(6)].map((_, i) => (
+                  <motion.g
+                    key={i}
+                    initial={{ y: 0, opacity: 0 }}
+                    animate={{
+                      y: [-100, 0],
+                      opacity: [0, 1, 1, 0]
+                    }}
+                    transition={{
+                      duration: 3,
+                      repeat: Infinity,
+                      delay: i * 0.5,
+                      ease: "easeOut"
+                    }}
+                  >
+                    <circle 
+                      cx={100 + i * 40} 
+                      cy={350} 
+                      r="8" 
+                      fill="var(--accent)"
+                      opacity="0.6"
+                    />
+                    <text
+                      x={100 + i * 40}
+                      y={355}
+                      fontSize="10"
+                      fontWeight="bold"
+                      fill="white"
+                      textAnchor="middle"
+                    >
+                      $
+                    </text>
+                  </motion.g>
+                ))}
+
+                {/* Search magnifier */}
+                <motion.g
+                  animate={{
+                    x: [0, 20, -20, 0],
+                    y: [0, -20, 20, 0]
+                  }}
+                  transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}
+                >
+                  <circle cx="320" cy="100" r="20" fill="none" stroke="var(--success)" strokeWidth="3"/>
+                  <line x1="335" y1="115" x2="350" y2="130" stroke="var(--success)" strokeWidth="3" strokeLinecap="round"/>
+                </motion.g>
+
+                {/* Floating particles */}
+                {[...Array(8)].map((_, i) => (
+                  <motion.circle
+                    key={`particle-${i}`}
+                    cx={80 + Math.random() * 240}
+                    cy={80 + Math.random() * 240}
+                    r="3"
+                    fill="var(--primary)"
+                    opacity="0.3"
+                    animate={{
+                      y: [0, -30, 0],
+                      opacity: [0.3, 0.6, 0.3]
+                    }}
+                    transition={{
+                      duration: 2 + Math.random() * 2,
+                      repeat: Infinity,
+                      delay: Math.random() * 2
+                    }}
+                  />
+                ))}
+              </svg>
+            </motion.div>
+
+            {/* Right Side - Content */}
+            <motion.div
+              initial={{ opacity: 0, x: 50 }}
+              animate={{ opacity: 1, x: 0 }}
+              transition={{ duration: 0.6, delay: 0.2 }}
+              className="text-left"
+            >
+              {/* Error Badge */}
+              <motion.div
+                initial={{ scale: 0 }}
+                animate={{ scale: 1 }}
+                transition={{ delay: 0.4, type: "spring" }}
+                className="inline-flex items-center gap-2 px-4 py-2 rounded-full mb-6"
+                style={{ backgroundColor: 'var(--error)', opacity: 0.1 }}
+              >
+                <AlertCircle className="w-4 h-4" style={{ color: 'var(--error)' }} />
+                <span className="text-sm font-semibold" style={{ color: 'var(--error)' }}>
+                  Error {error?.status || '404'}
+                </span>
+              </motion.div>
+
+              {/* Main Heading */}
+              <motion.h1
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.5 }}
+                className="text-4xl md:text-6xl font-black mb-4"
+                style={{ color: 'var(--text-primary)' }}
+              >
+                Oops! Page Not Found
+              </motion.h1>
+
+              {/* Description */}
+              <motion.p
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.6 }}
+                className="text-lg mb-6 max-w-md"
+                style={{ color: 'var(--text-secondary)' }}
+              >
+                The page you're looking for seems to have taken a loan and disappeared! Don't worry, we'll help you find your way back.
+              </motion.p>
+
+              {/* Error Details (if available) */}
+              {error?.statusText && (
+                <motion.div
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ delay: 0.7 }}
+                  className="mb-6 p-4 rounded-xl"
+                  style={{
+                    backgroundColor: 'var(--surface)',
+                    border: '1px solid var(--border)'
+                  }}
+                >
+                  <p className="text-sm font-mono" style={{ color: 'var(--text-secondary)' }}>
+                    <strong>Error:</strong> {error.statusText || error.message}
+                  </p>
+                </motion.div>
+              )}
+
+              {/* Quick Links */}
+              <motion.div
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.8 }}
+                className="mb-8"
+              >
+                <p className="text-sm font-semibold mb-3" style={{ color: 'var(--text-secondary)' }}>
+                  Quick Links:
+                </p>
+                <div className="flex flex-wrap gap-3">
+                  {[
+                    { icon: Home, label: 'Home', path: '/' },
+                    { icon: Search, label: 'Apply Loan', path: '/apply' },
+                    { icon: TrendingUp, label: 'Track Status', path: '/track' }
+                  ].map((link, index) => (
+                    <motion.button
+                      key={index}
+                      whileHover={{ scale: 1.05 }}
+                      whileTap={{ scale: 0.95 }}
+                      onClick={() => navigate(link.path)}
+                      className="flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-medium transition-all"
+                      style={{
+                        backgroundColor: 'var(--surface)',
+                        color: 'var(--text-primary)',
+                        border: '1px solid var(--border)'
+                      }}
+                    >
+                      <link.icon className="w-4 h-4" />
+                      {link.label}
+                    </motion.button>
+                  ))}
+                </div>
+              </motion.div>
+
+              {/* CTA Buttons */}
+              <motion.div
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.9 }}
+                className="flex flex-wrap gap-4"
+              >
+                <motion.button
+                  whileHover={{ scale: 1.05 }}
+                  whileTap={{ scale: 0.95 }}
+                  onClick={() => navigate('/')}
+                  className="btn-primary inline-flex items-center gap-2"
+                >
+                  <Home className="w-5 h-5" />
+                  Back to Homepage
+                </motion.button>
+
+                <motion.button
+                  whileHover={{ scale: 1.05 }}
+                  whileTap={{ scale: 0.95 }}
+                  onClick={() => navigate(-1)}
+                  className="btn-outline inline-flex items-center gap-2"
+                >
+                  <ArrowLeft className="w-5 h-5" />
+                  Go Back
+                </motion.button>
+              </motion.div>
+
+              {/* Contact Support */}
+              <motion.div
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                transition={{ delay: 1 }}
+                className="mt-8 p-4 rounded-xl"
+                style={{
+                  backgroundColor: 'var(--surface)',
+                  border: '1px solid var(--border)'
+                }}
+              >
+                <div className="flex items-center gap-3">
+                  <Mail className="w-5 h-5" style={{ color: 'var(--primary)' }} />
+                  <div>
+                    <p className="text-sm font-semibold" style={{ color: 'var(--text-primary)' }}>
+                      Need Help?
+                    </p>
+                    <p className="text-xs" style={{ color: 'var(--text-secondary)' }}>
+                      Contact our support team at{' '}
+                      <a 
+                        href="mailto:support@loanlink.com" 
+                        className="font-semibold hover:underline"
+                        style={{ color: 'var(--primary)' }}
+                      >
+                        support@loanlink.com
+                      </a>
+                    </p>
+                  </div>
+                </div>
+              </motion.div>
+            </motion.div>
+          </div>
         </div>
       </div>
 
-      <style jsx>{`
-        @keyframes float {
-          0%, 100% { transform: translateY(0px); }
-          50% { transform: translateY(-20px); }
-        }
-        
-        @keyframes shadow {
-          0%, 100% { transform: scale(1); opacity: 0.3; }
-          50% { transform: scale(1.1); opacity: 0.2; }
-        }
-        
-        @keyframes wave {
-          0%, 100% { transform: rotate(0deg); }
-          50% { transform: rotate(-15deg); }
-        }
-        
-        @keyframes wave-reverse {
-          0%, 100% { transform: rotate(0deg); }
-          50% { transform: rotate(15deg); }
-        }
-        
-        @keyframes blink {
-          0%, 90%, 100% { opacity: 1; }
-          95% { opacity: 0.3; }
-        }
-        
-        @keyframes antenna {
-          0%, 100% { transform: rotate(-5deg); }
-          50% { transform: rotate(5deg); }
-        }
-        
-        @keyframes wiggle {
-          0%, 100% { transform: rotate(0deg); }
-          25% { transform: rotate(-10deg); }
-          75% { transform: rotate(10deg); }
-        }
-        
-        @keyframes wiggle-reverse {
-          0%, 100% { transform: rotate(0deg); }
-          25% { transform: rotate(10deg); }
-          75% { transform: rotate(-10deg); }
-        }
-        
-        @keyframes glitch {
-          0%, 90%, 100% { transform: translate(0, 0); }
-          92% { transform: translate(-2px, 1px); }
-          94% { transform: translate(2px, -1px); }
-          96% { transform: translate(-1px, 2px); }
-          98% { transform: translate(1px, -2px); }
-        }
-        
-        @keyframes ping-slow {
-          0% { transform: scale(1); opacity: 1; }
-          75%, 100% { transform: scale(2); opacity: 0; }
-        }
-        
-        .animate-float { animation: float 3s ease-in-out infinite; }
-        .animate-shadow { animation: shadow 3s ease-in-out infinite; }
-        .animate-wave { animation: wave 2s ease-in-out infinite; }
-        .animate-wave-reverse { animation: wave-reverse 2s ease-in-out infinite; }
-        .animate-blink { animation: blink 4s ease-in-out infinite; }
-        .animate-antenna { animation: antenna 2s ease-in-out infinite; transform-origin: center bottom; }
-        .animate-wiggle { animation: wiggle 3s ease-in-out infinite; transform-origin: center; }
-        .animate-wiggle-reverse { animation: wiggle-reverse 3s ease-in-out infinite; transform-origin: center; }
-        .animate-glitch { animation: glitch 5s ease-in-out infinite; }
-        .animate-ping-slow { animation: ping-slow 2s cubic-bezier(0, 0, 0.2, 1) infinite; }
-      `}</style>
-    </div>
-    <Footer className="max-w-7xl mx-auto"/>
+      <Footer />
     </div>
   );
 };

@@ -41,7 +41,7 @@ const router = createBrowserRouter([
     element: <MainLayouts />,
     errorElement: <Error />,
     children: [
-      { index: true, element: <Home /> },
+      { path: "/", element: <Home /> },
       { path: "/about", element: <About /> },
       { path: "/privacy", element: <PrivacyPolicy /> },
       { path: "/terms", element: <TermsConditions /> },
@@ -122,11 +122,7 @@ const router = createBrowserRouter([
     ],
   },
 
-  // Fallback route
-  {
-    path: "*",
-    element: <Navigate to="/" replace />,
-  },
+
 ]);
 
 export default router;
