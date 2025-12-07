@@ -333,40 +333,6 @@ const CTASection = () => {
               </svg>
             </motion.div>
           </div>
-
-          {/* Bottom Stats Bar */}
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.6, delay: 0.7 }}
-            className="relative z-10 border-t border-white/20 px-8 lg:px-16 py-6"
-          >
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
-              {[
-                { number: "50,000+", label: "Loans Approved" },
-                { number: "$100M+", label: "Disbursed" },
-                { number: "98%", label: "Success Rate" },
-                { number: "2 Hours", label: "Avg Approval" }
-              ].map((stat, index) => (
-                <motion.div
-                  key={index}
-                  initial={{ opacity: 0, scale: 0.5 }}
-                  whileInView={{ opacity: 1, scale: 1 }}
-                  viewport={{ once: true }}
-                  transition={{ delay: 0.8 + index * 0.1 }}
-                  className="text-center"
-                >
-                  <div className="text-2xl md:text-3xl font-black text-white mb-1">
-                    {stat.number}
-                  </div>
-                  <div className="text-sm text-blue-200">
-                    {stat.label}
-                  </div>
-                </motion.div>
-              ))}
-            </div>
-          </motion.div>
         </motion.div>
       </div>
     </div>

@@ -14,7 +14,6 @@ import Coverage from "../Pages/Coverage/Coverage.jsx";
 import Error from "../Pages/Error";
 import Home from "../Pages/Home/Home";
 import MyProfile from "../Pages/MyProfile/MyProfile.jsx";
-import Pricing from "../Pages/Pricing/Pricing.jsx";
 import Services from "../Pages/Services/Services.jsx";
 
 import Login from "../Pages/Auth/Login/Login.jsx";
@@ -33,6 +32,7 @@ import TermsConditions from "../components/Footer/TermsConditions.jsx";
 import CookiesPolicy from "../components/Footer/CookiesPolicy.jsx";
 import FAQ from "../Pages/Home/Sections/FAQ.jsx";
 import WhyChooseUs from "../Pages/Home/Sections/WhyChooseUs.jsx";
+import Contact from "../Pages/Contact/Contact.jsx";
 
 // Route definitions // Public routes
 const router = createBrowserRouter([
@@ -46,10 +46,10 @@ const router = createBrowserRouter([
       { path: "/privacy", element: <PrivacyPolicy /> },
       { path: "/terms", element: <TermsConditions /> },
       { path: "/cookies", element: <CookiesPolicy /> },
-      { path: "/pricing", element: <Pricing /> },
       { path: "/services", element: <Services /> },
       { path: "/faqs", element: <FAQ /> },
       { path: "/why-choose-us", element: <WhyChooseUs /> },
+      { path: "/contact", element: <Contact /> },
       {
         path: "/coverage",
         element: <Coverage />,
