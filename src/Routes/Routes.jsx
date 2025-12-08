@@ -53,6 +53,8 @@ const router = createBrowserRouter([
       { path: "/contact", element: <Contact /> },
       { path: "/login", element: <Login /> },
       { path: "/register", element: <Register /> },
+      { path: "all-loans", element: <AllLoans />,      
+      },
       {
         path: "/coverage",
         element: <Coverage />,
@@ -71,16 +73,7 @@ const router = createBrowserRouter([
          loader: () => fetch("/serviceCenters.json").then((res) => res.json()),
       
       },
-      {
-        path: "all-loans",
-        element: (
-          <PrivateRoute>
-            <AllLoans />
-          </PrivateRoute>
-        ),
-        //  loader: () => fetch("/serviceCenters.json").then((res) => res.json()),
-      
-      },
+     
 
       {
         path: "/send-parcel",
