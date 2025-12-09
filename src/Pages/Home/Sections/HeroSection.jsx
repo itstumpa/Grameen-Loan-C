@@ -3,6 +3,7 @@ import { motion } from 'framer-motion';
 import { ArrowRight, Shield, Zap, CheckCircle2, Users, Clock, Award } from 'lucide-react';
 import { useTheme } from '../../../components/ThemeContext';
 import HeroImg from '../../../assets/hero_Img.png'
+import { Link } from 'react-router';
 
 
 const HeroSection = () => {
@@ -65,29 +66,23 @@ const HeroSection = () => {
             </p>
 
             {/* CTA Buttons */}
+
+
             <div className="flex flex-col sm:flex-row gap-4 justify-center lg:justify-start mb-10">
-              <motion.button
-                whileHover={{ scale: 1.05 }}
-                whileTap={{ scale: 0.95 }}
-                className="group bg-blue-900 hover:bg-blue-800 text-white px-8 py-4 rounded-xl 
-                  font-bold text-lg shadow-xl hover:shadow-2xl transition-all flex items-center 
-                  justify-center gap-2"
-              >
-                Apply for Loan
-                <ArrowRight className="group-hover:translate-x-1 transition-transform" size={22} />
-              </motion.button>
+                              <Link to='all-loans'>
 
               <motion.button
                 whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.95 }}
-                className={`px-8 py-4 rounded-xl font-bold text-lg border-2 transition-all
-                  ${isDark 
-                    ? 'border-slate-600 text-slate-300 hover:bg-slate-800 hover:border-slate-500' 
-                    : 'border-slate-300 text-slate-700 hover:bg-white hover:border-slate-400'
-                  }`}
+                className="group bg-blue-900 hover:bg-blue-800 text-white px-8 py-4 rounded-xl 
+                font-bold text-lg shadow-xl hover:shadow-2xl transition-all flex items-center 
+                justify-center gap-2"
               >
-                View Dashboard Demo
+                Apply for Loan
+                <ArrowRight className="group-hover:translate-x-1 transition-transform" size={22} />
               </motion.button>
+</Link>
+            
             </div>
 
             {/* Trust Indicators */}

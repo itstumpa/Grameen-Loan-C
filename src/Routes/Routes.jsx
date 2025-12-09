@@ -34,6 +34,7 @@ import FAQ from "../Pages/Home/Sections/FAQ.jsx";
 import WhyChooseUs from "../Pages/Home/Sections/WhyChooseUs.jsx";
 import Contact from "../Pages/Contact/Contact.jsx";
 import AllLoans from "../Pages/AllLoans/AllLoans.jsx";
+import LoanDetails from "../Pages/AllLoans/LoanDetails.jsx";
 
 // Route definitions // Public routes
 const router = createBrowserRouter([
@@ -53,8 +54,11 @@ const router = createBrowserRouter([
       { path: "/contact", element: <Contact /> },
       { path: "/login", element: <Login /> },
       { path: "/register", element: <Register /> },
-      { path: "all-loans", element: <AllLoans />,      
-      },
+      { path: "all-loans", element: <AllLoans /> },  
+        // fix me  (later add in private route)  
+      { path: "loan-details", element: <LoanDetails /> },
+
+      
       {
         path: "/coverage",
         element: <Coverage />,
