@@ -64,17 +64,20 @@ const Navbar = () => {
             </div>
 
             {/* Logo Text */}
-            <div>
-              <h1 className={`text-xl font-bold tracking-tight
-                ${isDark ? 'text-white' : 'text-slate-900'}`}
-              >
-                Grameen Loan
-              </h1>
-              <p className={`text-xs ${isDark ? 'text-slate-400' : 'text-slate-500'}`}>
-                Empowering Communities
-              </p>
-            </div>
+            <NavLink to='/'>
+              <div>
+                <h1 className={`text-xl font-bold tracking-tight
+                  ${isDark ? 'text-white' : 'text-slate-900'}`}
+                >
+                  Grameen Loan
+                </h1>
+                <p className={`text-xs ${isDark ? 'text-slate-400' : 'text-slate-500'}`}>
+                  Empowering Communities
+                </p>
+              </div>
+            </NavLink>
           </div>
+
 
           {/* ========== DESKTOP NAVIGATION (CENTER) ========== */}
           <div className="hidden lg:flex items-center gap-8">

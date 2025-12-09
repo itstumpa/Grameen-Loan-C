@@ -54,8 +54,8 @@ const AllLoans = () => {
     if (searchQuery) {
       result = result.filter(loan => 
         loan.loanTitle.toLowerCase().includes(searchQuery.toLowerCase()) ||
-        loan.category.toLowerCase().includes(searchQuery.toLowerCase()) ||
-        loan.shortDescription.toLowerCase().includes(searchQuery.toLowerCase())
+        loan.category.toLowerCase().includes(searchQuery.toLowerCase())
+        // loan.shortDescription.toLowerCase().includes(searchQuery.toLowerCase())
       );
     }
 
@@ -118,7 +118,7 @@ const AllLoans = () => {
                 </div>
                 <input
                   type="text"
-                  placeholder="Search loans by title, category, or description..."
+                  placeholder="Search loans by title or category"
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
                   className={`w-full pl-12 pr-4 py-3 rounded-lg border-2 transition-all
@@ -184,7 +184,7 @@ const AllLoans = () => {
           <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
             {filteredLoans.map((loan, index) => (
               <motion.div
-                key={loan.id}
+                key={loan._id}
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.5, delay: index * 0.1 }}
@@ -268,10 +268,12 @@ const AllLoans = () => {
                   <motion.button
                     whileHover={{ scale: 1.02 }}
                     whileTap={{ scale: 0.98 }}
-                    onClick={() => handleViewDetails(loan.id)}
+                    onClick={() => handleViewDetails(loan._id)}
                     className="w-full bg-blue-900 hover:bg-blue-800 text-white py-3 rounded-lg font-bold flex items-center justify-center gap-2 transition-all shadow-lg hover:shadow-xl"
                   >
-                    <span>View Details</span>
+                    <span>
+                      View Details
+                      </span>
                     <ArrowRight size={20} />
                   </motion.button>
                 </div>

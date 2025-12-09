@@ -56,7 +56,7 @@ const router = createBrowserRouter([
       { path: "/register", element: <Register /> },
       { path: "all-loans", element: <AllLoans /> },  
         // fix me  (later add in private route)  
-      { path: "loan-details", element: <LoanDetails /> },
+      { path: "loan-details/:id", element: <LoanDetails /> },
 
       
       {
