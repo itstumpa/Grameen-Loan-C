@@ -259,7 +259,7 @@ const AllLoans = () => {
                         </span>
                       </div>
                       <span className={`text-lg font-bold ${isDark ? 'text-blue-400' : 'text-blue-600'}`}>
-                        ${loan.maxLimit.toLocaleString()}
+                        ${loan.maxLimit}
                       </span>
                     </div>
                   </div>

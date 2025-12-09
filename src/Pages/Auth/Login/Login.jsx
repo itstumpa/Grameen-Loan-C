@@ -26,49 +26,76 @@ const Login = () => {
   const [showPassword, setShowPassword] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
 
-  // ========== HANDLERS ==========
-  const handleLogin = (data) => {
-    console.log(data);
-    setIsLoading(true);
+  // ✅ Get the redirect path from location state
+  const from = location?.state?.from || '/';
 
-    signInUser(data.email, data.password)
-      .then((result) => {
-        console.log(result.user);
-         Swal.fire({
-                      icon: 'success',
-                      title: 'Login Successful!',
-                      text: 'Welcome to Grameen Loan',
-                      confirmButtonColor: '#1E3A8A',
-                      confirmButtonText: 'Continue'
-                    }).then(() => {
-                      navigate(location?.state || '/');
-                    });
-      })
-      .catch((error) => {
-         console.log('Login Error:', error);
+  console.log('Redirect path:', from); // Debug log
+
+  // ========== EMAIL/PASSWORD LOGIN ==========
+  const handleLogin = async (data) => {
+    try {
+      setIsLoading(true);
+      
+      const result = await signInUser(data.email, data.password);
+      console.log('✅ Login successful:', result.user);
+      
+      Swal.fire({
+        icon: 'success',
+        title: 'Login Successful!',
+        text: 'Welcome to Grameen Loan',
+        confirmButtonColor: '#1E3A8A',
+        confirmButtonText: 'Continue',
+        timer: 2000
+      }).then(() => {
+        console.log(from)
+        navigate(from, { replace: true }); // ✅ Fixed
+      });
+      
+    } catch (error) {
+      console.error('❌ Login Error:', error);
       Swal.fire({
         icon: 'error',
         title: 'Login Failed',
-        text: error.message || 'Could not Login. Please try again.',
+        text: error.message || 'Invalid email or password',
         confirmButtonColor: '#DC2626'
       });
-      })
-      .finally(() => {
-        setIsLoading(false);
-      });
+    } finally {
+      setIsLoading(false);
+    }
   };
 
-  const handleGoogleLogin = () => {
-    signInGoogle()
-      .then(result => {
-        console.log(result.user);
-        navigate(location?.state || '/');
-      })
-      .catch(error => {
-        console.log(error);
+  // ========== GOOGLE LOGIN ==========
+  const handleGoogleLogin = async () => {
+    try {
+      setIsLoading(true);
+      
+      const result = await signInGoogle();
+      console.log('✅ Google login successful:', result.user);
+      
+      Swal.fire({
+        icon: 'success',
+        title: 'Welcome!',
+        text: 'Logged in with Google',
+        confirmButtonColor: '#1E3A8A',
+        timer: 1500,
+        showConfirmButton: false
       });
-    console.log("Google login clicked");
+      
+      navigate(from, { replace: true }); // ✅ Fixed
+      
+    } catch (error) {
+      console.error('❌ Google Login Error:', error);
+      Swal.fire({
+        icon: 'error',
+        title: 'Google Login Failed',
+        text: error.message,
+        confirmButtonColor: '#DC2626'
+      });
+    } finally {
+      setIsLoading(false);
+    }
   };
+
 
 return (
   <div className={`min-h-screen ${isDark ? 'bg-slate-900' : 'bg-slate-50'} transition-colors duration-300`}>

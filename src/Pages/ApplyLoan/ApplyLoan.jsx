@@ -182,28 +182,13 @@ const ApplyLoan = () => {
          style={{ backgroundColor: 'var(--bg)' }}>
       <div className="max-w-4xl mx-auto">
         
-        {/* Back Button */}
-        <motion.button
-          initial={{ opacity: 0, x: -20 }}
-          animate={{ opacity: 1, x: 0 }}
-          onClick={() => navigate(`/loan-details/${id}`)}
-          className="flex items-center gap-2 mb-8 px-4 py-2 rounded-lg transition-all"
-          style={{
-            backgroundColor: 'var(--surface)',
-            color: 'var(--text-primary)',
-            border: '2px solid var(--border)'
-          }}
-          whileHover={{ x: -5 }}
-        >
-          <ArrowLeft className="w-5 h-5" />
-          Back to Loan Details
-        </motion.button>
+        
 
         {/* Header */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
-          className="text-center mb-12"
+          className="text-center my-12"
         >
           <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full mb-4"
                style={{ backgroundColor: 'var(--primary)', opacity: 0.1 }}>

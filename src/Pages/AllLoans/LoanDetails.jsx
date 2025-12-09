@@ -75,9 +75,11 @@ const LoanDetails = () => {
         confirmButtonText: 'Go to Login',
       }).then((result) => {
         if (result.isConfirmed) {
-          navigate('/login', { state: { from: `/loan-details/${id}` } });
-        }
-      });
+           navigate('/login', { 
+          state: { from: `/apply-loan/${id}` },
+          replace: true  // Don't add login to history
+        })
+      }});
       return;
     }
 
