@@ -181,7 +181,7 @@ const AllLoans = () => {
             </p>
           </motion.div>
         ) : (
-          <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
+          <div className="grid  sm:grid-cols-2 lg:grid-cols-3 gap-6">
             {filteredLoans.map((loan, index) => (
               <motion.div
                 key={loan._id}
@@ -226,12 +226,12 @@ const AllLoans = () => {
                 {/* Card Content */}
                 <div className="p-6">
                   {/* Title */}
-                  <h3 className={`text-xl font-bold mb-2 line-clamp-2 ${isDark ? 'text-white' : 'text-slate-900'}`}>
+                  <h3 className={`text-xl font-bold mb-2 line-clamp-1 ${isDark ? 'text-white' : 'text-slate-900'}`}>
                     {loan.loanTitle}
                   </h3>
 
                   {/* Description */}
-                  <p className={`text-sm mb-4 line-clamp-2 ${isDark ? 'text-slate-400' : 'text-slate-600 line-clamp-1'}`}>
+                  <p className={`text-sm mb-4 line-clamp-1 ${isDark ? 'text-slate-400' : 'text-slate-600 '}`}>
                     {loan.shortDescription} 
                   </p>
 

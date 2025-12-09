@@ -36,7 +36,7 @@ const Login = () => {
         console.log(result.user);
          Swal.fire({
                       icon: 'success',
-                      title: 'Registration Successful!',
+                      title: 'Login Successful!',
                       text: 'Welcome to Grameen Loan',
                       confirmButtonColor: '#1E3A8A',
                       confirmButtonText: 'Continue'
