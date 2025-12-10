@@ -7,10 +7,15 @@ import {
   CheckCircle,
   Clock,
   DollarSign,
+  Edit2,
   Eye,
   FileText,
   Loader,
+  Percent,
+  Rotate3D,
   Search,
+  SquaresIntersectIcon,
+  Trash2Icon,
   XCircle,
 } from "lucide-react";
 import { useEffect, useState } from "react";
@@ -120,20 +125,61 @@ const MyLoans = () => {
     );
   };
 
-  // ========== VIEW DETAILS ==========
-  const handleViewDetails = (applicationId) => {
+  // ========== DELETE LOAN ==========
+  const handleDelete = async (application) => {
     Swal.fire({
-      title: "Application Details",
-      html: `
-        <div class="text-left">
-          <p><strong>Application ID:</strong> ${applicationId}</p>
-          <p class="text-sm text-gray-500 mt-2">Full details page coming soon...</p>
-        </div>
-      `,
-      confirmButtonText: "Close",
+      title: "Delete Application?",
+      text: `Are you sure you want to delete "${application.loanTitle}"?`,
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonText: "Yes, Delete",
+      confirmButtonColor: "var(--error)",
+      cancelButtonText: "Cancel",
+    }).then(async (result) => {
+      if (result.isConfirmed) {
+        try {
+          await axios.delete(`http://localhost:3000/loan-applications/${application._id}`);
+
+          setApplications(applications.filter((a) => a._id !== application._id));
+          setFilteredApplications(filteredApplications.filter((a) => a._id !== application._id));
+
+          Swal.fire({
+            icon: "success",
+            title: "Deleted!",
+            text: "Application deleted successfully",
+            timer: 2000,
+            showConfirmButton: false,
+          });
+        } catch (error) {
+          Swal.fire({
+            icon: "error",
+            title: "Failed",
+            text: "Could not delete application",
+          });
+        }
+      }
     });
   };
 
+  // ========== VIEW DETAILS ==========
+   const handleViewDetails = (applicationId, status, userEmail, monthlyIncome, contactNumber, interestRate) => {
+      
+      Swal.fire({
+        title: "Application Details",
+        html: `
+          <div class="text-left">
+           <p><strong>Application ID:</strong> ${applicationId}</p>
+              <p><strong>Email:</strong> ${userEmail}</p>
+              <p><strong>Status:</strong> ${status}</p>
+              <p><strong>monthlyIncome:</strong> ${monthlyIncome}</p>
+              <p><strong>Contact:</strong> ${contactNumber}</p>
+              <p><strong>Interest Rate:</strong> ${interestRate}</p>
+          </div>
+        `,
+        confirmButtonText: "Close",
+      });
+    };
+  
   // ========== LOADING STATE ==========
   if (loading) {
     return (
@@ -397,8 +443,7 @@ const MyLoans = () => {
                           className="text-sm mb-3"
                           style={{ color: "var(--text-secondary)" }}
                         >
-                          Applied by: {application.firstName}{" "}
-                          {application.lastName}
+                          Id: {application._id}{" "}
                         </p>
 
                         <div className="flex flex-wrap gap-4 text-sm">
@@ -411,6 +456,18 @@ const MyLoans = () => {
                               Amount:{" "}
                               <strong style={{ color: "var(--text-primary)" }}>
                                 ${application.loanAmount?.toLocaleString()}
+                              </strong>
+                            </span>
+                          </div>
+                          <div className="flex items-center gap-2">
+                            <Percent
+                              className="w-4 h-4"
+                              style={{ color: "var(--success)" }}
+                            />
+                            <span style={{ color: "var(--text-secondary)" }}>
+                              Interest:{" "}
+                              <strong style={{ color: "var(--text-primary)" }}>
+                                ${application.interestRate?.toLocaleString()}
                               </strong>
                             </span>
                           </div>
@@ -432,11 +489,52 @@ const MyLoans = () => {
                   </div>
 
                   {/* Right: Status & Actions */}
+<div className="flex flex-col items-end gap-3">
+                    {getStatusBadge(application.approvedAt)}
+
+                    {/* Actions */}
+                    <td className="p-4">
+                      <div className="flex items-center justify-center gap-2">
+                        {/* Edit button can be implemented similarly if needed */}
+                        <motion.button
+                          whileHover={{ scale: 1.1 }}
+                          whileTap={{ scale: 0.9 }}
+                          // onClick={() => handleEdit(application)}
+                          className="p-2 rounded-lg"
+                          style={{
+                            backgroundColor: "var(--accent)",
+                          }}
+                          title="Edit"
+                        >
+                          <Edit2
+                            className="w-4 h-4"
+                            style={{ color: "var(--text-third)" }}
+                          />
+                        </motion.button>
+
+                        <motion.button
+                          whileHover={{ scale: 1.1 }}
+                          whileTap={{ scale: 0.9 }}
+                          onClick={() => handleDelete(application)}
+                          className="p-2 rounded-lg"
+                          style={{
+                            backgroundColor: "var(--error)",
+                          }}
+                          title="Delete"
+                        >
+                          <Trash2Icon
+                            className="w-4 h-4"
+                            style={{ color: "var(--text-third)" }}
+                          />
+                        </motion.button>
+                      </div>
+                    </td>
+                  </div>
                   <div className="flex flex-col items-end gap-3">
                     {getStatusBadge(application.status)}
 
-                    <button
-                      onClick={() => handleViewDetails(application._id)}
+                   <button
+                      onClick={() => handleViewDetails(application._id, application.status, application.userEmail,  application.monthlyIncome, application.contactNumber, application.interestRate)}
                       className="flex items-center gap-2 px-4 py-2 rounded-lg font-semibold transition-all"
                       style={{
                         backgroundColor: "var(--primary)",

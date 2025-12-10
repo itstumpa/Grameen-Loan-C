@@ -48,11 +48,11 @@ const LoanApplications = () => {
           `http://localhost:3000/loan-applications/user/${user.email}`
         );
 
-        console.log("✅ Applications fetched:", response.data);
+        console.log("Applications fetched:", response.data);
         setApplications(response.data);
         setFilteredApplications(response.data);
       } catch (err) {
-        console.error("❌ Error fetching applications:", err);
+        console.error("Error fetching applications:", err);
         setError("Failed to load applications");
       } finally {
         setLoading(false);
@@ -121,13 +121,18 @@ const LoanApplications = () => {
   };
 
   // ========== VIEW DETAILS ==========
-  const handleViewDetails = (applicationId) => {
+  const handleViewDetails = (applicationId, status, userEmail, monthlyIncome, contactNumber, interestRate) => {
+    
     Swal.fire({
       title: "Application Details",
       html: `
         <div class="text-left">
-          <p><strong>Application ID:</strong> ${applicationId}</p>
-          <p class="text-sm text-gray-500 mt-2">Full details page coming soon...</p>
+         <p><strong>Application ID:</strong> ${applicationId}</p>
+            <p><strong>Email:</strong> ${userEmail}</p>
+            <p><strong>Status:</strong> ${status}</p>
+            <p><strong>monthlyIncome:</strong> ${monthlyIncome}</p>
+            <p><strong>Contact:</strong> ${contactNumber}</p>
+            <p><strong>Interest Rate:</strong> ${interestRate}</p>
         </div>
       `,
       confirmButtonText: "Close",
@@ -436,7 +441,7 @@ const LoanApplications = () => {
                     {getStatusBadge(application.status)}
 
                     <button
-                      onClick={() => handleViewDetails(application._id)}
+                      onClick={() => handleViewDetails(application._id, application.status, application.userEmail,  application.monthlyIncome, application.contactNumber, application.interestRate)}
                       className="flex items-center gap-2 px-4 py-2 rounded-lg font-semibold transition-all"
                       style={{
                         backgroundColor: "var(--primary)",
