@@ -34,10 +34,10 @@ const AddLoan = () => {
   const [uploadingImage, setUploadingImage] = useState(false);
   const [requiredDocs, setRequiredDocs] = useState(['Government ID', 'Proof of Address']);
   const [newDoc, setNewDoc] = useState('');
-  const [emiPlans, setEmiPlans] = useState(['6 months', '12 months']);
+  const [emiPlans, setEmiPlans] = useState(['6', '12']);
   const [newEmi, setNewEmi] = useState('');
 
-  // ========== HANDLE IMAGE UPLOAD ==========
+  // IMAGE UPLOAD 
   const handleImageUpload = async (e) => {
     const file = e.target.files[0];
     if (!file) return;
@@ -58,14 +58,14 @@ const AddLoan = () => {
       
       toast.success('Image uploaded successfully!');
     } catch (error) {
-      console.error('❌ Error uploading image:', error);
+      console.error('Error uploading image:', error);
       toast.error('Failed to upload image');
     } finally {
       setUploadingImage(false);
     }
   };
 
-  // ========== ADD REQUIRED DOCUMENT ==========
+  //  ADD 
   const handleAddDocument = () => {
     if (newDoc.trim() && !requiredDocs.includes(newDoc.trim())) {
       setRequiredDocs([...requiredDocs, newDoc.trim()]);
@@ -73,12 +73,12 @@ const AddLoan = () => {
     }
   };
 
-  // ========== REMOVE REQUIRED DOCUMENT ==========
+  // REMOVE 
   const handleRemoveDocument = (index) => {
     setRequiredDocs(requiredDocs.filter((_, i) => i !== index));
   };
 
-  // ========== ADD EMI PLAN ==========
+  //  ADD EMI
   const handleAddEmi = () => {
     if (newEmi.trim() && !emiPlans.includes(newEmi.trim())) {
       setEmiPlans([...emiPlans, newEmi.trim()]);
@@ -86,12 +86,12 @@ const AddLoan = () => {
     }
   };
 
-  // ========== REMOVE EMI PLAN ==========
+  // REMOVE EMI 
   const handleRemoveEmi = (index) => {
     setEmiPlans(emiPlans.filter((_, i) => i !== index));
   };
 
-  // ========== FORM SUBMISSION ==========
+  //  FORM 
   const onSubmit = async (data) => {
     try {
       setSubmitting(true);
@@ -121,18 +121,18 @@ const AddLoan = () => {
         description: data.description,
         category: data.category,
         interestRate: data.interestRate,
-        maxLoan: `$${data.maxLoan}`,
+        maxLimit: data.maxLimit,
         tenure: data.tenure,
         requiredDocuments: requiredDocs,
-        emiPlans: emiPlans,
-        image: imagePreview,
+        availableEMIPlans: emiPlans,
+        loanImage: imagePreview,
         showOnHome: showOnHome,
         createdAt: new Date(),
         updatedAt: new Date(),
         status: 'active'
       };
 
-      console.log('📤 Submitting loan data:', loanData);
+      console.log('Submitting loan data:', loanData);
 
       // Submit to backend
       const response = await axios.post(
@@ -140,7 +140,7 @@ const AddLoan = () => {
         loanData
       );
 
-      console.log('✅ Loan created:', response.data);
+      console.log('Loan created:', response.data);
 
       // Show success message
       Swal.fire({
@@ -163,14 +163,14 @@ const AddLoan = () => {
           setImagePreview('');
           setShowOnHome(false);
           setRequiredDocs(['Government ID', 'Proof of Address']);
-          setEmiPlans(['6 months', '12 months']);
+          setEmiPlans(['6', '12']);
         }
       });
 
       toast.success('Loan created successfully!');
 
     } catch (error) {
-      console.error('❌ Error creating loan:', error);
+      console.error(' Error creating loan:', error);
       
       Swal.fire({
         icon: 'error',
@@ -358,7 +358,7 @@ const AddLoan = () => {
                   <DollarSign className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5" 
                               style={{ color: 'var(--text-secondary)' }} />
                   <input
-                    {...register('maxLoan', { 
+                    {...register('maxLimit', { 
                       required: 'Max loan amount is required',
                       min: { value: 100, message: 'Minimum $100' }
                     })}
@@ -368,14 +368,14 @@ const AddLoan = () => {
                     className="w-full pl-10 pr-4 py-3 rounded-lg outline-none"
                     style={{
                       backgroundColor: 'var(--bg)',
-                      border: `2px solid ${errors.maxLoan ? 'var(--error)' : 'var(--border)'}`,
+                      border: `2px solid ${errors.maxLimit ? 'var(--error)' : 'var(--border)'}`,
                       color: 'var(--text-primary)'
                     }}
                   />
                 </div>
-                {errors.maxLoan && (
+                {errors.maxLimit && (
                   <p className="text-sm mt-1" style={{ color: 'var(--error)' }}>
-                    {errors.maxLoan.message}
+                    {errors.maxLimit.message}
                   </p>
                 )}
               </div>
@@ -461,10 +461,9 @@ const AddLoan = () => {
                   color: 'var(--text-primary)'
                 }}
               />
-              <motion.button
+              <button
                 type="button"
-                whileHover={{ scale: 1.05 }}
-                whileTap={{ scale: 0.95 }}
+              
                 onClick={handleAddDocument}
                 className="px-6 py-3 rounded-lg font-semibold flex items-center gap-2"
                 style={{
@@ -474,17 +473,14 @@ const AddLoan = () => {
               >
                 <Plus className="w-5 h-5" />
                 Add
-              </motion.button>
+              </button>
             </div>
 
             {/* Documents List */}
             <div className="flex flex-wrap gap-3">
               {requiredDocs.map((doc, index) => (
-                <motion.div
+                <div
                   key={index}
-                  initial={{ scale: 0 }}
-                  animate={{ scale: 1 }}
-                  exit={{ scale: 0 }}
                   className="flex items-center gap-2 px-4 py-2 rounded-lg"
                   style={{
                     backgroundColor: 'var(--bg)',
@@ -500,7 +496,7 @@ const AddLoan = () => {
                   >
                     <X className="w-4 h-4" style={{ color: 'var(--error)' }} />
                   </button>
-                </motion.div>
+                </div>
               ))}
             </div>
           </div>
@@ -532,10 +528,8 @@ const AddLoan = () => {
                   color: 'var(--text-primary)'
                 }}
               />
-              <motion.button
+              <button
                 type="button"
-                whileHover={{ scale: 1.05 }}
-                whileTap={{ scale: 0.95 }}
                 onClick={handleAddEmi}
                 className="px-6 py-3 rounded-lg font-semibold flex items-center gap-2"
                 style={{
@@ -545,17 +539,14 @@ const AddLoan = () => {
               >
                 <Plus className="w-5 h-5" />
                 Add
-              </motion.button>
+              </button>
             </div>
 
             {/* EMI Plans List */}
             <div className="flex flex-wrap gap-3">
               {emiPlans.map((plan, index) => (
-                <motion.div
+                <div
                   key={index}
-                  initial={{ scale: 0 }}
-                  animate={{ scale: 1 }}
-                  exit={{ scale: 0 }}
                   className="flex items-center gap-2 px-4 py-2 rounded-lg"
                   style={{
                     backgroundColor: 'var(--bg)',
@@ -571,7 +562,7 @@ const AddLoan = () => {
                   >
                     <X className="w-4 h-4" style={{ color: 'var(--error)' }} />
                   </button>
-                </motion.div>
+                </div>
               ))}
             </div>
           </div>
@@ -591,9 +582,7 @@ const AddLoan = () => {
             <div className="flex flex-col md:flex-row gap-6 items-center">
               {/* Image Preview */}
               {imagePreview && (
-                <motion.div
-                  initial={{ scale: 0 }}
-                  animate={{ scale: 1 }}
+                <div
                   className="w-48 h-48 rounded-xl overflow-hidden"
                   style={{ border: '3px solid var(--primary)' }}
                 >
@@ -602,7 +591,7 @@ const AddLoan = () => {
                     alt="Preview"
                     className="w-full h-full object-cover"
                   />
-                </motion.div>
+                </div>
               )}
 
               {/* Upload Button */}

@@ -1,36 +1,33 @@
 // ApprovedLoans.jsx
-import React, { useState, useEffect } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
-import { 
-  CheckCircle,
-  Eye,
-  Search,
-  Download,
-  Loader,
-  AlertCircle,
-  X,
-  DollarSign,
+import axios from "axios";
+import { AnimatePresence, motion } from "framer-motion";
+import {
+  Briefcase,
   Calendar,
-  User,
+  CheckCircle,
+  Clock,
+  DollarSign,
+  Download,
+  Eye,
+  FileText,
+  Loader,
   Mail,
   Phone,
-  MapPin,
-  FileText,
-  Briefcase,
-  Clock,
+  Search,
   TrendingUp,
-  Filter
-} from 'lucide-react';
-import axios from 'axios';
-import Swal from 'sweetalert2';
+  User,
+  X,
+} from "lucide-react";
+import { useEffect, useState } from "react";
+import Swal from "sweetalert2";
 
 const ApprovedLoans = () => {
   // ========== STATE ==========
   const [applications, setApplications] = useState([]);
   const [filteredApplications, setFilteredApplications] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [searchQuery, setSearchQuery] = useState('');
-  const [dateFilter, setDateFilter] = useState('All');
+  const [searchQuery, setSearchQuery] = useState("");
+  const [dateFilter, setDateFilter] = useState("All");
   const [showModal, setShowModal] = useState(false);
   const [selectedApplication, setSelectedApplication] = useState(null);
 
@@ -42,23 +39,29 @@ const ApprovedLoans = () => {
   const fetchApplications = async () => {
     try {
       setLoading(true);
-      const response = await axios.get('http://localhost:3000/loan-applications');
-      
+      const response = await axios.get(
+        "http://localhost:3000/loan-applications"
+      );
+
       // Filter only approved applications
-      const approvedApps = response.data.filter(app => app.status === 'Approved');
-      
+      const approvedApps = response.data.filter(
+        (app) => app.status === "Approved"
+      );
+
       // Sort by approved date (newest first)
-      approvedApps.sort((a, b) => new Date(b.approvedAt) - new Date(a.approvedAt));
-      
-      console.log('✅ Approved applications:', approvedApps);
+      approvedApps.sort(
+        (a, b) => new Date(b.approvedAt) - new Date(a.approvedAt)
+      );
+
+      console.log("✅ Approved applications:", approvedApps);
       setApplications(approvedApps);
       setFilteredApplications(approvedApps);
     } catch (error) {
-      console.error('❌ Error fetching applications:', error);
+      console.error("❌ Error fetching applications:", error);
       Swal.fire({
-        icon: 'error',
-        title: 'Error',
-        text: 'Failed to load approved applications'
+        icon: "error",
+        title: "Error",
+        text: "Failed to load approved applications",
       });
     } finally {
       setLoading(false);
@@ -71,32 +74,35 @@ const ApprovedLoans = () => {
 
     // Search filter
     if (searchQuery) {
-      result = result.filter(app =>
-        app.firstName?.toLowerCase().includes(searchQuery.toLowerCase()) ||
-        app.lastName?.toLowerCase().includes(searchQuery.toLowerCase()) ||
-        app.userEmail?.toLowerCase().includes(searchQuery.toLowerCase()) ||
-        app.loanTitle?.toLowerCase().includes(searchQuery.toLowerCase())
+      result = result.filter(
+        (app) =>
+          app.firstName?.toLowerCase().includes(searchQuery.toLowerCase()) ||
+          app.lastName?.toLowerCase().includes(searchQuery.toLowerCase()) ||
+          app.userEmail?.toLowerCase().includes(searchQuery.toLowerCase()) ||
+          app.loanTitle?.toLowerCase().includes(searchQuery.toLowerCase())
       );
     }
 
     // Date filter
-    if (dateFilter !== 'All') {
+    if (dateFilter !== "All") {
       const now = new Date();
       const today = new Date(now.getFullYear(), now.getMonth(), now.getDate());
-      
-      result = result.filter(app => {
+
+      result = result.filter((app) => {
         const approvedDate = new Date(app.approvedAt);
-        
-        switch(dateFilter) {
-          case 'Today':
+
+        switch (dateFilter) {
+          case "Today":
             return approvedDate >= today;
-          case 'This Week':
+          case "This Week":
             const weekAgo = new Date(today);
             weekAgo.setDate(weekAgo.getDate() - 7);
             return approvedDate >= weekAgo;
-          case 'This Month':
-            return approvedDate.getMonth() === now.getMonth() && 
-                   approvedDate.getFullYear() === now.getFullYear();
+          case "This Month":
+            return (
+              approvedDate.getMonth() === now.getMonth() &&
+              approvedDate.getFullYear() === now.getFullYear()
+            );
           default:
             return true;
         }
@@ -116,66 +122,84 @@ const ApprovedLoans = () => {
   const handleExport = () => {
     if (filteredApplications.length === 0) {
       Swal.fire({
-        icon: 'warning',
-        title: 'No Data',
-        text: 'No approved applications to export'
+        icon: "warning",
+        title: "No Data",
+        text: "No approved applications to export",
       });
       return;
     }
 
     const csvContent = [
       // Headers
-      ['Loan ID', 'Name', 'Email', 'Loan Type', 'Amount', 'Approved Date', 'Approved By'].join(','),
+      [
+        "Loan ID",
+        "Name",
+        "Email",
+        "Loan Type",
+        "Amount",
+        "Approved Date",
+        "Approved By",
+      ].join(","),
       // Data rows
-      ...filteredApplications.map(app => [
-        app._id,
-        `${app.firstName} ${app.lastName}`,
-        app.userEmail,
-        app.loanTitle,
-        app.loanAmount,
-        new Date(app.approvedAt).toLocaleDateString(),
-        app.approvedBy || 'Admin'
-      ].join(','))
-    ].join('\n');
+      ...filteredApplications.map((app) =>
+        [
+          app._id,
+          `${app.firstName} ${app.lastName}`,
+          app.userEmail,
+          app.loanTitle,
+          app.loanAmount,
+          new Date(app.approvedAt).toLocaleDateString(),
+          app.approvedBy || "Admin",
+        ].join(",")
+      ),
+    ].join("\n");
 
-    const blob = new Blob([csvContent], { type: 'text/csv' });
+    const blob = new Blob([csvContent], { type: "text/csv" });
     const url = window.URL.createObjectURL(blob);
-    const a = document.createElement('a');
+    const a = document.createElement("a");
     a.href = url;
-    a.download = `approved-loans-${new Date().toISOString().split('T')[0]}.csv`;
+    a.download = `approved-loans-${new Date().toISOString().split("T")[0]}.csv`;
     a.click();
     window.URL.revokeObjectURL(url);
 
     Swal.fire({
-      icon: 'success',
-      title: 'Exported!',
-      text: 'Approved loans exported successfully',
+      icon: "success",
+      title: "Exported!",
+      text: "Approved loans exported successfully",
       timer: 2000,
-      showConfirmButton: false
+      showConfirmButton: false,
     });
   };
 
   // ========== CALCULATE STATS ==========
   const stats = {
     totalApproved: applications.length,
-    totalAmount: applications.reduce((sum, app) => sum + (app.loanAmount || 0), 0),
-    todayApproved: applications.filter(app => {
+    totalAmount: applications.reduce(
+      (sum, app) => sum + (app.loanAmount || 0),
+      0
+    ),
+    todayApproved: applications.filter((app) => {
       const today = new Date().toDateString();
       return new Date(app.approvedAt).toDateString() === today;
     }).length,
-    thisMonthApproved: applications.filter(app => {
+    thisMonthApproved: applications.filter((app) => {
       const now = new Date();
       const approvedDate = new Date(app.approvedAt);
-      return approvedDate.getMonth() === now.getMonth() && 
-             approvedDate.getFullYear() === now.getFullYear();
-    }).length
+      return (
+        approvedDate.getMonth() === now.getMonth() &&
+        approvedDate.getFullYear() === now.getFullYear()
+      );
+    }).length,
   };
 
   // ========== LOADING STATE ==========
   if (loading) {
     return (
       <div className="flex items-center justify-center h-96">
-        <Loader className="w-12 h-12 animate-spin" style={{ color: 'var(--primary)' }} />
+        <Loader
+          className="w-12 h-12 animate-spin"
+          style={{ color: "var(--primary)" }}
+        />
       </div>
     );
   }
@@ -186,11 +210,13 @@ const ApprovedLoans = () => {
       {/* Header */}
       <div className="flex flex-col md:flex-row md:items-center justify-between mb-8 gap-4">
         <div>
-          <h1 className="text-3xl md:text-4xl font-black mb-2" 
-              style={{ color: 'var(--text-primary)' }}>
+          <h1
+            className="text-3xl md:text-4xl font-black mb-2"
+            style={{ color: "var(--text-primary)" }}
+          >
             Approved Loan Applications
           </h1>
-          <p style={{ color: 'var(--text-secondary)' }}>
+          <p style={{ color: "var(--text-secondary)" }}>
             View and manage all approved loans
           </p>
         </div>
@@ -201,8 +227,8 @@ const ApprovedLoans = () => {
           onClick={handleExport}
           className="flex items-center gap-2 px-6 py-3 rounded-xl font-bold"
           style={{
-            backgroundColor: 'var(--success)',
-            color: 'white'
+            backgroundColor: "var(--success)",
+            color: "white",
           }}
         >
           <Download className="w-5 h-5" />
@@ -213,30 +239,30 @@ const ApprovedLoans = () => {
       {/* Stats Cards */}
       <div className="grid md:grid-cols-4 gap-6 mb-8">
         {[
-          { 
-            label: 'Total Approved', 
+          {
+            label: "Total Approved",
             value: stats.totalApproved,
-            icon: CheckCircle, 
-            color: 'var(--success)' 
+            icon: CheckCircle,
+            color: "var(--success)",
           },
-          { 
-            label: 'Total Amount Disbursed', 
+          {
+            label: "Total Amount Disbursed",
             value: `$${stats.totalAmount.toLocaleString()}`,
-            icon: DollarSign, 
-            color: 'var(--primary)' 
+            icon: DollarSign,
+            color: "var(--primary)",
           },
-          { 
-            label: 'Approved Today', 
+          {
+            label: "Approved Today",
             value: stats.todayApproved,
-            icon: Clock, 
-            color: 'var(--accent)' 
+            icon: Clock,
+            color: "var(--accent)",
           },
-          { 
-            label: 'This Month', 
+          {
+            label: "This Month",
             value: stats.thisMonthApproved,
-            icon: TrendingUp, 
-            color: 'var(--secondary)' 
-          }
+            icon: TrendingUp,
+            color: "var(--secondary)",
+          },
         ].map((stat, index) => (
           <motion.div
             key={index}
@@ -245,17 +271,23 @@ const ApprovedLoans = () => {
             transition={{ delay: index * 0.1 }}
             className="p-6 rounded-xl"
             style={{
-              backgroundColor: 'var(--surface)',
-              border: '2px solid var(--border)'
+              backgroundColor: "var(--surface)",
+              border: "2px solid var(--border)",
             }}
           >
             <div className="flex items-center justify-between mb-2">
               <stat.icon className="w-6 h-6" style={{ color: stat.color }} />
-              <span className="text-2xl font-black" style={{ color: stat.color }}>
+              <span
+                className="text-2xl font-black"
+                style={{ color: stat.color }}
+              >
                 {stat.value}
               </span>
             </div>
-            <p className="text-sm font-semibold" style={{ color: 'var(--text-secondary)' }}>
+            <p
+              className="text-sm font-semibold"
+              style={{ color: "var(--text-secondary)" }}
+            >
               {stat.label}
             </p>
           </motion.div>
@@ -266,8 +298,10 @@ const ApprovedLoans = () => {
       <div className="mb-6 flex flex-col md:flex-row gap-4">
         {/* Search */}
         <div className="flex-1 relative">
-          <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5" 
-                  style={{ color: 'var(--text-secondary)' }} />
+          <Search
+            className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5"
+            style={{ color: "var(--text-secondary)" }}
+          />
           <input
             type="text"
             placeholder="Search by name, email, or loan type..."
@@ -275,31 +309,27 @@ const ApprovedLoans = () => {
             onChange={(e) => setSearchQuery(e.target.value)}
             className="w-full pl-10 pr-4 py-3 rounded-lg outline-none"
             style={{
-              backgroundColor: 'var(--surface)',
-              border: '2px solid var(--border)',
-              color: 'var(--text-primary)'
+              backgroundColor: "var(--surface)",
+              border: "2px solid var(--border)",
+              color: "var(--text-primary)",
             }}
           />
         </div>
 
         {/* Date Filter */}
         <div className="flex gap-2">
-          {['All', 'Today', 'This Week', 'This Month'].map((filter) => (
+          {["All", "Today", "This Week", "This Month"].map((filter) => (
             <button
               key={filter}
               onClick={() => setDateFilter(filter)}
               className="px-4 py-2 rounded-lg font-semibold transition-all whitespace-nowrap"
               style={{
-                backgroundColor: dateFilter === filter 
-                  ? 'var(--primary)' 
-                  : 'var(--surface)',
-                color: dateFilter === filter 
-                  ? 'white' 
-                  : 'var(--text-primary)',
-                border: '2px solid',
-                borderColor: dateFilter === filter 
-                  ? 'var(--primary)' 
-                  : 'var(--border)'
+                backgroundColor:
+                  dateFilter === filter ? "var(--primary)" : "var(--surface)",
+                color: dateFilter === filter ? "white" : "var(--text-primary)",
+                border: "2px solid",
+                borderColor:
+                  dateFilter === filter ? "var(--primary)" : "var(--border)",
               }}
             >
               {filter}
@@ -309,39 +339,63 @@ const ApprovedLoans = () => {
       </div>
 
       {/* Results Count */}
-      <p className="mb-4 text-sm" style={{ color: 'var(--text-secondary)' }}>
-        Showing {filteredApplications.length} of {applications.length} approved applications
+      <p className="mb-4 text-sm" style={{ color: "var(--text-secondary)" }}>
+        Showing {filteredApplications.length} of {applications.length} approved
+        applications
       </p>
 
       {/* Applications Table */}
-      <div className="rounded-xl overflow-hidden"
-           style={{
-             backgroundColor: 'var(--surface)',
-             border: '2px solid var(--border)'
-           }}>
+      <div
+        className="rounded-xl overflow-hidden"
+        style={{
+          backgroundColor: "var(--surface)",
+          border: "2px solid var(--border)",
+        }}
+      >
         <div className="overflow-x-auto">
           <table className="w-full">
-            <thead style={{ backgroundColor: 'var(--bg)' }}>
+            <thead style={{ backgroundColor: "var(--bg)" }}>
               <tr>
-                <th className="text-left p-4 font-bold" style={{ color: 'var(--text-primary)' }}>
+                <th
+                  className="text-left p-4 font-bold"
+                  style={{ color: "var(--text-primary)" }}
+                >
                   Loan ID
                 </th>
-                <th className="text-left p-4 font-bold" style={{ color: 'var(--text-primary)' }}>
+                <th
+                  className="text-left p-4 font-bold"
+                  style={{ color: "var(--text-primary)" }}
+                >
                   User Info
                 </th>
-                <th className="text-left p-4 font-bold" style={{ color: 'var(--text-primary)' }}>
+                <th
+                  className="text-left p-4 font-bold"
+                  style={{ color: "var(--text-primary)" }}
+                >
                   Loan Type
                 </th>
-                <th className="text-left p-4 font-bold" style={{ color: 'var(--text-primary)' }}>
+                <th
+                  className="text-left p-4 font-bold"
+                  style={{ color: "var(--text-primary)" }}
+                >
                   Amount
                 </th>
-                <th className="text-left p-4 font-bold" style={{ color: 'var(--text-primary)' }}>
+                <th
+                  className="text-left p-4 font-bold"
+                  style={{ color: "var(--text-primary)" }}
+                >
                   Approved Date
                 </th>
-                <th className="text-left p-4 font-bold" style={{ color: 'var(--text-primary)' }}>
+                <th
+                  className="text-left p-4 font-bold"
+                  style={{ color: "var(--text-primary)" }}
+                >
                   Approved By
                 </th>
-                <th className="text-center p-4 font-bold" style={{ color: 'var(--text-primary)' }}>
+                <th
+                  className="text-center p-4 font-bold"
+                  style={{ color: "var(--text-primary)" }}
+                >
                   Actions
                 </th>
               </tr>
@@ -350,12 +404,14 @@ const ApprovedLoans = () => {
               {filteredApplications.length === 0 ? (
                 <tr>
                   <td colSpan="7" className="text-center p-8">
-                    <CheckCircle className="w-12 h-12 mx-auto mb-4 opacity-30" 
-                                 style={{ color: 'var(--text-secondary)' }} />
-                    <p style={{ color: 'var(--text-secondary)' }}>
-                      {applications.length === 0 
-                        ? 'No approved applications yet' 
-                        : 'No applications match your filters'}
+                    <CheckCircle
+                      className="w-12 h-12 mx-auto mb-4 opacity-30"
+                      style={{ color: "var(--text-secondary)" }}
+                    />
+                    <p style={{ color: "var(--text-secondary)" }}>
+                      {applications.length === 0
+                        ? "No approved applications yet"
+                        : "No applications match your filters"}
                     </p>
                   </td>
                 </tr>
@@ -367,12 +423,14 @@ const ApprovedLoans = () => {
                     animate={{ opacity: 1 }}
                     transition={{ delay: index * 0.05 }}
                     className="border-t hover:bg-opacity-5"
-                    style={{ borderColor: 'var(--border)' }}
+                    style={{ borderColor: "var(--border)" }}
                   >
                     {/* Loan ID */}
                     <td className="p-4">
-                      <span className="font-mono text-sm font-semibold" 
-                            style={{ color: 'var(--text-primary)' }}>
+                      <span
+                        className="font-mono text-sm font-semibold"
+                        style={{ color: "var(--text-primary)" }}
+                      >
                         #{application._id.slice(-8).toUpperCase()}
                       </span>
                     </td>
@@ -381,15 +439,24 @@ const ApprovedLoans = () => {
                     <td className="p-4">
                       <div className="flex items-center gap-3">
                         <img
-                          src={application.userPhoto || 'https://via.placeholder.com/40'}
+                          src={
+                            application.userPhoto ||
+                            "https://via.placeholder.com/40"
+                          }
                           alt={application.firstName}
                           className="w-10 h-10 rounded-full object-cover"
                         />
                         <div>
-                          <p className="font-bold" style={{ color: 'var(--text-primary)' }}>
+                          <p
+                            className="font-bold"
+                            style={{ color: "var(--text-primary)" }}
+                          >
                             {application.firstName} {application.lastName}
                           </p>
-                          <p className="text-sm" style={{ color: 'var(--text-secondary)' }}>
+                          <p
+                            className="text-sm"
+                            style={{ color: "var(--text-secondary)" }}
+                          >
                             {application.userEmail}
                           </p>
                         </div>
@@ -398,19 +465,24 @@ const ApprovedLoans = () => {
 
                     {/* Loan Type */}
                     <td className="p-4">
-                      <span className="px-3 py-1 rounded-full text-sm font-semibold"
-                            style={{ 
-                              backgroundColor: 'var(--primary)', 
-                              opacity: 0.1,
-                              color: 'var(--primary)' 
-                            }}>
+                      <span
+                        className="px-3 py-1 rounded-full text-sm font-semibold"
+                        style={{
+                          backgroundColor: "var(--primary)",
+                          opacity: 0.1,
+                          color: "var(--primary)",
+                        }}
+                      >
                         {application.loanTitle}
                       </span>
                     </td>
 
                     {/* Amount */}
                     <td className="p-4">
-                      <span className="text-lg font-black" style={{ color: 'var(--success)' }}>
+                      <span
+                        className="text-lg font-black"
+                        style={{ color: "var(--success)" }}
+                      >
                         ${application.loanAmount?.toLocaleString()}
                       </span>
                     </td>
@@ -419,21 +491,37 @@ const ApprovedLoans = () => {
                     <td className="p-4">
                       <div>
                         <div className="flex items-center gap-2 mb-1">
-                          <Calendar className="w-4 h-4" style={{ color: 'var(--success)' }} />
-                          <span className="text-sm font-semibold" style={{ color: 'var(--text-primary)' }}>
-                            {new Date(application.approvedAt).toLocaleDateString()}
+                          <Calendar
+                            className="w-4 h-4"
+                            style={{ color: "var(--success)" }}
+                          />
+                          <span
+                            className="text-sm font-semibold"
+                            style={{ color: "var(--text-primary)" }}
+                          >
+                            {new Date(
+                              application.approvedAt
+                            ).toLocaleDateString()}
                           </span>
                         </div>
-                        <p className="text-xs" style={{ color: 'var(--text-secondary)' }}>
-                          {new Date(application.approvedAt).toLocaleTimeString()}
+                        <p
+                          className="text-xs"
+                          style={{ color: "var(--text-secondary)" }}
+                        >
+                          {new Date(
+                            application.approvedAt
+                          ).toLocaleTimeString()}
                         </p>
                       </div>
                     </td>
 
                     {/* Approved By */}
                     <td className="p-4">
-                      <span className="text-sm font-semibold" style={{ color: 'var(--text-primary)' }}>
-                        {application.approvedBy || 'Admin'}
+                      <span
+                        className="text-sm font-semibold"
+                        style={{ color: "var(--text-primary)" }}
+                      >
+                        {application.approvedBy || "Admin"}
                       </span>
                     </td>
 
@@ -445,10 +533,16 @@ const ApprovedLoans = () => {
                           whileTap={{ scale: 0.9 }}
                           onClick={() => handleViewDetails(application)}
                           className="p-2 rounded-lg"
-                          style={{ backgroundColor: 'var(--primary)', opacity: 0.1 }}
+                          style={{
+                            backgroundColor: "var(--primary)",
+                            opacity: 0.1,
+                          }}
                           title="View Details"
                         >
-                          <Eye className="w-4 h-4" style={{ color: 'var(--primary)' }} />
+                          <Eye
+                            className="w-4 h-4"
+                            style={{ color: "var(--primary)" }}
+                          />
                         </motion.button>
                       </div>
                     </td>
@@ -476,76 +570,143 @@ const ApprovedLoans = () => {
               onClick={(e) => e.stopPropagation()}
               className="w-full max-w-3xl p-8 rounded-2xl my-8"
               style={{
-                backgroundColor: 'var(--surface)',
-                border: '2px solid var(--border)'
+                backgroundColor: "var(--surface)",
+                border: "2px solid var(--border)",
               }}
             >
               {/* Header */}
               <div className="flex items-center justify-between mb-6">
                 <div className="flex items-center gap-3">
-                  <div className="w-12 h-12 rounded-full flex items-center justify-center"
-                       style={{ backgroundColor: 'var(--success)', opacity: 0.1 }}>
-                    <CheckCircle className="w-6 h-6" style={{ color: 'var(--success)' }} />
+                  <div
+                    className="w-12 h-12 rounded-full flex items-center justify-center"
+                    style={{ backgroundColor: "var(--success)", opacity: 0.1 }}
+                  >
+                    <CheckCircle
+                      className="w-6 h-6"
+                      style={{ color: "var(--success)" }}
+                    />
                   </div>
                   <div>
-                    <h3 className="text-2xl font-black" style={{ color: 'var(--text-primary)' }}>
+                    <h3
+                      className="text-2xl font-black"
+                      style={{ color: "var(--text-primary)" }}
+                    >
                       Approved Application
                     </h3>
-                    <p className="text-sm" style={{ color: 'var(--text-secondary)' }}>
-                      Approved on {new Date(selectedApplication.approvedAt).toLocaleDateString()}
+                    <p
+                      className="text-sm"
+                      style={{ color: "var(--text-secondary)" }}
+                    >
+                      Approved on{" "}
+                      {new Date(
+                        selectedApplication.approvedAt
+                      ).toLocaleDateString()}
                     </p>
                   </div>
                 </div>
                 <button
                   onClick={() => setShowModal(false)}
                   className="w-8 h-8 rounded-lg flex items-center justify-center"
-                  style={{ backgroundColor: 'var(--bg)' }}
+                  style={{ backgroundColor: "var(--bg)" }}
                 >
-                  <X className="w-5 h-5" style={{ color: 'var(--text-primary)' }} />
+                  <X
+                    className="w-5 h-5"
+                    style={{ color: "var(--text-primary)" }}
+                  />
                 </button>
               </div>
 
               {/* Content */}
               <div className="space-y-6">
-                
                 {/* Applicant Info */}
-                <div className="p-6 rounded-xl" style={{ backgroundColor: 'var(--bg)' }}>
-                  <h4 className="text-lg font-bold mb-4" style={{ color: 'var(--text-primary)' }}>
+                <div
+                  className="p-6 rounded-xl"
+                  style={{ backgroundColor: "var(--bg)" }}
+                >
+                  <h4
+                    className="text-lg font-bold mb-4"
+                    style={{ color: "var(--text-primary)" }}
+                  >
                     Applicant Information
                   </h4>
                   <div className="grid md:grid-cols-2 gap-4">
                     <div className="flex items-center gap-3">
-                      <User className="w-5 h-5" style={{ color: 'var(--primary)' }} />
+                      <User
+                        className="w-5 h-5"
+                        style={{ color: "var(--primary)" }}
+                      />
                       <div>
-                        <p className="text-sm" style={{ color: 'var(--text-secondary)' }}>Full Name</p>
-                        <p className="font-semibold" style={{ color: 'var(--text-primary)' }}>
-                          {selectedApplication.firstName} {selectedApplication.lastName}
+                        <p
+                          className="text-sm"
+                          style={{ color: "var(--text-secondary)" }}
+                        >
+                          Full Name
+                        </p>
+                        <p
+                          className="font-semibold"
+                          style={{ color: "var(--text-primary)" }}
+                        >
+                          {selectedApplication.firstName}{" "}
+                          {selectedApplication.lastName}
                         </p>
                       </div>
                     </div>
                     <div className="flex items-center gap-3">
-                      <Mail className="w-5 h-5" style={{ color: 'var(--primary)' }} />
+                      <Mail
+                        className="w-5 h-5"
+                        style={{ color: "var(--primary)" }}
+                      />
                       <div>
-                        <p className="text-sm" style={{ color: 'var(--text-secondary)' }}>Email</p>
-                        <p className="font-semibold" style={{ color: 'var(--text-primary)' }}>
+                        <p
+                          className="text-sm"
+                          style={{ color: "var(--text-secondary)" }}
+                        >
+                          Email
+                        </p>
+                        <p
+                          className="font-semibold"
+                          style={{ color: "var(--text-primary)" }}
+                        >
                           {selectedApplication.userEmail}
                         </p>
                       </div>
                     </div>
                     <div className="flex items-center gap-3">
-                      <Phone className="w-5 h-5" style={{ color: 'var(--primary)' }} />
+                      <Phone
+                        className="w-5 h-5"
+                        style={{ color: "var(--primary)" }}
+                      />
                       <div>
-                        <p className="text-sm" style={{ color: 'var(--text-secondary)' }}>Contact</p>
-                        <p className="font-semibold" style={{ color: 'var(--text-primary)' }}>
+                        <p
+                          className="text-sm"
+                          style={{ color: "var(--text-secondary)" }}
+                        >
+                          Contact
+                        </p>
+                        <p
+                          className="font-semibold"
+                          style={{ color: "var(--text-primary)" }}
+                        >
                           {selectedApplication.contactNumber}
                         </p>
                       </div>
                     </div>
                     <div className="flex items-center gap-3">
-                      <FileText className="w-5 h-5" style={{ color: 'var(--primary)' }} />
+                      <FileText
+                        className="w-5 h-5"
+                        style={{ color: "var(--primary)" }}
+                      />
                       <div>
-                        <p className="text-sm" style={{ color: 'var(--text-secondary)' }}>National ID</p>
-                        <p className="font-semibold" style={{ color: 'var(--text-primary)' }}>
+                        <p
+                          className="text-sm"
+                          style={{ color: "var(--text-secondary)" }}
+                        >
+                          National ID
+                        </p>
+                        <p
+                          className="font-semibold"
+                          style={{ color: "var(--text-primary)" }}
+                        >
                           {selectedApplication.nationalId}
                         </p>
                       </div>
@@ -554,32 +715,70 @@ const ApprovedLoans = () => {
                 </div>
 
                 {/* Loan Details */}
-                <div className="p-6 rounded-xl" style={{ backgroundColor: 'var(--bg)' }}>
-                  <h4 className="text-lg font-bold mb-4" style={{ color: 'var(--text-primary)' }}>
+                <div
+                  className="p-6 rounded-xl"
+                  style={{ backgroundColor: "var(--bg)" }}
+                >
+                  <h4
+                    className="text-lg font-bold mb-4"
+                    style={{ color: "var(--text-primary)" }}
+                  >
                     Loan Information
                   </h4>
                   <div className="grid md:grid-cols-2 gap-4">
                     <div>
-                      <p className="text-sm mb-1" style={{ color: 'var(--text-secondary)' }}>Loan Type</p>
-                      <p className="font-bold text-lg" style={{ color: 'var(--primary)' }}>
+                      <p
+                        className="text-sm mb-1"
+                        style={{ color: "var(--text-secondary)" }}
+                      >
+                        Loan Type
+                      </p>
+                      <p
+                        className="font-bold text-lg"
+                        style={{ color: "var(--primary)" }}
+                      >
                         {selectedApplication.loanTitle}
                       </p>
                     </div>
                     <div>
-                      <p className="text-sm mb-1" style={{ color: 'var(--text-secondary)' }}>Approved Amount</p>
-                      <p className="font-black text-2xl" style={{ color: 'var(--success)' }}>
+                      <p
+                        className="text-sm mb-1"
+                        style={{ color: "var(--text-secondary)" }}
+                      >
+                        Approved Amount
+                      </p>
+                      <p
+                        className="font-black text-2xl"
+                        style={{ color: "var(--success)" }}
+                      >
                         ${selectedApplication.loanAmount?.toLocaleString()}
                       </p>
                     </div>
                     <div>
-                      <p className="text-sm mb-1" style={{ color: 'var(--text-secondary)' }}>Interest Rate</p>
-                      <p className="font-semibold" style={{ color: 'var(--text-primary)' }}>
+                      <p
+                        className="text-sm mb-1"
+                        style={{ color: "var(--text-secondary)" }}
+                      >
+                        Interest Rate
+                      </p>
+                      <p
+                        className="font-semibold"
+                        style={{ color: "var(--text-primary)" }}
+                      >
                         {selectedApplication.interestRate}
                       </p>
                     </div>
                     <div>
-                      <p className="text-sm mb-1" style={{ color: 'var(--text-secondary)' }}>Purpose</p>
-                      <p className="font-semibold" style={{ color: 'var(--text-primary)' }}>
+                      <p
+                        className="text-sm mb-1"
+                        style={{ color: "var(--text-secondary)" }}
+                      >
+                        Purpose
+                      </p>
+                      <p
+                        className="font-semibold"
+                        style={{ color: "var(--text-primary)" }}
+                      >
                         {selectedApplication.reasonForLoan}
                       </p>
                     </div>
@@ -587,25 +786,53 @@ const ApprovedLoans = () => {
                 </div>
 
                 {/* Financial Info */}
-                <div className="p-6 rounded-xl" style={{ backgroundColor: 'var(--bg)' }}>
-                  <h4 className="text-lg font-bold mb-4" style={{ color: 'var(--text-primary)' }}>
+                <div
+                  className="p-6 rounded-xl"
+                  style={{ backgroundColor: "var(--bg)" }}
+                >
+                  <h4
+                    className="text-lg font-bold mb-4"
+                    style={{ color: "var(--text-primary)" }}
+                  >
                     Financial Information
                   </h4>
                   <div className="grid md:grid-cols-2 gap-4">
                     <div className="flex items-center gap-3">
-                      <Briefcase className="w-5 h-5" style={{ color: 'var(--success)' }} />
+                      <Briefcase
+                        className="w-5 h-5"
+                        style={{ color: "var(--success)" }}
+                      />
                       <div>
-                        <p className="text-sm" style={{ color: 'var(--text-secondary)' }}>Income Source</p>
-                        <p className="font-semibold" style={{ color: 'var(--text-primary)' }}>
+                        <p
+                          className="text-sm"
+                          style={{ color: "var(--text-secondary)" }}
+                        >
+                          Income Source
+                        </p>
+                        <p
+                          className="font-semibold"
+                          style={{ color: "var(--text-primary)" }}
+                        >
                           {selectedApplication.incomeSource}
                         </p>
                       </div>
                     </div>
                     <div className="flex items-center gap-3">
-                      <DollarSign className="w-5 h-5" style={{ color: 'var(--success)' }} />
+                      <DollarSign
+                        className="w-5 h-5"
+                        style={{ color: "var(--success)" }}
+                      />
                       <div>
-                        <p className="text-sm" style={{ color: 'var(--text-secondary)' }}>Monthly Income</p>
-                        <p className="font-semibold" style={{ color: 'var(--text-primary)' }}>
+                        <p
+                          className="text-sm"
+                          style={{ color: "var(--text-secondary)" }}
+                        >
+                          Monthly Income
+                        </p>
+                        <p
+                          className="font-semibold"
+                          style={{ color: "var(--text-primary)" }}
+                        >
                           ${selectedApplication.monthlyIncome?.toLocaleString()}
                         </p>
                       </div>
@@ -614,30 +841,59 @@ const ApprovedLoans = () => {
                 </div>
 
                 {/* Timeline */}
-                <div className="p-6 rounded-xl" style={{ backgroundColor: 'var(--bg)' }}>
-                  <h4 className="text-lg font-bold mb-4" style={{ color: 'var(--text-primary)' }}>
+                <div
+                  className="p-6 rounded-xl"
+                  style={{ backgroundColor: "var(--bg)" }}
+                >
+                  <h4
+                    className="text-lg font-bold mb-4"
+                    style={{ color: "var(--text-primary)" }}
+                  >
                     Application Timeline
                   </h4>
                   <div className="space-y-3">
                     <div className="flex items-center gap-3">
-                      <div className="w-2 h-2 rounded-full" style={{ backgroundColor: 'var(--primary)' }} />
+                      <div
+                        className="w-2 h-2 rounded-full"
+                        style={{ backgroundColor: "var(--primary)" }}
+                      />
                       <div className="flex-1">
-                        <p className="text-sm font-semibold" style={{ color: 'var(--text-primary)' }}>
+                        <p
+                          className="text-sm font-semibold"
+                          style={{ color: "var(--text-primary)" }}
+                        >
                           Applied
                         </p>
-                        <p className="text-xs" style={{ color: 'var(--text-secondary)' }}>
-                          {new Date(selectedApplication.appliedAt).toLocaleString()}
+                        <p
+                          className="text-xs"
+                          style={{ color: "var(--text-secondary)" }}
+                        >
+                          {new Date(
+                            selectedApplication.appliedAt
+                          ).toLocaleString()}
                         </p>
                       </div>
                     </div>
                     <div className="flex items-center gap-3">
-                      <div className="w-2 h-2 rounded-full" style={{ backgroundColor: 'var(--success)' }} />
+                      <div
+                        className="w-2 h-2 rounded-full"
+                        style={{ backgroundColor: "var(--success)" }}
+                      />
                       <div className="flex-1">
-                        <p className="text-sm font-semibold" style={{ color: 'var(--text-primary)' }}>
-                          Approved by {selectedApplication.approvedBy || 'Admin'}
+                        <p
+                          className="text-sm font-semibold"
+                          style={{ color: "var(--text-primary)" }}
+                        >
+                          Approved by{" "}
+                          {selectedApplication.approvedBy || "Admin"}
                         </p>
-                        <p className="text-xs" style={{ color: 'var(--text-secondary)' }}>
-                          {new Date(selectedApplication.approvedAt).toLocaleString()}
+                        <p
+                          className="text-xs"
+                          style={{ color: "var(--text-secondary)" }}
+                        >
+                          {new Date(
+                            selectedApplication.approvedAt
+                          ).toLocaleString()}
                         </p>
                       </div>
                     </div>
@@ -649,8 +905,8 @@ const ApprovedLoans = () => {
                   onClick={() => setShowModal(false)}
                   className="w-full py-3 rounded-xl font-bold"
                   style={{
-                    backgroundColor: 'var(--bg)',
-                    color: 'var(--text-primary)'
+                    backgroundColor: "var(--bg)",
+                    color: "var(--text-primary)",
                   }}
                 >
                   Close

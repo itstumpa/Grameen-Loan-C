@@ -1,16 +1,15 @@
 // HowItWorks.jsx
-import React from 'react';
-import { motion } from 'framer-motion';
-import { 
-  FileText, 
-  Search, 
-  CheckCircle, 
-  Wallet, 
+import { motion } from "framer-motion";
+import {
   ArrowRight,
+  CheckCircle,
   Clock,
+  FileText,
+  Search,
   Shield,
-  TrendingUp
-} from 'lucide-react';
+  TrendingUp,
+  Wallet,
+} from "lucide-react";
 
 const HowItWorks = () => {
   const containerVariants = {
@@ -19,9 +18,9 @@ const HowItWorks = () => {
       opacity: 1,
       transition: {
         staggerChildren: 0.2,
-        delayChildren: 0.3
-      }
-    }
+        delayChildren: 0.3,
+      },
+    },
   };
 
   const itemVariants = {
@@ -31,9 +30,9 @@ const HowItWorks = () => {
       y: 0,
       transition: {
         duration: 0.6,
-        ease: "easeOut"
-      }
-    }
+        ease: "easeOut",
+      },
+    },
   };
 
   const cardHoverVariants = {
@@ -41,9 +40,9 @@ const HowItWorks = () => {
       y: -10,
       transition: {
         duration: 0.3,
-        ease: "easeInOut"
-      }
-    }
+        ease: "easeInOut",
+      },
+    },
   };
 
   const steps = [
@@ -51,60 +50,67 @@ const HowItWorks = () => {
       number: "01",
       icon: FileText,
       title: "Submit Application",
-      description: "Fill out our simple online form with your personal and financial details. Takes less than 5 minutes.",
+      description:
+        "Fill out our simple online form with your personal and financial details. Takes less than 5 minutes.",
       color: "var(--primary)",
       bgColor: "rgba(30, 58, 138, 0.1)",
-      features: ["Quick form", "Secure data", "No paperwork"]
+      features: ["Quick form", "Secure data", "No paperwork"],
     },
     {
       number: "02",
       icon: Search,
       title: "Verification & Review",
-      description: "Our team reviews your application and verifies your information to ensure accuracy and security.",
+      description:
+        "Our team reviews your application and verifies your information to ensure accuracy and security.",
       color: "var(--secondary)",
       bgColor: "rgba(14, 165, 233, 0.1)",
-      features: ["Fast review", "Credit check", "Document verify"]
+      features: ["Fast review", "Credit check", "Document verify"],
     },
     {
       number: "03",
       icon: CheckCircle,
       title: "Get Approved",
-      description: "Receive instant approval notification with your loan amount, interest rate, and repayment schedule.",
+      description:
+        "Receive instant approval notification with your loan amount, interest rate, and repayment schedule.",
       color: "var(--success)",
       bgColor: "rgba(5, 150, 105, 0.1)",
-      features: ["Instant decision", "Clear terms", "No hidden fees"]
+      features: ["Instant decision", "Clear terms", "No hidden fees"],
     },
     {
       number: "04",
       icon: Wallet,
       title: "Receive Funds",
-      description: "Once approved, funds are transferred directly to your bank account within 24 hours.",
+      description:
+        "Once approved, funds are transferred directly to your bank account within 24 hours.",
       color: "var(--accent)",
       bgColor: "rgba(245, 158, 11, 0.1)",
-      features: ["Quick transfer", "Direct deposit", "Track payment"]
-    }
+      features: ["Quick transfer", "Direct deposit", "Track payment"],
+    },
   ];
 
   const benefits = [
     {
       icon: Clock,
       title: "Fast Processing",
-      description: "Get approved in minutes, not days"
+      description: "Get approved in minutes, not days",
     },
     {
       icon: Shield,
       title: "Secure & Safe",
-      description: "Bank-level encryption for your data"
+      description: "Bank-level encryption for your data",
     },
     {
       icon: TrendingUp,
       title: "Flexible Terms",
-      description: "Customize repayment to fit your needs"
-    }
+      description: "Customize repayment to fit your needs",
+    },
   ];
 
   return (
-    <section className="py-14 px-4 md:px-8" style={{ backgroundColor: 'var(--bg)' }}>
+    <section
+      className="py-14 px-4 md:px-8"
+      style={{ backgroundColor: "var(--bg)" }}
+    >
       <div className="max-w-7xl mx-auto">
         {/* Section Header */}
         <motion.div
@@ -120,18 +126,28 @@ const HowItWorks = () => {
             viewport={{ once: true }}
             transition={{ duration: 0.5, type: "spring" }}
             className="inline-flex items-center gap-2 px-4 py-2 rounded-full mb-6"
-            style={{ backgroundColor: 'var(--primary)', opacity: 0.1 }}
+            style={{ backgroundColor: "var(--primary)", opacity: 0.1 }}
           >
-            <span className="text-sm font-semibold" style={{ color: 'var(--primary)' }}>
+            <span
+              className="text-sm font-semibold"
+              style={{ color: "var(--primary)" }}
+            >
               Simple Process
             </span>
           </motion.div>
-          
-          <h2 className="text-3xl md:text-5xl font-black mb-4" style={{ color: 'var(--text-primary)' }}>
+
+          <h2
+            className="text-3xl md:text-5xl font-black mb-4"
+            style={{ color: "var(--text-primary)" }}
+          >
             How It Works
           </h2>
-          <p className="text-lg max-w-2xl mx-auto" style={{ color: 'var(--text-secondary)' }}>
-            Get your microloan in 4 easy steps. Fast, transparent, and hassle-free process designed for your convenience.
+          <p
+            className="text-lg max-w-2xl mx-auto"
+            style={{ color: "var(--text-secondary)" }}
+          >
+            Get your microloan in 4 easy steps. Fast, transparent, and
+            hassle-free process designed for your convenience.
           </p>
         </motion.div>
 
@@ -153,13 +169,13 @@ const HowItWorks = () => {
               <motion.div
                 variants={cardHoverVariants}
                 className="h-full p-6 rounded-2xl shadow-lg relative overflow-hidden"
-                style={{ 
-                  backgroundColor: 'var(--surface)',
-                  border: '1px solid var(--border)'
+                style={{
+                  backgroundColor: "var(--surface)",
+                  border: "1px solid var(--border)",
                 }}
               >
                 {/* Background Number */}
-                <div 
+                <div
                   className="absolute top-0 right-0 text-8xl font-black opacity-5 leading-none"
                   style={{ color: step.color }}
                 >
@@ -173,16 +189,19 @@ const HowItWorks = () => {
                   className="w-16 h-16 rounded-xl flex items-center justify-center mb-6 relative z-10"
                   style={{ backgroundColor: step.bgColor }}
                 >
-                  <step.icon className="w-8 h-8" style={{ color: step.color }} />
+                  <step.icon
+                    className="w-8 h-8"
+                    style={{ color: step.color }}
+                  />
                 </motion.div>
 
                 {/* Step Number */}
                 <div className="flex items-center gap-3 mb-3">
-                  <span 
+                  <span
                     className="text-sm font-bold px-3 py-1 rounded-full"
-                    style={{ 
+                    style={{
                       backgroundColor: step.bgColor,
-                      color: step.color
+                      color: step.color,
                     }}
                   >
                     Step {step.number}
@@ -190,12 +209,18 @@ const HowItWorks = () => {
                 </div>
 
                 {/* Title */}
-                <h3 className="text-xl font-bold mb-3" style={{ color: 'var(--text-primary)' }}>
+                <h3
+                  className="text-xl font-bold mb-3"
+                  style={{ color: "var(--text-primary)" }}
+                >
                   {step.title}
                 </h3>
 
                 {/* Description */}
-                <p className="mb-4 text-sm leading-relaxed" style={{ color: 'var(--text-secondary)' }}>
+                <p
+                  className="mb-4 text-sm leading-relaxed"
+                  style={{ color: "var(--text-secondary)" }}
+                >
                   {step.description}
                 </p>
 
@@ -205,10 +230,10 @@ const HowItWorks = () => {
                     <span
                       key={idx}
                       className="text-xs px-2 py-1 rounded-md"
-                      style={{ 
-                        backgroundColor: 'var(--bg)',
-                        color: 'var(--text-secondary)',
-                        border: '1px solid var(--border)'
+                      style={{
+                        backgroundColor: "var(--bg)",
+                        color: "var(--text-secondary)",
+                        border: "1px solid var(--border)",
                       }}
                     >
                       {feature}
@@ -225,7 +250,10 @@ const HowItWorks = () => {
                     transition={{ delay: 0.5 + index * 0.2 }}
                     className="hidden lg:block absolute top-1/2 -right-4 transform -translate-y-1/2 z-20"
                   >
-                    <ArrowRight className="w-8 h-8" style={{ color: step.color }} />
+                    <ArrowRight
+                      className="w-8 h-8"
+                      style={{ color: step.color }}
+                    />
                   </motion.div>
                 )}
               </motion.div>
@@ -240,9 +268,9 @@ const HowItWorks = () => {
           viewport={{ once: true }}
           transition={{ duration: 0.6 }}
           className="grid grid-cols-1 md:grid-cols-3 gap-6 p-8 rounded-2xl"
-          style={{ 
-            backgroundColor: 'var(--surface)',
-            border: '2px solid var(--border)'
+          style={{
+            backgroundColor: "var(--surface)",
+            border: "2px solid var(--border)",
           }}
         >
           {benefits.map((benefit, index) => (
@@ -255,17 +283,26 @@ const HowItWorks = () => {
               whileHover={{ scale: 1.05 }}
               className="flex items-start gap-4"
             >
-              <div 
+              <div
                 className="w-12 h-12 rounded-lg flex items-center justify-center flex-shrink-0"
-                style={{ backgroundColor: 'var(--primary)', opacity: 0.1 }}
+                style={{ backgroundColor: "var(--primary)", opacity: 0.1 }}
               >
-                <benefit.icon className="w-6 h-6" style={{ color: 'var(--primary)' }} />
+                <benefit.icon
+                  className="w-6 h-6"
+                  style={{ color: "var(--primary)" }}
+                />
               </div>
               <div>
-                <h4 className="font-bold mb-1" style={{ color: 'var(--text-primary)' }}>
+                <h4
+                  className="font-bold mb-1"
+                  style={{ color: "var(--text-primary)" }}
+                >
                   {benefit.title}
                 </h4>
-                <p className="text-sm" style={{ color: 'var(--text-secondary)' }}>
+                <p
+                  className="text-sm"
+                  style={{ color: "var(--text-secondary)" }}
+                >
                   {benefit.description}
                 </p>
               </div>

@@ -1,7 +1,6 @@
 // CTASection.jsx
-import React from 'react';
-import { motion } from 'framer-motion';
-import { DollarSign, TrendingUp, Zap, ArrowRight, CheckCircle, Clock } from 'lucide-react';
+import { motion } from "framer-motion";
+import { ArrowRight, CheckCircle, Clock, TrendingUp, Zap } from "lucide-react";
 
 const CTASection = () => {
   return (
@@ -14,7 +13,8 @@ const CTASection = () => {
           transition={{ duration: 0.6 }}
           className="relative rounded-3xl overflow-hidden"
           style={{
-            background: 'linear-gradient(135deg, var(--primary) 0%, #1E40AF 50%, var(--secondary) 100%)'
+            background:
+              "linear-gradient(135deg, var(--primary) 0%, #1E40AF 50%, var(--secondary) 100%)",
           }}
         >
           {/* Decorative wave pattern */}
@@ -78,25 +78,25 @@ const CTASection = () => {
             className="absolute top-10 left-10 w-32 h-32 bg-white rounded-full opacity-5"
             animate={{
               y: [0, -20, 0],
-              scale: [1, 1.1, 1]
+              scale: [1, 1.1, 1],
             }}
             transition={{
               duration: 4,
               repeat: Infinity,
-              ease: "easeInOut"
+              ease: "easeInOut",
             }}
           />
           <motion.div
             className="absolute bottom-20 left-1/4 w-24 h-24 bg-white rounded-full opacity-5"
             animate={{
               y: [0, 20, 0],
-              scale: [1, 1.2, 1]
+              scale: [1, 1.2, 1],
             }}
             transition={{
               duration: 5,
               repeat: Infinity,
               ease: "easeInOut",
-              delay: 1
+              delay: 1,
             }}
           />
 
@@ -116,7 +116,8 @@ const CTASection = () => {
                 transition={{ duration: 0.6, delay: 0.3 }}
                 className="text-3xl lg:text-4xl font-black text-white mb-4 leading-tight"
               >
-                Quick Loans, Happy Lives<br />
+                Quick Loans, Happy Lives
+                <br />
                 Your Financial Growth Partner
               </motion.h2>
 
@@ -127,7 +128,9 @@ const CTASection = () => {
                 transition={{ duration: 0.6, delay: 0.4 }}
                 className="text-blue-100 text-base mb-6 leading-relaxed"
               >
-                We offer the lowest interest rates with the highest approval chances along with 100% transparency. LoanLink delivers financial support to every corner of your dreams, right on time.
+                We offer the lowest interest rates with the highest approval
+                chances along with 100% transparency. GrameenLoan delivers
+                financial support to every corner of your dreams, right on time.
               </motion.p>
 
               {/* Quick Stats */}
@@ -141,7 +144,7 @@ const CTASection = () => {
                 {[
                   { icon: Clock, text: "2-Hour Approval" },
                   { icon: CheckCircle, text: "98% Success Rate" },
-                  { icon: TrendingUp, text: "Flexible EMI" }
+                  { icon: TrendingUp, text: "Flexible EMI" },
                 ].map((item, index) => (
                   <motion.div
                     key={index}
@@ -149,7 +152,9 @@ const CTASection = () => {
                     className="flex items-center gap-2 bg-white/10 backdrop-blur-sm px-4 py-2 rounded-full border border-white/20"
                   >
                     <item.icon className="w-4 h-4 text-blue-200" />
-                    <span className="text-sm text-white font-semibold">{item.text}</span>
+                    <span className="text-sm text-white font-semibold">
+                      {item.text}
+                    </span>
                   </motion.div>
                 ))}
               </motion.div>
@@ -163,7 +168,10 @@ const CTASection = () => {
                 className="flex flex-wrap gap-4"
               >
                 <motion.button
-                  whileHover={{ scale: 1.05, boxShadow: "0 20px 40px rgba(0,0,0,0.3)" }}
+                  whileHover={{
+                    scale: 1.05,
+                    boxShadow: "0 20px 40px rgba(0,0,0,0.3)",
+                  }}
                   whileTap={{ scale: 0.95 }}
                   className="group px-8 py-4 bg-white text-blue-900 font-bold rounded-full transition-all duration-300 flex items-center gap-2"
                 >
@@ -172,7 +180,10 @@ const CTASection = () => {
                 </motion.button>
 
                 <motion.button
-                  whileHover={{ scale: 1.05, backgroundColor: "rgba(255,255,255,0.2)" }}
+                  whileHover={{
+                    scale: 1.05,
+                    backgroundColor: "rgba(255,255,255,0.2)",
+                  }}
                   whileTap={{ scale: 0.95 }}
                   className="px-8 py-4 bg-transparent text-white font-bold rounded-full border-2 border-white/50 hover:border-white transition-all duration-300 flex items-center gap-2"
                 >
@@ -194,88 +205,211 @@ const CTASection = () => {
                 {/* Background Money Stack */}
                 <motion.g
                   animate={{
-                    y: [0, -10, 0]
+                    y: [0, -10, 0],
                   }}
                   transition={{
                     duration: 3,
                     repeat: Infinity,
                     ease: "easeInOut",
-                    delay: 0.2
+                    delay: 0.2,
                   }}
                 >
-                  <rect x="40" y="120" width="100" height="60" rx="6" fill="none" stroke="#93c5fd" strokeWidth="3"/>
-                  <circle cx="90" cy="150" r="15" fill="none" stroke="#93c5fd" strokeWidth="3"/>
-                  <text x="90" y="155" fontSize="20" fill="#93c5fd" textAnchor="middle" fontWeight="bold">$</text>
+                  <rect
+                    x="40"
+                    y="120"
+                    width="100"
+                    height="60"
+                    rx="6"
+                    fill="none"
+                    stroke="#93c5fd"
+                    strokeWidth="3"
+                  />
+                  <circle
+                    cx="90"
+                    cy="150"
+                    r="15"
+                    fill="none"
+                    stroke="#93c5fd"
+                    strokeWidth="3"
+                  />
+                  <text
+                    x="90"
+                    y="155"
+                    fontSize="20"
+                    fill="#93c5fd"
+                    textAnchor="middle"
+                    fontWeight="bold"
+                  >
+                    $
+                  </text>
                 </motion.g>
 
                 {/* Front Money Stack with Dollar Sign */}
                 <motion.g
                   animate={{
-                    y: [0, -15, 0]
+                    y: [0, -15, 0],
                   }}
                   transition={{
                     duration: 3,
                     repeat: Infinity,
-                    ease: "easeInOut"
+                    ease: "easeInOut",
                   }}
                 >
-                  <rect x="100" y="140" width="120" height="80" rx="8" fill="none" stroke="#60a5fa" strokeWidth="4"/>
-                  <circle cx="160" cy="180" r="25" fill="none" stroke="#60a5fa" strokeWidth="4"/>
-                  <text x="160" y="190" fontSize="30" fill="#60a5fa" textAnchor="middle" fontWeight="bold">$</text>
-                  
+                  <rect
+                    x="100"
+                    y="140"
+                    width="120"
+                    height="80"
+                    rx="8"
+                    fill="none"
+                    stroke="#60a5fa"
+                    strokeWidth="4"
+                  />
+                  <circle
+                    cx="160"
+                    cy="180"
+                    r="25"
+                    fill="none"
+                    stroke="#60a5fa"
+                    strokeWidth="4"
+                  />
+                  <text
+                    x="160"
+                    y="190"
+                    fontSize="30"
+                    fill="#60a5fa"
+                    textAnchor="middle"
+                    fontWeight="bold"
+                  >
+                    $
+                  </text>
+
                   {/* Money details */}
-                  <line x1="110" y1="155" x2="150" y2="155" stroke="#60a5fa" strokeWidth="2"/>
-                  <line x1="170" y1="155" x2="210" y2="155" stroke="#60a5fa" strokeWidth="2"/>
-                  <line x1="110" y1="205" x2="150" y2="205" stroke="#60a5fa" strokeWidth="2"/>
-                  <line x1="170" y1="205" x2="210" y2="205" stroke="#60a5fa" strokeWidth="2"/>
+                  <line
+                    x1="110"
+                    y1="155"
+                    x2="150"
+                    y2="155"
+                    stroke="#60a5fa"
+                    strokeWidth="2"
+                  />
+                  <line
+                    x1="170"
+                    y1="155"
+                    x2="210"
+                    y2="155"
+                    stroke="#60a5fa"
+                    strokeWidth="2"
+                  />
+                  <line
+                    x1="110"
+                    y1="205"
+                    x2="150"
+                    y2="205"
+                    stroke="#60a5fa"
+                    strokeWidth="2"
+                  />
+                  <line
+                    x1="170"
+                    y1="205"
+                    x2="210"
+                    y2="205"
+                    stroke="#60a5fa"
+                    strokeWidth="2"
+                  />
                 </motion.g>
 
                 {/* Flying Dollar Coins */}
                 <motion.g
                   animate={{
                     y: [0, -30, -60],
-                    opacity: [1, 1, 0]
-                  }}
-                  transition={{
-                    duration: 2,
-                    repeat: Infinity,
-                    ease: "easeOut"
-                  }}
-                >
-                  <circle cx="180" cy="100" r="12" fill="#fbbf24" opacity="0.8"/>
-                  <text x="180" y="105" fontSize="12" fill="#78350f" textAnchor="middle" fontWeight="bold">$</text>
-                </motion.g>
-
-                <motion.g
-                  animate={{
-                    y: [0, -30, -60],
-                    opacity: [1, 1, 0]
+                    opacity: [1, 1, 0],
                   }}
                   transition={{
                     duration: 2,
                     repeat: Infinity,
                     ease: "easeOut",
-                    delay: 0.5
                   }}
                 >
-                  <circle cx="140" cy="110" r="10" fill="#fbbf24" opacity="0.8"/>
-                  <text x="140" y="114" fontSize="10" fill="#78350f" textAnchor="middle" fontWeight="bold">$</text>
+                  <circle
+                    cx="180"
+                    cy="100"
+                    r="12"
+                    fill="#fbbf24"
+                    opacity="0.8"
+                  />
+                  <text
+                    x="180"
+                    y="105"
+                    fontSize="12"
+                    fill="#78350f"
+                    textAnchor="middle"
+                    fontWeight="bold"
+                  >
+                    $
+                  </text>
                 </motion.g>
 
                 <motion.g
                   animate={{
                     y: [0, -30, -60],
-                    opacity: [1, 1, 0]
+                    opacity: [1, 1, 0],
                   }}
                   transition={{
                     duration: 2,
                     repeat: Infinity,
                     ease: "easeOut",
-                    delay: 1
+                    delay: 0.5,
                   }}
                 >
-                  <circle cx="200" cy="110" r="10" fill="#fbbf24" opacity="0.8"/>
-                  <text x="200" y="114" fontSize="10" fill="#78350f" textAnchor="middle" fontWeight="bold">$</text>
+                  <circle
+                    cx="140"
+                    cy="110"
+                    r="10"
+                    fill="#fbbf24"
+                    opacity="0.8"
+                  />
+                  <text
+                    x="140"
+                    y="114"
+                    fontSize="10"
+                    fill="#78350f"
+                    textAnchor="middle"
+                    fontWeight="bold"
+                  >
+                    $
+                  </text>
+                </motion.g>
+
+                <motion.g
+                  animate={{
+                    y: [0, -30, -60],
+                    opacity: [1, 1, 0],
+                  }}
+                  transition={{
+                    duration: 2,
+                    repeat: Infinity,
+                    ease: "easeOut",
+                    delay: 1,
+                  }}
+                >
+                  <circle
+                    cx="200"
+                    cy="110"
+                    r="10"
+                    fill="#fbbf24"
+                    opacity="0.8"
+                  />
+                  <text
+                    x="200"
+                    y="114"
+                    fontSize="10"
+                    fill="#78350f"
+                    textAnchor="middle"
+                    fontWeight="bold"
+                  >
+                    $
+                  </text>
                 </motion.g>
 
                 {/* Growth Arrow */}
@@ -285,7 +419,7 @@ const CTASection = () => {
                   transition={{
                     duration: 2,
                     repeat: Infinity,
-                    ease: "easeInOut"
+                    ease: "easeInOut",
                   }}
                 >
                   <path
@@ -295,22 +429,31 @@ const CTASection = () => {
                     fill="none"
                     strokeDasharray="6 4"
                   />
-                  <polygon points="260,100 250,95 255,105" fill="#34d399"/>
+                  <polygon points="260,100 250,95 255,105" fill="#34d399" />
                 </motion.g>
 
                 {/* Dots on path */}
                 <motion.circle
-                  cx="20" cy="200" r="5" fill="#34d399"
+                  cx="20"
+                  cy="200"
+                  r="5"
+                  fill="#34d399"
                   animate={{ scale: [1, 1.5, 1] }}
                   transition={{ duration: 1.5, repeat: Infinity }}
                 />
                 <motion.circle
-                  cx="140" cy="160" r="5" fill="#34d399"
+                  cx="140"
+                  cy="160"
+                  r="5"
+                  fill="#34d399"
                   animate={{ scale: [1, 1.5, 1] }}
                   transition={{ duration: 1.5, repeat: Infinity, delay: 0.5 }}
                 />
                 <motion.circle
-                  cx="260" cy="100" r="5" fill="#34d399"
+                  cx="260"
+                  cy="100"
+                  r="5"
+                  fill="#34d399"
                   animate={{ scale: [1, 1.5, 1] }}
                   transition={{ duration: 1.5, repeat: Infinity, delay: 1 }}
                 />
@@ -318,17 +461,33 @@ const CTASection = () => {
                 {/* Percentage Badge */}
                 <motion.g
                   animate={{
-                    rotate: [0, 5, -5, 0]
+                    rotate: [0, 5, -5, 0],
                   }}
                   transition={{
                     duration: 2,
                     repeat: Infinity,
-                    ease: "easeInOut"
+                    ease: "easeInOut",
                   }}
-                  style={{ transformOrigin: '240px 60px' }}
+                  style={{ transformOrigin: "240px 60px" }}
                 >
-                  <rect x="220" y="45" width="60" height="30" rx="15" fill="#10b981"/>
-                  <text x="250" y="65" fontSize="14" fill="white" textAnchor="middle" fontWeight="bold">8% APR</text>
+                  <rect
+                    x="220"
+                    y="45"
+                    width="60"
+                    height="30"
+                    rx="15"
+                    fill="#10b981"
+                  />
+                  <text
+                    x="250"
+                    y="65"
+                    fontSize="14"
+                    fill="white"
+                    textAnchor="middle"
+                    fontWeight="bold"
+                  >
+                    8% APR
+                  </text>
                 </motion.g>
               </svg>
             </motion.div>

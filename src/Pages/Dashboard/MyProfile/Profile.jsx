@@ -1,33 +1,32 @@
 // MyProfile.jsx
-import React, { useState, useEffect } from 'react';
-import { motion } from 'framer-motion';
+import axios from "axios";
 import { updateProfile } from "firebase/auth";
-import { toast } from 'react-toastify';
-import { 
-  User,
-  Mail,
-  Phone,
-  MapPin,
+import { motion } from "framer-motion";
+import {
+  Briefcase,
   Calendar,
-  Shield,
-  Edit,
-  LogOut,
   Camera,
-  Save,
-  X,
-  Loader,
   CheckCircle,
-  FileText,
-  DollarSign,
   Clock,
-  CreditCard,
-  Briefcase
-} from 'lucide-react';
-import useAuth from '../../../hooks/useAuth';
-import { auth } from '../../../firebase/firebase.config';
-import axios from 'axios';
-import Swal from 'sweetalert2';
-import { useNavigate } from 'react-router';
+  DollarSign,
+  Edit,
+  FileText,
+  Loader,
+  LogOut,
+  Mail,
+  MapPin,
+  Phone,
+  Save,
+  Shield,
+  User,
+  X,
+} from "lucide-react";
+import { useEffect, useState } from "react";
+import { useNavigate } from "react-router";
+import { toast } from "react-toastify";
+import Swal from "sweetalert2";
+import { auth } from "../../../firebase/firebase.config";
+import useAuth from "../../../hooks/useAuth";
 
 const Profile = () => {
   const { user, logOut, loading: authLoading } = useAuth();
@@ -42,17 +41,17 @@ const Profile = () => {
     totalApplications: 0,
     pendingApplications: 0,
     approvedApplications: 0,
-    totalBorrowed: 0
+    totalBorrowed: 0,
   });
 
   const [formData, setFormData] = useState({
-    displayName: '',
-    photoURL: '',
-    phone: '',
-    address: '',
-    dateOfBirth: '',
-    occupation: '',
-    monthlyIncome: ''
+    displayName: "",
+    photoURL: "",
+    phone: "",
+    address: "",
+    dateOfBirth: "",
+    occupation: "",
+    monthlyIncome: "",
   });
 
   // ========== FETCH USER DATA ==========
@@ -66,23 +65,24 @@ const Profile = () => {
   const fetchUserData = async () => {
     try {
       setLoading(true);
-      const response = await axios.get(`http://localhost:3000/users/${user.email}`);
-      
+      const response = await axios.get(
+        `http://localhost:3000/users/${user.email}`
+      );
+
       const data = response.data.user || response.data;
       setUserData(data);
-      
+
       setFormData({
-        displayName: user.displayName || data.name || '',
-        photoURL: user.photoURL || data.photoURL || '',
-        phone: data.phone || '',
-        address: data.address || '',
-        dateOfBirth: data.dateOfBirth || '',
-        occupation: data.occupation || '',
-        monthlyIncome: data.monthlyIncome || ''
+        displayName: user.displayName || data.name || "",
+        photoURL: user.photoURL || data.photoURL || "",
+        phone: data.phone || "",
+        address: data.address || "",
+        dateOfBirth: data.dateOfBirth || "",
+        occupation: data.occupation || "",
+        monthlyIncome: data.monthlyIncome || "",
       });
-      
     } catch (error) {
-      console.error('❌ Error fetching user data:', error);
+      console.error("❌ Error fetching user data:", error);
     } finally {
       setLoading(false);
     }
@@ -90,19 +90,25 @@ const Profile = () => {
 
   const fetchUserStats = async () => {
     try {
-      const response = await axios.get(`http://localhost:3000/loan-applications/user/${user.email}`);
+      const response = await axios.get(
+        `http://localhost:3000/loan-applications/user/${user.email}`
+      );
       const applications = response.data;
 
       setStats({
         totalApplications: applications.length,
-        pendingApplications: applications.filter(app => app.status === 'Pending').length,
-        approvedApplications: applications.filter(app => app.status === 'Approved').length,
+        pendingApplications: applications.filter(
+          (app) => app.status === "Pending"
+        ).length,
+        approvedApplications: applications.filter(
+          (app) => app.status === "Approved"
+        ).length,
         totalBorrowed: applications
-          .filter(app => app.status === 'Approved')
-          .reduce((sum, app) => sum + (app.loanAmount || 0), 0)
+          .filter((app) => app.status === "Approved")
+          .reduce((sum, app) => sum + (app.loanAmount || 0), 0),
       });
     } catch (error) {
-      console.error('❌ Error fetching stats:', error);
+      console.error("❌ Error fetching stats:", error);
     }
   };
 
@@ -110,19 +116,19 @@ const Profile = () => {
   const handleInputChange = (e) => {
     setFormData({
       ...formData,
-      [e.target.name]: e.target.value
+      [e.target.name]: e.target.value,
     });
   };
 
   // ========== UPDATE PROFILE ==========
   const handleUpdateProfile = async (e) => {
-     console.log('🔥 Form submitted!'); // ADD THIS
-  console.log('📝 Form data:', formData); // ADD THIS
+    console.log("🔥 Form submitted!"); // ADD THIS
+    console.log("📝 Form data:", formData); // ADD THIS
     e.preventDefault();
     setUpdating(true);
 
     try {
-       console.log(' 1️⃣ Updating Firebase...'); // ADD THIS
+      console.log(" 1️⃣ Updating Firebase..."); // ADD THIS
       // 1. Update Firebase Auth Profile
       await updateProfile(auth.currentUser, {
         displayName: formData.displayName,
@@ -138,7 +144,7 @@ const Profile = () => {
         dateOfBirth: formData.dateOfBirth,
         occupation: formData.occupation,
         monthlyIncome: formData.monthlyIncome,
-        updatedAt: new Date()
+        updatedAt: new Date(),
       });
 
       // 3. Reload Firebase user data
@@ -149,24 +155,23 @@ const Profile = () => {
       setEditMode(false);
 
       // 5. Show success message
-      toast.success('Profile updated successfully!');
+      toast.success("Profile updated successfully!");
 
       Swal.fire({
-        icon: 'success',
-        title: 'Profile Updated!',
-        text: 'Your profile has been updated successfully',
+        icon: "success",
+        title: "Profile Updated!",
+        text: "Your profile has been updated successfully",
         timer: 2000,
-        showConfirmButton: false
+        showConfirmButton: false,
       });
-
     } catch (error) {
-      console.error('❌ Error updating profile:', error);
+      console.error("❌ Error updating profile:", error);
       toast.error(error.message || "Failed to update profile");
-      
+
       Swal.fire({
-        icon: 'error',
-        title: 'Update Failed',
-        text: 'Failed to update profile. Please try again.'
+        icon: "error",
+        title: "Update Failed",
+        text: "Failed to update profile. Please try again.",
       });
     } finally {
       setUpdating(false);
@@ -176,25 +181,25 @@ const Profile = () => {
   // ========== HANDLE LOGOUT ==========
   const handleLogout = () => {
     Swal.fire({
-      title: 'Logout',
-      text: 'Are you sure you want to logout?',
-      icon: 'question',
+      title: "Logout",
+      text: "Are you sure you want to logout?",
+      icon: "question",
       showCancelButton: true,
-      confirmButtonText: 'Yes, Logout',
-      cancelButtonText: 'Cancel',
-      confirmButtonColor: 'var(--error)',
-      cancelButtonColor: 'var(--border)'
+      confirmButtonText: "Yes, Logout",
+      cancelButtonText: "Cancel",
+      confirmButtonColor: "var(--error)",
+      cancelButtonColor: "var(--border)",
     }).then((result) => {
       if (result.isConfirmed) {
         logOut().then(() => {
-          navigate('/');
-          toast.success('Logged out successfully');
+          navigate("/");
+          toast.success("Logged out successfully");
           Swal.fire({
-            icon: 'success',
-            title: 'Logged Out',
-            text: 'You have been logged out successfully',
+            icon: "success",
+            title: "Logged Out",
+            text: "You have been logged out successfully",
             timer: 1500,
-            showConfirmButton: false
+            showConfirmButton: false,
           });
         });
       }
@@ -209,11 +214,13 @@ const Profile = () => {
     try {
       setUpdating(true);
       const formDataImg = new FormData();
-      formDataImg.append('image', file);
+      formDataImg.append("image", file);
 
       // Upload to ImgBB
       const imgbbResponse = await axios.post(
-        `https://api.imgbb.com/1/upload?key=${import.meta.env.VITE_image_host_key}`,
+        `https://api.imgbb.com/1/upload?key=${
+          import.meta.env.VITE_image_host_key
+        }`,
         formDataImg
       );
 
@@ -225,32 +232,31 @@ const Profile = () => {
       // Update database
       await axios.patch(`http://localhost:3000/users/${user.email}`, {
         photoURL,
-        updatedAt: new Date()
+        updatedAt: new Date(),
       });
 
       // Update local state
       setFormData({ ...formData, photoURL });
 
-      toast.success('Photo updated successfully!');
+      toast.success("Photo updated successfully!");
 
       Swal.fire({
-        icon: 'success',
-        title: 'Photo Updated!',
+        icon: "success",
+        title: "Photo Updated!",
         timer: 1500,
-        showConfirmButton: false
+        showConfirmButton: false,
       });
 
       // Reload to show new photo
       await auth.currentUser.reload();
-
     } catch (error) {
-      console.error('❌ Error uploading photo:', error);
-      toast.error('Failed to upload photo');
-      
+      console.error("❌ Error uploading photo:", error);
+      toast.error("Failed to upload photo");
+
       Swal.fire({
-        icon: 'error',
-        title: 'Upload Failed',
-        text: 'Failed to upload photo'
+        icon: "error",
+        title: "Upload Failed",
+        text: "Failed to upload photo",
       });
     } finally {
       setUpdating(false);
@@ -260,12 +266,16 @@ const Profile = () => {
   // ========== LOADING STATE ==========
   if (authLoading || loading) {
     return (
-      <div className="flex items-center justify-center h-screen" 
-           style={{ backgroundColor: 'var(--bg)' }}>
+      <div
+        className="flex items-center justify-center h-screen"
+        style={{ backgroundColor: "var(--bg)" }}
+      >
         <div className="text-center">
-          <Loader className="w-12 h-12 mx-auto mb-4 animate-spin" 
-                  style={{ color: 'var(--primary)' }} />
-          <p style={{ color: 'var(--text-secondary)' }}>Loading profile...</p>
+          <Loader
+            className="w-12 h-12 mx-auto mb-4 animate-spin"
+            style={{ color: "var(--primary)" }}
+          />
+          <p style={{ color: "var(--text-secondary)" }}>Loading profile...</p>
         </div>
       </div>
     );
@@ -274,16 +284,23 @@ const Profile = () => {
   // ========== NO USER STATE ==========
   if (!user) {
     return (
-      <div className="min-h-screen flex items-center justify-center px-4" 
-           style={{ backgroundColor: 'var(--bg)' }}>
-        <div className="max-w-md w-full rounded-2xl p-8 text-center"
-             style={{
-               backgroundColor: 'var(--surface)',
-               border: '2px solid var(--border)'
-             }}>
-          <Shield className="mx-auto mb-4" size={64} 
-                  style={{ color: 'var(--text-secondary)' }} />
-          <p className="text-lg" style={{ color: 'var(--text-secondary)' }}>
+      <div
+        className="min-h-screen flex items-center justify-center px-4"
+        style={{ backgroundColor: "var(--bg)" }}
+      >
+        <div
+          className="max-w-md w-full rounded-2xl p-8 text-center"
+          style={{
+            backgroundColor: "var(--surface)",
+            border: "2px solid var(--border)",
+          }}
+        >
+          <Shield
+            className="mx-auto mb-4"
+            size={64}
+            style={{ color: "var(--text-secondary)" }}
+          />
+          <p className="text-lg" style={{ color: "var(--text-secondary)" }}>
             No user logged in.
           </p>
         </div>
@@ -293,54 +310,63 @@ const Profile = () => {
 
   // ========== MAIN RENDER ==========
   return (
-    <div className="min-h-screen py-8 px-4" 
-         style={{ backgroundColor: 'var(--bg)' }}>
+    <div
+      className="min-h-screen py-8 px-4"
+      style={{ backgroundColor: "var(--bg)" }}
+    >
       <div className="max-w-6xl mx-auto">
-        
         {/* Header */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           className="mb-8"
         >
-          <h1 className="text-3xl md:text-4xl font-black mb-2" 
-              style={{ color: 'var(--text-primary)' }}>
+          <h1
+            className="text-3xl md:text-4xl font-black mb-2"
+            style={{ color: "var(--text-primary)" }}
+          >
             My Profile
           </h1>
-          <p style={{ color: 'var(--text-secondary)' }}>
+          <p style={{ color: "var(--text-secondary)" }}>
             Manage your account information and settings
           </p>
         </motion.div>
 
         <div className="grid lg:grid-cols-3 gap-8">
-          
           {/* Left Column - Profile Card */}
           <motion.div
             initial={{ opacity: 0, x: -20 }}
             animate={{ opacity: 1, x: 0 }}
             className="lg:col-span-1"
           >
-            <div className="p-8 rounded-2xl text-center sticky top-24"
-                 style={{
-                   backgroundColor: 'var(--surface)',
-                   border: '2px solid var(--border)'
-                 }}>
-              
+            <div
+              className="p-8 rounded-2xl text-center sticky top-24"
+              style={{
+                backgroundColor: "var(--surface)",
+                border: "2px solid var(--border)",
+              }}
+            >
               {/* Profile Photo */}
               <div className="relative inline-block mb-6">
                 <img
-                  src={formData.photoURL || user?.photoURL || 'https://via.placeholder.com/150'}
+                  src={
+                    formData.photoURL ||
+                    user?.photoURL ||
+                    "https://via.placeholder.com/150"
+                  }
                   alt="Profile"
                   className="w-32 h-32 rounded-full object-cover mx-auto"
-                  style={{ border: '4px solid var(--primary)' }}
+                  style={{ border: "4px solid var(--primary)" }}
                   onError={(e) => {
-                    e.target.src = 'https://via.placeholder.com/150';
+                    e.target.src = "https://via.placeholder.com/150";
                   }}
                 />
-                
+
                 {/* Upload Button */}
-                <label className="absolute bottom-0 right-0 w-10 h-10 rounded-full flex items-center justify-center cursor-pointer shadow-lg"
-                       style={{ backgroundColor: 'var(--primary)' }}>
+                <label
+                  className="absolute bottom-0 right-0 w-10 h-10 rounded-full flex items-center justify-center cursor-pointer shadow-lg"
+                  style={{ backgroundColor: "var(--primary)" }}
+                >
                   <Camera className="w-5 h-5 text-white" />
                   <input
                     type="file"
@@ -353,72 +379,107 @@ const Profile = () => {
               </div>
 
               {/* Name & Email */}
-              <h2 className="text-2xl font-black mb-2" 
-                  style={{ color: 'var(--text-primary)' }}>
-                {formData.displayName || user?.displayName || 'User'}
+              <h2
+                className="text-2xl font-black mb-2"
+                style={{ color: "var(--text-primary)" }}
+              >
+                {formData.displayName || user?.displayName || "User"}
               </h2>
-              <p className="mb-4 break-words" 
-                 style={{ color: 'var(--text-secondary)' }}>
+              <p
+                className="mb-4 break-words"
+                style={{ color: "var(--text-secondary)" }}
+              >
                 {user?.email}
               </p>
 
               {/* Role Badge */}
-              <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full mb-6"
-                   style={{ backgroundColor: 'var(--primary)', opacity: 0.1 }}>
-                <Shield className="w-4 h-4" style={{ color: 'var(--primary)' }} />
-                <span className="text-sm font-bold capitalize" 
-                      style={{ color: 'var(--primary)' }}>
-                  {userData?.role || 'User'}
+              <div
+                className="inline-flex items-center gap-2 px-4 py-2 rounded-full mb-6"
+                style={{ backgroundColor: "var(--primary)", opacity: 0.1 }}
+              >
+                <Shield
+                  className="w-4 h-4"
+                  style={{ color: "var(--primary)" }}
+                />
+                <span
+                  className="text-sm font-bold capitalize"
+                  style={{ color: "var(--primary)" }}
+                >
+                  {userData?.role || "User"}
                 </span>
               </div>
 
               {/* Provider Badge */}
-              <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full mb-6"
-                   style={{ 
-                     backgroundColor: 'var(--success)', 
-                     opacity: 0.1,
-                     border: '1px solid var(--success)'
-                   }}>
-                <CheckCircle className="w-4 h-4" style={{ color: 'var(--success)' }} />
-                <span className="text-sm font-semibold" 
-                      style={{ color: 'var(--success)' }}>
-                  {user?.providerData?.[0]?.providerId === 'google.com' 
-                    ? 'Google Account' 
-                    : 'Email Account'}
+              <div
+                className="inline-flex items-center gap-2 px-4 py-2 rounded-full mb-6"
+                style={{
+                  backgroundColor: "var(--success)",
+                  opacity: 0.1,
+                  border: "1px solid var(--success)",
+                }}
+              >
+                <CheckCircle
+                  className="w-4 h-4"
+                  style={{ color: "var(--success)" }}
+                />
+                <span
+                  className="text-sm font-semibold"
+                  style={{ color: "var(--success)" }}
+                >
+                  {user?.providerData?.[0]?.providerId === "google.com"
+                    ? "Google Account"
+                    : "Email Account"}
                 </span>
               </div>
 
               {/* Member Since */}
               <div className="flex items-center justify-center gap-2 mb-6">
-                <Calendar className="w-4 h-4" 
-                          style={{ color: 'var(--text-secondary)' }} />
-                <span className="text-sm" 
-                      style={{ color: 'var(--text-secondary)' }}>
-                  Member since {new Date(userData?.createdAt || user?.metadata?.creationTime).toLocaleDateString()}
+                <Calendar
+                  className="w-4 h-4"
+                  style={{ color: "var(--text-secondary)" }}
+                />
+                <span
+                  className="text-sm"
+                  style={{ color: "var(--text-secondary)" }}
+                >
+                  Member since{" "}
+                  {new Date(
+                    userData?.createdAt || user?.metadata?.creationTime
+                  ).toLocaleDateString()}
                 </span>
               </div>
 
               {/* Stats */}
-              <div className="pt-6 border-t mb-6" 
-                   style={{ borderColor: 'var(--border)' }}>
+              <div
+                className="pt-6 border-t mb-6"
+                style={{ borderColor: "var(--border)" }}
+              >
                 <div className="grid grid-cols-2 gap-4">
                   <div>
-                    <p className="text-2xl font-bold" 
-                       style={{ color: 'var(--primary)' }}>
+                    <p
+                      className="text-2xl font-bold"
+                      style={{ color: "var(--primary)" }}
+                    >
                       {stats.totalApplications}
                     </p>
-                    <p className="text-xs" 
-                       style={{ color: 'var(--text-secondary)' }}>
+                    <p
+                      className="text-xs"
+                      style={{ color: "var(--text-secondary)" }}
+                    >
                       Total Applications
                     </p>
                   </div>
                   <div>
-                    <p className="text-2xl font-bold" 
-                       style={{ color: 'var(--success)' }}>
+                    <p
+                      className="text-2xl font-bold"
+                      style={{ color: "var(--success)" }}
+                    >
                       ${stats.totalBorrowed.toLocaleString()}
                     </p>
-                    <p className="text-xs" 
-                       style={{ color: 'var(--text-secondary)' }}>
+                    <p
+                      className="text-xs"
+                      style={{ color: "var(--text-secondary)" }}
+                    >
                       Total Borrowed
                     </p>
                   </div>
@@ -432,8 +493,8 @@ const Profile = () => {
                 onClick={handleLogout}
                 className="w-full py-3 rounded-xl font-bold flex items-center justify-center gap-2"
                 style={{
-                  backgroundColor: 'var(--error)',
-                  color: 'white'
+                  backgroundColor: "var(--error)",
+                  color: "white",
                 }}
               >
                 <LogOut className="w-5 h-5" />
@@ -449,34 +510,33 @@ const Profile = () => {
             transition={{ delay: 0.2 }}
             className="lg:col-span-2 space-y-8"
           >
-            
             {/* Quick Stats */}
             <div className="grid md:grid-cols-4 gap-4">
               {[
-                { 
-                  icon: FileText, 
-                  label: 'Applications', 
-                  value: stats.totalApplications, 
-                  color: 'var(--primary)' 
+                {
+                  icon: FileText,
+                  label: "Applications",
+                  value: stats.totalApplications,
+                  color: "var(--primary)",
                 },
-                { 
-                  icon: Clock, 
-                  label: 'Pending', 
-                  value: stats.pendingApplications, 
-                  color: 'var(--accent)' 
+                {
+                  icon: Clock,
+                  label: "Pending",
+                  value: stats.pendingApplications,
+                  color: "var(--accent)",
                 },
-                { 
-                  icon: CheckCircle, 
-                  label: 'Approved', 
-                  value: stats.approvedApplications, 
-                  color: 'var(--success)' 
+                {
+                  icon: CheckCircle,
+                  label: "Approved",
+                  value: stats.approvedApplications,
+                  color: "var(--success)",
                 },
-                { 
-                  icon: DollarSign, 
-                  label: 'Borrowed', 
-                  value: `$${stats.totalBorrowed.toLocaleString()}`, 
-                  color: 'var(--secondary)' 
-                }
+                {
+                  icon: DollarSign,
+                  label: "Borrowed",
+                  value: `$${stats.totalBorrowed.toLocaleString()}`,
+                  color: "var(--secondary)",
+                },
               ].map((stat, index) => (
                 <motion.div
                   key={index}
@@ -485,15 +545,24 @@ const Profile = () => {
                   transition={{ delay: 0.1 * index }}
                   className="p-4 rounded-xl"
                   style={{
-                    backgroundColor: 'var(--surface)',
-                    border: '2px solid var(--border)'
+                    backgroundColor: "var(--surface)",
+                    border: "2px solid var(--border)",
                   }}
                 >
-                  <stat.icon className="w-5 h-5 mb-2" style={{ color: stat.color }} />
-                  <p className="text-xl font-black mb-1" style={{ color: stat.color }}>
+                  <stat.icon
+                    className="w-5 h-5 mb-2"
+                    style={{ color: stat.color }}
+                  />
+                  <p
+                    className="text-xl font-black mb-1"
+                    style={{ color: stat.color }}
+                  >
                     {stat.value}
                   </p>
-                  <p className="text-xs font-semibold" style={{ color: 'var(--text-secondary)' }}>
+                  <p
+                    className="text-xs font-semibold"
+                    style={{ color: "var(--text-secondary)" }}
+                  >
                     {stat.label}
                   </p>
                 </motion.div>
@@ -501,20 +570,25 @@ const Profile = () => {
             </div>
 
             {/* Profile Information Form */}
-            
-            <div className="p-8 rounded-2xl"
-                 style={{
-                   backgroundColor: 'var(--surface)',
-                   border: '2px solid var(--border)'
-                 }}>
-              
+
+            <div
+              className="p-8 rounded-2xl"
+              style={{
+                backgroundColor: "var(--surface)",
+                border: "2px solid var(--border)",
+              }}
+            >
               {/* Header */}
               <div className="flex items-center justify-between mb-6">
-                <h3 className="text-2xl font-black" 
-                    style={{ color: 'var(--text-primary)' }}>
-                  {editMode ? 'Edit Profile Information' : 'Profile Information'}
+                <h3
+                  className="text-2xl font-black"
+                  style={{ color: "var(--text-primary)" }}
+                >
+                  {editMode
+                    ? "Edit Profile Information"
+                    : "Profile Information"}
                 </h3>
-                
+
                 {!editMode ? (
                   <motion.button
                     whileHover={{ scale: 1.05 }}
@@ -522,8 +596,8 @@ const Profile = () => {
                     onClick={() => setEditMode(true)}
                     className="flex items-center gap-2 px-4 py-2 rounded-lg font-semibold"
                     style={{
-                      backgroundColor: 'var(--primary)',
-                      color: 'white'
+                      backgroundColor: "var(--primary)",
+                      color: "white",
                     }}
                   >
                     <Edit className="w-4 h-4" />
@@ -540,8 +614,8 @@ const Profile = () => {
                       }}
                       className="flex items-center gap-2 px-4 py-2 rounded-lg font-semibold"
                       style={{
-                        backgroundColor: 'var(--bg)',
-                        color: 'var(--text-primary)'
+                        backgroundColor: "var(--bg)",
+                        color: "var(--text-primary)",
                       }}
                     >
                       <X className="w-4 h-4" />
@@ -553,43 +627,55 @@ const Profile = () => {
 
               {/* Form */}
               <form onSubmit={handleUpdateProfile} className="space-y-6">
-                
                 {/* Email (Read-only) */}
                 <div>
-                  <label className="block text-sm font-semibold mb-2" 
-                         style={{ color: 'var(--text-primary)' }}>
+                  <label
+                    className="block text-sm font-semibold mb-2"
+                    style={{ color: "var(--text-primary)" }}
+                  >
                     Email Address
                   </label>
                   <div className="relative">
                     <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
-                      <Mail className="w-5 h-5" style={{ color: 'var(--text-secondary)' }} />
+                      <Mail
+                        className="w-5 h-5"
+                        style={{ color: "var(--text-secondary)" }}
+                      />
                     </div>
                     <input
                       type="email"
-                      value={user?.email || ''}
+                      value={user?.email || ""}
                       disabled
                       className="w-full pl-12 pr-4 py-3 rounded-lg border-2 cursor-not-allowed"
                       style={{
-                        backgroundColor: 'var(--bg)',
-                        border: '2px solid var(--border)',
-                        color: 'var(--text-secondary)'
+                        backgroundColor: "var(--bg)",
+                        border: "2px solid var(--border)",
+                        color: "var(--text-secondary)",
                       }}
                     />
                   </div>
-                  <p className="text-xs mt-1" style={{ color: 'var(--text-secondary)' }}>
+                  <p
+                    className="text-xs mt-1"
+                    style={{ color: "var(--text-secondary)" }}
+                  >
                     Email cannot be changed
                   </p>
                 </div>
 
                 {/* Display Name */}
                 <div>
-                  <label className="block text-sm font-semibold mb-2" 
-                         style={{ color: 'var(--text-primary)' }}>
+                  <label
+                    className="block text-sm font-semibold mb-2"
+                    style={{ color: "var(--text-primary)" }}
+                  >
                     Display Name
                   </label>
                   <div className="relative">
                     <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
-                      <User className="w-5 h-5" style={{ color: 'var(--text-secondary)' }} />
+                      <User
+                        className="w-5 h-5"
+                        style={{ color: "var(--text-secondary)" }}
+                      />
                     </div>
                     <input
                       type="text"
@@ -600,10 +686,12 @@ const Profile = () => {
                       placeholder="Enter your display name"
                       className="w-full pl-12 pr-4 py-3 rounded-lg border-2 outline-none transition-all"
                       style={{
-                        backgroundColor: editMode ? 'var(--bg)' : 'var(--surface)',
+                        backgroundColor: editMode
+                          ? "var(--bg)"
+                          : "var(--surface)",
                         border: `2px solid var(--border)`,
-                        color: 'var(--text-primary)',
-                        cursor: editMode ? 'text' : 'not-allowed'
+                        color: "var(--text-primary)",
+                        cursor: editMode ? "text" : "not-allowed",
                       }}
                     />
                   </div>
@@ -611,13 +699,18 @@ const Profile = () => {
 
                 {/* Photo URL */}
                 <div>
-                  <label className="block text-sm font-semibold mb-2" 
-                         style={{ color: 'var(--text-primary)' }}>
+                  <label
+                    className="block text-sm font-semibold mb-2"
+                    style={{ color: "var(--text-primary)" }}
+                  >
                     Photo URL
                   </label>
                   <div className="relative">
                     <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
-                      <Camera className="w-5 h-5" style={{ color: 'var(--text-secondary)' }} />
+                      <Camera
+                        className="w-5 h-5"
+                        style={{ color: "var(--text-secondary)" }}
+                      />
                     </div>
                     <input
                       type="text"
@@ -628,26 +721,32 @@ const Profile = () => {
                       placeholder="Enter image URL"
                       className="w-full pl-12 pr-4 py-3 rounded-lg border-2 outline-none transition-all"
                       style={{
-                        backgroundColor: editMode ? 'var(--bg)' : 'var(--surface)',
+                        backgroundColor: editMode
+                          ? "var(--bg)"
+                          : "var(--surface)",
                         border: `2px solid var(--border)`,
-                        color: 'var(--text-primary)',
-                        cursor: editMode ? 'text' : 'not-allowed'
+                        color: "var(--text-primary)",
+                        cursor: editMode ? "text" : "not-allowed",
                       }}
                     />
                   </div>
                 </div>
 
                 <div className="grid md:grid-cols-2 gap-6">
-                  
                   {/* Phone */}
                   <div>
-                    <label className="block text-sm font-semibold mb-2" 
-                           style={{ color: 'var(--text-primary)' }}>
+                    <label
+                      className="block text-sm font-semibold mb-2"
+                      style={{ color: "var(--text-primary)" }}
+                    >
                       Phone Number
                     </label>
                     <div className="relative">
                       <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
-                        <Phone className="w-5 h-5" style={{ color: 'var(--text-secondary)' }} />
+                        <Phone
+                          className="w-5 h-5"
+                          style={{ color: "var(--text-secondary)" }}
+                        />
                       </div>
                       <input
                         type="tel"
@@ -658,10 +757,12 @@ const Profile = () => {
                         placeholder="+1 (555) 123-4567"
                         className="w-full pl-12 pr-4 py-3 rounded-lg border-2 outline-none"
                         style={{
-                          backgroundColor: editMode ? 'var(--bg)' : 'var(--surface)',
+                          backgroundColor: editMode
+                            ? "var(--bg)"
+                            : "var(--surface)",
                           border: `2px solid var(--border)`,
-                          color: 'var(--text-primary)',
-                          cursor: editMode ? 'text' : 'not-allowed'
+                          color: "var(--text-primary)",
+                          cursor: editMode ? "text" : "not-allowed",
                         }}
                       />
                     </div>
@@ -669,13 +770,18 @@ const Profile = () => {
 
                   {/* Date of Birth */}
                   <div>
-                    <label className="block text-sm font-semibold mb-2" 
-                           style={{ color: 'var(--text-primary)' }}>
+                    <label
+                      className="block text-sm font-semibold mb-2"
+                      style={{ color: "var(--text-primary)" }}
+                    >
                       Date of Birth
                     </label>
                     <div className="relative">
                       <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
-                        <Calendar className="w-5 h-5" style={{ color: 'var(--text-secondary)' }} />
+                        <Calendar
+                          className="w-5 h-5"
+                          style={{ color: "var(--text-secondary)" }}
+                        />
                       </div>
                       <input
                         type="date"
@@ -685,10 +791,12 @@ const Profile = () => {
                         disabled={!editMode}
                         className="w-full pl-12 pr-4 py-3 rounded-lg border-2 outline-none"
                         style={{
-                          backgroundColor: editMode ? 'var(--bg)' : 'var(--surface)',
+                          backgroundColor: editMode
+                            ? "var(--bg)"
+                            : "var(--surface)",
                           border: `2px solid var(--border)`,
-                          color: 'var(--text-primary)',
-                          cursor: editMode ? 'text' : 'not-allowed'
+                          color: "var(--text-primary)",
+                          cursor: editMode ? "text" : "not-allowed",
                         }}
                       />
                     </div>
@@ -696,13 +804,18 @@ const Profile = () => {
 
                   {/* Occupation */}
                   <div>
-                    <label className="block text-sm font-semibold mb-2" 
-                           style={{ color: 'var(--text-primary)' }}>
+                    <label
+                      className="block text-sm font-semibold mb-2"
+                      style={{ color: "var(--text-primary)" }}
+                    >
                       Occupation
                     </label>
                     <div className="relative">
                       <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
-                        <Briefcase className="w-5 h-5" style={{ color: 'var(--text-secondary)' }} />
+                        <Briefcase
+                          className="w-5 h-5"
+                          style={{ color: "var(--text-secondary)" }}
+                        />
                       </div>
                       <input
                         type="text"
@@ -713,10 +826,12 @@ const Profile = () => {
                         placeholder="Your occupation"
                         className="w-full pl-12 pr-4 py-3 rounded-lg border-2 outline-none"
                         style={{
-                          backgroundColor: editMode ? 'var(--bg)' : 'var(--surface)',
+                          backgroundColor: editMode
+                            ? "var(--bg)"
+                            : "var(--surface)",
                           border: `2px solid var(--border)`,
-                          color: 'var(--text-primary)',
-                          cursor: editMode ? 'text' : 'not-allowed'
+                          color: "var(--text-primary)",
+                          cursor: editMode ? "text" : "not-allowed",
                         }}
                       />
                     </div>
@@ -724,13 +839,18 @@ const Profile = () => {
 
                   {/* Monthly Income */}
                   <div>
-                    <label className="block text-sm font-semibold mb-2" 
-                           style={{ color: 'var(--text-primary)' }}>
+                    <label
+                      className="block text-sm font-semibold mb-2"
+                      style={{ color: "var(--text-primary)" }}
+                    >
                       Monthly Income
                     </label>
                     <div className="relative">
                       <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
-                        <DollarSign className="w-5 h-5" style={{ color: 'var(--text-secondary)' }} />
+                        <DollarSign
+                          className="w-5 h-5"
+                          style={{ color: "var(--text-secondary)" }}
+                        />
                       </div>
                       <input
                         type="number"
@@ -741,10 +861,12 @@ const Profile = () => {
                         placeholder="5000"
                         className="w-full pl-12 pr-4 py-3 rounded-lg border-2 outline-none"
                         style={{
-                          backgroundColor: editMode ? 'var(--bg)' : 'var(--surface)',
+                          backgroundColor: editMode
+                            ? "var(--bg)"
+                            : "var(--surface)",
                           border: `2px solid var(--border)`,
-                          color: 'var(--text-primary)',
-                          cursor: editMode ? 'text' : 'not-allowed'
+                          color: "var(--text-primary)",
+                          cursor: editMode ? "text" : "not-allowed",
                         }}
                       />
                     </div>
@@ -753,13 +875,18 @@ const Profile = () => {
 
                 {/* Address */}
                 <div>
-                  <label className="block text-sm font-semibold mb-2" 
-                         style={{ color: 'var(--text-primary)' }}>
+                  <label
+                    className="block text-sm font-semibold mb-2"
+                    style={{ color: "var(--text-primary)" }}
+                  >
                     Address
                   </label>
                   <div className="relative">
                     <div className="absolute top-3 left-4 pointer-events-none">
-                      <MapPin className="w-5 h-5" style={{ color: 'var(--text-secondary)' }} />
+                      <MapPin
+                        className="w-5 h-5"
+                        style={{ color: "var(--text-secondary)" }}
+                      />
                     </div>
                     <textarea
                       name="address"
@@ -770,28 +897,39 @@ const Profile = () => {
                       placeholder="Your full address"
                       className="w-full pl-12 pr-4 py-3 rounded-lg border-2 outline-none resize-none"
                       style={{
-                        backgroundColor: editMode ? 'var(--bg)' : 'var(--surface)',
+                        backgroundColor: editMode
+                          ? "var(--bg)"
+                          : "var(--surface)",
                         border: `2px solid var(--border)`,
-                        color: 'var(--text-primary)',
-                        cursor: editMode ? 'text' : 'not-allowed'
+                        color: "var(--text-primary)",
+                        cursor: editMode ? "text" : "not-allowed",
                       }}
                     />
                   </div>
                 </div>
 
                 {/* Provider Info */}
-                <div className="rounded-lg p-4" 
-                     style={{ backgroundColor: 'var(--bg)' }}>
+                <div
+                  className="rounded-lg p-4"
+                  style={{ backgroundColor: "var(--bg)" }}
+                >
                   <div className="flex items-center gap-3">
-                    <Shield className="w-6 h-6" style={{ color: 'var(--primary)' }} />
+                    <Shield
+                      className="w-6 h-6"
+                      style={{ color: "var(--primary)" }}
+                    />
                     <div>
-                      <p className="font-semibold text-sm" 
-                         style={{ color: 'var(--text-primary)' }}>
+                      <p
+                        className="font-semibold text-sm"
+                        style={{ color: "var(--text-primary)" }}
+                      >
                         Authentication Provider
                       </p>
-                      <p className="text-xs" 
-                         style={{ color: 'var(--text-secondary)' }}>
-                        {user?.providerData?.[0]?.providerId || 'unknown'}
+                      <p
+                        className="text-xs"
+                        style={{ color: "var(--text-secondary)" }}
+                      >
+                        {user?.providerData?.[0]?.providerId || "unknown"}
                       </p>
                     </div>
                   </div>
@@ -806,7 +944,9 @@ const Profile = () => {
                     whileTap={{ scale: updating ? 1 : 0.98 }}
                     className="w-full py-4 rounded-lg font-bold text-lg shadow-lg transition-all text-white disabled:opacity-50 disabled:cursor-not-allowed"
                     style={{
-                      backgroundColor: updating ? 'var(--text-secondary)' : 'var(--primary)'
+                      backgroundColor: updating
+                        ? "var(--text-secondary)"
+                        : "var(--primary)",
                     }}
                   >
                     {updating ? (

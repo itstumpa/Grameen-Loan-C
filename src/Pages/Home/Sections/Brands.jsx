@@ -1,58 +1,141 @@
 // PartnerEcosystem.jsx
-import React, { useEffect, useRef } from 'react';
-import { motion } from 'framer-motion';
-import { 
-  Handshake, 
-  Shield, 
-  CreditCard, 
-  Building2, 
-  Store, 
-  Laptop,
-  CheckCircle,
-  TrendingUp,
-  Award,
-  Lock,
-  Zap,
-  Users
-} from 'lucide-react';
+import { motion } from "framer-motion";
+import { CheckCircle, Lock } from "lucide-react";
+import { useEffect, useRef } from "react";
 
 const Brands = () => {
   const scrollRef = useRef(null);
 
   // Financial Partners (NBFCs, Banks)
   const financialPartners = [
-    { name: "HDFC Bank", logo: "https://logo.clearbit.com/hdfcbank.com", category: "Banking" },
-    { name: "ICICI Bank", logo: "https://logo.clearbit.com/icicibank.com", category: "Banking" },
-    { name: "Axis Bank", logo: "https://logo.clearbit.com/axisbank.com", category: "Banking" },
-    { name: "Bajaj Finserv", logo: "https://logo.clearbit.com/bajajfinserv.in", category: "NBFC" },
-    { name: "Tata Capital", logo: "https://logo.clearbit.com/tatacapital.com", category: "NBFC" },
-    { name: "Mahindra Finance", logo: "https://logo.clearbit.com/mahindrafinance.com", category: "NBFC" },
-    { name: "Kotak Mahindra", logo: "https://logo.clearbit.com/kotak.com", category: "Banking" },
-    { name: "IndusInd Bank", logo: "https://logo.clearbit.com/indusind.com", category: "Banking" }
+    {
+      name: "HDFC Bank",
+      logo: "https://logo.clearbit.com/hdfcbank.com",
+      category: "Banking",
+    },
+    {
+      name: "ICICI Bank",
+      logo: "https://logo.clearbit.com/icicibank.com",
+      category: "Banking",
+    },
+    {
+      name: "Axis Bank",
+      logo: "https://logo.clearbit.com/axisbank.com",
+      category: "Banking",
+    },
+    {
+      name: "Bajaj Finserv",
+      logo: "https://logo.clearbit.com/bajajfinserv.in",
+      category: "NBFC",
+    },
+    {
+      name: "Tata Capital",
+      logo: "https://logo.clearbit.com/tatacapital.com",
+      category: "NBFC",
+    },
+    {
+      name: "Mahindra Finance",
+      logo: "https://logo.clearbit.com/mahindrafinance.com",
+      category: "NBFC",
+    },
+    {
+      name: "Kotak Mahindra",
+      logo: "https://logo.clearbit.com/kotak.com",
+      category: "Banking",
+    },
+    {
+      name: "IndusInd Bank",
+      logo: "https://logo.clearbit.com/indusind.com",
+      category: "Banking",
+    },
   ];
 
   // Merchant Partners
   const merchantPartners = [
-    { name: "Amazon", logo: "https://logo.clearbit.com/amazon.com", category: "E-commerce" },
-    { name: "Flipkart", logo: "https://logo.clearbit.com/flipkart.com", category: "E-commerce" },
-    { name: "Apple", logo: "https://logo.clearbit.com/apple.com", category: "Electronics" },
-    { name: "Samsung", logo: "https://logo.clearbit.com/samsung.com", category: "Electronics" },
-    { name: "Walmart", logo: "https://logo.clearbit.com/walmart.com", category: "Retail" },
-    { name: "Home Depot", logo: "https://logo.clearbit.com/homedepot.com", category: "Home Improvement" },
-    { name: "Best Buy", logo: "https://logo.clearbit.com/bestbuy.com", category: "Electronics" },
-    { name: "Target", logo: "https://logo.clearbit.com/target.com", category: "Retail" }
+    {
+      name: "Amazon",
+      logo: "https://logo.clearbit.com/amazon.com",
+      category: "E-commerce",
+    },
+    {
+      name: "Flipkart",
+      logo: "https://logo.clearbit.com/flipkart.com",
+      category: "E-commerce",
+    },
+    {
+      name: "Apple",
+      logo: "https://logo.clearbit.com/apple.com",
+      category: "Electronics",
+    },
+    {
+      name: "Samsung",
+      logo: "https://logo.clearbit.com/samsung.com",
+      category: "Electronics",
+    },
+    {
+      name: "Walmart",
+      logo: "https://logo.clearbit.com/walmart.com",
+      category: "Retail",
+    },
+    {
+      name: "Home Depot",
+      logo: "https://logo.clearbit.com/homedepot.com",
+      category: "Home Improvement",
+    },
+    {
+      name: "Best Buy",
+      logo: "https://logo.clearbit.com/bestbuy.com",
+      category: "Electronics",
+    },
+    {
+      name: "Target",
+      logo: "https://logo.clearbit.com/target.com",
+      category: "Retail",
+    },
   ];
 
   // Technology Partners
   const technologyPartners = [
-    { name: "Stripe", logo: "https://logo.clearbit.com/stripe.com", category: "Payment" },
-    { name: "PayPal", logo: "https://logo.clearbit.com/paypal.com", category: "Payment" },
-    { name: "Razorpay", logo: "https://logo.clearbit.com/razorpay.com", category: "Payment" },
-    { name: "AWS", logo: "https://logo.clearbit.com/aws.amazon.com", category: "Cloud" },
-    { name: "Google Cloud", logo: "https://logo.clearbit.com/cloud.google.com", category: "Cloud" },
-    { name: "Cloudflare", logo: "https://logo.clearbit.com/cloudflare.com", category: "Security" },
-    { name: "Microsoft", logo: "https://logo.clearbit.com/microsoft.com", category: "Technology" },
-    { name: "Plaid", logo: "https://logo.clearbit.com/plaid.com", category: "FinTech" }
+    {
+      name: "Stripe",
+      logo: "https://logo.clearbit.com/stripe.com",
+      category: "Payment",
+    },
+    {
+      name: "PayPal",
+      logo: "https://logo.clearbit.com/paypal.com",
+      category: "Payment",
+    },
+    {
+      name: "Razorpay",
+      logo: "https://logo.clearbit.com/razorpay.com",
+      category: "Payment",
+    },
+    {
+      name: "AWS",
+      logo: "https://logo.clearbit.com/aws.amazon.com",
+      category: "Cloud",
+    },
+    {
+      name: "Google Cloud",
+      logo: "https://logo.clearbit.com/cloud.google.com",
+      category: "Cloud",
+    },
+    {
+      name: "Cloudflare",
+      logo: "https://logo.clearbit.com/cloudflare.com",
+      category: "Security",
+    },
+    {
+      name: "Microsoft",
+      logo: "https://logo.clearbit.com/microsoft.com",
+      category: "Technology",
+    },
+    {
+      name: "Plaid",
+      logo: "https://logo.clearbit.com/plaid.com",
+      category: "FinTech",
+    },
   ];
 
   const cobrands = [
@@ -60,20 +143,20 @@ const Brands = () => {
       title: "Amazon Shopping Card",
       offer: "5% Cashback + No Interest for 6 months",
       logo: "https://logo.clearbit.com/amazon.com",
-      gradient: "from-blue-300 to-indigo-500"
+      gradient: "from-blue-300 to-indigo-500",
     },
     {
       title: "Apple Finance Program",
       offer: "0% APR for 12 months on Apple Products",
       logo: "https://logo.clearbit.com/apple.com",
-      gradient: "from-blue-400 to-indigo-600"
+      gradient: "from-blue-400 to-indigo-600",
     },
     {
       title: "HDFC Co-branded Loan",
       offer: "8% Interest Rate + Zero Processing Fee",
       logo: "https://logo.clearbit.com/hdfcbank.com",
-      gradient: "from-blue-600 to-indigo-700"
-    }
+      gradient: "from-blue-600 to-indigo-700",
+    },
   ];
 
   // Auto-scroll animation for infinite carousel
@@ -100,9 +183,11 @@ const Brands = () => {
   }, []);
 
   return (
-    <section className="py-14 px-4 md:px-8 overflow-hidden" style={{ backgroundColor: 'var(--bg)' }}>
+    <section
+      className="py-14 px-4 md:px-8 overflow-hidden"
+      style={{ backgroundColor: "var(--bg)" }}
+    >
       <div className="max-w-7xl mx-auto">
-
         {/* Infinite Scrolling Logo Carousel */}
         <motion.div
           initial={{ opacity: 0 }}
@@ -110,33 +195,43 @@ const Brands = () => {
           viewport={{ once: true }}
           className="mb-20"
         >
-          <h3 className="text-2xl font-bold text-center mb-8" style={{ color: 'var(--text-primary)' }}>
+          <h3
+            className="text-2xl font-bold text-center mb-8"
+            style={{ color: "var(--text-primary)" }}
+          >
             Trusted By Global Leaders
           </h3>
-          
+
           <div className="relative">
             {/* Gradient Overlays */}
             <div className="absolute left-0 top-0 bottom-0 w-20 bg-gradient-to-r from-[var(--bg)] to-transparent z-10" />
             <div className="absolute right-0 top-0 bottom-0 w-20 bg-gradient-to-l from-[var(--bg)] to-transparent z-10" />
 
             {/* Scrolling Container */}
-            <div 
+            <div
               ref={scrollRef}
               className="flex gap-8 overflow-hidden py-6"
-              style={{ scrollBehavior: 'auto' }}
+              style={{ scrollBehavior: "auto" }}
             >
               {/* Duplicate logos for infinite scroll */}
-              {[...financialPartners, ...merchantPartners, ...technologyPartners, ...financialPartners, ...merchantPartners, ...technologyPartners].map((partner, idx) => (
+              {[
+                ...financialPartners,
+                ...merchantPartners,
+                ...technologyPartners,
+                ...financialPartners,
+                ...merchantPartners,
+                ...technologyPartners,
+              ].map((partner, idx) => (
                 <motion.div
                   key={idx}
                   whileHover={{ scale: 1.1, y: -5 }}
                   className="flex-shrink-0 w-32 h-20 rounded-xl p-4 flex items-center justify-center"
                   style={{
-                    backgroundColor: 'var(--surface)',
-                    border: '2px solid var(--border)'
+                    backgroundColor: "var(--surface)",
+                    border: "2px solid var(--border)",
                   }}
                 >
-                  <img 
+                  <img
                     src={partner.logo}
                     alt={partner.name}
                     className="max-w-full max-h-full object-contain grayscale hover:grayscale-0 transition-all"
@@ -151,19 +246,24 @@ const Brands = () => {
           </div>
         </motion.div>
 
-       
-
         {/* Co-branded Offers */}
         <motion.div
           initial={{ opacity: 0, y: 30 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
         >
-          <h3 className="text-3xl font-bold text-center mb-4" style={{ color: 'var(--text-primary)' }}>
+          <h3
+            className="text-3xl font-bold text-center mb-4"
+            style={{ color: "var(--text-primary)" }}
+          >
             Exclusive Co-branded Offers
           </h3>
-          <p className="text-center mb-12 max-w-2xl mx-auto" style={{ color: 'var(--text-secondary)' }}>
-            Special financing programs designed in partnership with leading brands
+          <p
+            className="text-center mb-12 max-w-2xl mx-auto"
+            style={{ color: "var(--text-secondary)" }}
+          >
+            Special financing programs designed in partnership with leading
+            brands
           </p>
 
           <div className="grid md:grid-cols-3 gap-6">
@@ -178,13 +278,15 @@ const Brands = () => {
                 className="relative rounded-2xl overflow-hidden group cursor-pointer"
               >
                 {/* Gradient Background */}
-                <div className={`absolute inset-0 bg-gradient-to-br ${cobrand.gradient}`} />
-                
+                <div
+                  className={`absolute inset-0 bg-gradient-to-br ${cobrand.gradient}`}
+                />
+
                 {/* Content */}
                 <div className="relative z-10 p-8 text-white">
                   <div className="w-16 h-16 bg-white rounded-xl p-3 mb-4 flex items-center justify-center">
-                    <img 
-                      src={cobrand.logo} 
+                    <img
+                      src={cobrand.logo}
                       alt={cobrand.title}
                       className="w-full h-full object-contain"
                       onError={(e) => {
@@ -193,16 +295,12 @@ const Brands = () => {
                       }}
                     />
                   </div>
-                  
-                  <h4 className="text-xl font-bold mb-3">
-                    {cobrand.title}
-                  </h4>
-                  
+
+                  <h4 className="text-xl font-bold mb-3">{cobrand.title}</h4>
+
                   <div className="flex items-start gap-2 mb-4">
                     <CheckCircle className="w-5 h-5 flex-shrink-0 mt-0.5" />
-                    <p className="text-sm font-semibold">
-                      {cobrand.offer}
-                    </p>
+                    <p className="text-sm font-semibold">{cobrand.offer}</p>
                   </div>
 
                   <motion.button
@@ -218,12 +316,12 @@ const Brands = () => {
                 <motion.div
                   className="absolute inset-0 bg-gradient-to-r from-transparent via-white to-transparent opacity-0 group-hover:opacity-20"
                   animate={{
-                    x: ['-100%', '100%']
+                    x: ["-100%", "100%"],
                   }}
                   transition={{
                     duration: 1.5,
                     repeat: Infinity,
-                    repeatDelay: 3
+                    repeatDelay: 3,
                   }}
                 />
               </motion.div>
@@ -238,16 +336,26 @@ const Brands = () => {
           viewport={{ once: true }}
           className="text-center mt-16 p-8 rounded-2xl"
           style={{
-            backgroundColor: 'var(--surface)',
-            border: '2px solid var(--border)'
+            backgroundColor: "var(--surface)",
+            border: "2px solid var(--border)",
           }}
         >
-          <Lock className="w-12 h-12 mx-auto mb-4" style={{ color: 'var(--primary)' }} />
-          <h3 className="text-2xl font-bold mb-3" style={{ color: 'var(--text-primary)' }}>
+          <Lock
+            className="w-12 h-12 mx-auto mb-4"
+            style={{ color: "var(--primary)" }}
+          />
+          <h3
+            className="text-2xl font-bold mb-3"
+            style={{ color: "var(--text-primary)" }}
+          >
             Protected By The Best
           </h3>
-          <p className="mb-6 max-w-2xl mx-auto" style={{ color: 'var(--text-secondary)' }}>
-            Our partnerships ensure your data is secure, payments are seamless, and you get the best rates in the market.
+          <p
+            className="mb-6 max-w-2xl mx-auto"
+            style={{ color: "var(--text-secondary)" }}
+          >
+            Our partnerships ensure your data is secure, payments are seamless,
+            and you get the best rates in the market.
           </p>
           <motion.button
             whileHover={{ scale: 1.05 }}

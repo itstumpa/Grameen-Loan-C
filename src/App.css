@@ -17,7 +17,7 @@
   font-weight: 600;
   cursor: pointer;
 }
-.primary-btn {
+--primary-btn {
   background-color: #34d399;
   color: white;
   padding: 10px 20px;
@@ -29,7 +29,7 @@
   justify-content: center;
   align-items: center;
 }
-.primary-btn1 {
+--primary-btn1 {
   border: 2px solid #ebebeb;
   padding: 8px 24px;
   color: rgb(58, 58, 58);
@@ -57,7 +57,7 @@
   color: white;
 }
 
-.primary-text {
+--primary-text {
   color: #34d399;
 }
 .secondary-color {

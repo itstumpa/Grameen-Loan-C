@@ -3,15 +3,9 @@
 
 
 
-/* ============================================
-   LOANLINK - SIMPLE GLOBAL CSS
-   Only: Fonts, Buttons, Theme Colors
-   ============================================ */
-
-/* ========== IMPORT GOOGLE FONT ========== */
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap');
 
-/* ========== CSS VARIABLES - LIGHT MODE ========== */
+/* LIGHT MODE */
 :root {
   /* Primary Colors */
   --primary: #1E3A8A;
@@ -25,16 +19,17 @@
   /* Text Colors */
   --text-primary: #1E293B;
   --text-secondary: #64748B;
+  --text-third: #ffffff;
   
   /* Border Colors */
   --border: #E2E8F0;
   
   /* Status Colors */
-  --success: #059669;
+  --success: #10B981;
   --error: #DC2626;
 }
 
-/* ========== CSS VARIABLES - DARK MODE ========== */
+/* DARK MODE  */
 [data-theme="dark"] {
   /* Primary Colors */
   --primary: #3B82F6;
@@ -57,7 +52,7 @@
   --error: #EF4444;
 }
 
-/* ========== GLOBAL RESET ========== */
+/* GLOBAL */
 
 html {
   scroll-behavior: smooth;
@@ -70,7 +65,7 @@ body {
   line-height: 1.6;
 }
 
-/* ========== BUTTON STYLES ========== */
+/*  BUTTON  */
 /* Primary Button */
 .btn-primary {
   background-color: var(--primary);

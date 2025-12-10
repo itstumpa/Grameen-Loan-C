@@ -1,11 +1,656 @@
-import React from 'react';
+// ManageLoans.jsx
+import axios from "axios";
+import { motion } from "framer-motion";
+import {
+  AlertCircle,
+  DollarSign,
+  Edit,
+  Eye,
+  EyeOff,
+  Filter,
+  Image as ImageIcon,
+  Loader,
+  Percent,
+  Plus,
+  Search,
+  Trash2,
+} from "lucide-react";
+import { useEffect, useState } from "react";
+import { useNavigate } from "react-router";
+import { toast } from "react-toastify";
+import Swal from "sweetalert2";
+import useAuth from "../../../hooks/useAuth";
 
 const ManageLoans = () => {
-       return (
-              <div>
-                     
-              </div>
-       );
+  const { user } = useAuth();
+  const navigate = useNavigate();
+
+  // ========== STATE ==========
+  const [loans, setLoans] = useState([]);
+  const [filteredLoans, setFilteredLoans] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [searchQuery, setSearchQuery] = useState("");
+  const [selectedCategory, setSelectedCategory] = useState("All");
+  const [deleting, setDeleting] = useState(null);
+
+  // ========== FETCH LOANS ==========
+  useEffect(() => {
+    fetchLoans();
+  }, []);
+
+  const fetchLoans = async () => {
+    try {
+      setLoading(true);
+      const response = await axios.get("http://localhost:3000/all-loans");
+
+      console.log("✅ Loans fetched:", response.data);
+      setLoans(response.data);
+      setFilteredLoans(response.data);
+    } catch (error) {
+      console.error("❌ Error fetching loans:", error);
+      toast.error("Failed to load loans");
+      Swal.fire({
+        icon: "error",
+        title: "Error",
+        text: "Failed to load loans",
+      });
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  // ========== FILTER LOANS ==========
+  useEffect(() => {
+    let result = loans;
+
+    // Filter by category
+    if (selectedCategory !== "All") {
+      result = result.filter((loan) => loan.category === selectedCategory);
+    }
+
+    // Filter by search query
+    if (searchQuery) {
+      result = result.filter(
+        (loan) =>
+          loan.loanTitle?.toLowerCase().includes(searchQuery.toLowerCase()) ||
+          loan.category?.toLowerCase().includes(searchQuery.toLowerCase()) ||
+          loan.shortDescription
+            ?.toLowerCase()
+            .includes(searchQuery.toLowerCase())
+      );
+    }
+
+    setFilteredLoans(result);
+  }, [selectedCategory, searchQuery, loans]);
+
+  // ========== GET UNIQUE CATEGORIES ==========
+  const categories = ["All", ...new Set(loans.map((loan) => loan.category))];
+
+  // ========== HANDLE UPDATE ==========
+  const handleUpdate = (loanId) => {
+    navigate(`/dashboard/update-loan/${loanId}`);
+  };
+
+  // ========== HANDLE DELETE ==========
+  const handleDelete = (loan) => {
+    Swal.fire({
+      title: "Delete Loan?",
+      html: `
+        <p>Are you sure you want to delete <strong>"${loan.loanTitle}"</strong>?</p>
+        <p class="text-sm text-red-600 mt-2">This action cannot be undone.</p>
+      `,
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonText: "Yes, Delete",
+      cancelButtonText: "Cancel",
+      confirmButtonColor: "#DC2626",
+      cancelButtonColor: "#6B7280",
+      showLoaderOnConfirm: true,
+      preConfirm: async () => {
+        try {
+          setDeleting(loan._id);
+
+          await axios.delete(`http://localhost:3000/all-loans/${loan._id}`);
+
+          // Remove from state
+          setLoans(loans.filter((l) => l._id !== loan._id));
+
+          return true;
+        } catch (error) {
+          console.error("❌ Error deleting loan:", error);
+          Swal.showValidationMessage(
+            `Delete failed: ${error.response?.data?.message || error.message}`
+          );
+          return false;
+        } finally {
+          setDeleting(null);
+        }
+      },
+      allowOutsideClick: () => !Swal.isLoading(),
+    }).then((result) => {
+      if (result.isConfirmed && result.value) {
+        toast.success("Loan deleted successfully!");
+        Swal.fire({
+          icon: "success",
+          title: "Deleted!",
+          text: `${loan.loanTitle} has been deleted.`,
+          timer: 2000,
+          showConfirmButton: false,
+        });
+      }
+    });
+  };
+
+  // ========== TOGGLE VISIBILITY ==========
+  const toggleVisibility = async (loan) => {
+    try {
+      const newStatus = !loan.showOnHome;
+
+      await axios.patch(`http://localhost:3000/all-loans/${loan._id}`, {
+        showOnHome: newStatus,
+      });
+
+      // Update local state
+      setLoans(
+        loans.map((l) =>
+          l._id === loan._id ? { ...l, showOnHome: newStatus } : l
+        )
+      );
+
+      toast.success(
+        newStatus
+          ? "Loan is now visible on homepage"
+          : "Loan hidden from homepage"
+      );
+    } catch (error) {
+      console.error("❌ Error updating visibility:", error);
+      toast.error("Failed to update visibility");
+    }
+  };
+
+  // ========== CALCULATE STATS ==========
+  const stats = {
+    total: loans.length,
+    visible: loans.filter((l) => l.showOnHome).length,
+    hidden: loans.filter((l) => !l.showOnHome).length,
+    categories: new Set(loans.map((l) => l.category)).size,
+  };
+
+  // ========== LOADING STATE ==========
+  if (loading) {
+    return (
+      <div className="flex items-center justify-center h-96">
+        <div className="text-center">
+          <Loader
+            className="w-12 h-12 mx-auto mb-4 animate-spin"
+            style={{ color: "var(--primary)" }}
+          />
+          <p style={{ color: "var(--text-secondary)" }}>Loading loans...</p>
+        </div>
+      </div>
+    );
+  }
+
+  // ========== MAIN RENDER ==========
+  return (
+    <div>
+      {/* Header */}
+      <div className="flex flex-col md:flex-row md:items-center justify-between mb-8 gap-4">
+        <div>
+          <h1
+            className="text-3xl md:text-4xl font-black mb-2"
+            style={{ color: "var(--text-primary)" }}
+          >
+            Manage Loans
+          </h1>
+          <p style={{ color: "var(--text-secondary)" }}>
+            View, edit, and manage all loan products
+          </p>
+        </div>
+
+        <motion.button
+          whileHover={{ scale: 1.05 }}
+          whileTap={{ scale: 0.95 }}
+          onClick={() => navigate("/dashboard/add-loan")}
+          className="flex items-center gap-2 px-6 py-3 rounded-xl font-bold"
+          style={{
+            backgroundColor: "var(--primary)",
+            color: "white",
+          }}
+        >
+          <Plus className="w-5 h-5" />
+          Add New Loan
+        </motion.button>
+      </div>
+
+      {/* Stats Cards */}
+      <div className="grid md:grid-cols-4 gap-6 mb-8">
+        {[
+          {
+            label: "Total Loans",
+            value: stats.total,
+            icon: DollarSign,
+            color: "var(--primary)",
+          },
+          {
+            label: "Visible on Home",
+            value: stats.visible,
+            icon: Eye,
+            color: "var(--success)",
+          },
+          {
+            label: "Hidden",
+            value: stats.hidden,
+            icon: EyeOff,
+            color: "var(--text-secondary)",
+          },
+          {
+            label: "Categories",
+            value: stats.categories,
+            icon: Filter,
+            color: "var(--secondary)",
+          },
+        ].map((stat, index) => (
+          <motion.div
+            key={index}
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: index * 0.1 }}
+            className="p-6 rounded-xl"
+            style={{
+              backgroundColor: "var(--surface)",
+              border: "2px solid var(--border)",
+            }}
+          >
+            <div className="flex items-center justify-between mb-2">
+              <stat.icon className="w-6 h-6" style={{ color: stat.color }} />
+              <span
+                className="text-3xl font-black"
+                style={{ color: stat.color }}
+              >
+                {stat.value}
+              </span>
+            </div>
+            <p
+              className="text-sm font-semibold"
+              style={{ color: "var(--text-secondary)" }}
+            >
+              {stat.label}
+            </p>
+          </motion.div>
+        ))}
+      </div>
+
+      {/* Filters */}
+      <div className="mb-6 flex flex-col md:flex-row gap-4">
+        {/* Search */}
+        <div className="flex-1 relative">
+          <Search
+            className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5"
+            style={{ color: "var(--text-secondary)" }}
+          />
+          <input
+            type="text"
+            placeholder="Search by title or category..."
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
+            className="w-full pl-10 pr-4 py-3 rounded-lg outline-none"
+            style={{
+              backgroundColor: "var(--surface)",
+              border: "2px solid var(--border)",
+              color: "var(--text-primary)",
+            }}
+          />
+        </div>
+
+        {/* Category Filter */}
+        <div className="flex gap-2 flex-wrap">
+          {categories.map((category) => (
+            <motion.button
+              key={category}
+              whileHover={{ scale: 1.05 }}
+              whileTap={{ scale: 0.95 }}
+              onClick={() => setSelectedCategory(category)}
+              className="px-4 py-2 rounded-lg font-semibold transition-all whitespace-nowrap"
+              style={{
+                backgroundColor:
+                  selectedCategory === category
+                    ? "var(--primary)"
+                    : "var(--surface)",
+                color:
+                  selectedCategory === category
+                    ? "white"
+                    : "var(--text-primary)",
+                border: "2px solid",
+                borderColor:
+                  selectedCategory === category
+                    ? "var(--primary)"
+                    : "var(--border)",
+              }}
+            >
+              {category}
+            </motion.button>
+          ))}
+        </div>
+      </div>
+
+      {/* Results Count */}
+      <p className="mb-4 text-sm" style={{ color: "var(--text-secondary)" }}>
+        Showing {filteredLoans.length} of {loans.length} loans
+      </p>
+
+      {/* Loans Table */}
+      <div
+        className="rounded-xl overflow-hidden"
+        style={{
+          backgroundColor: "var(--surface)",
+          border: "2px solid var(--border)",
+        }}
+      >
+        <div className="overflow-x-auto">
+          <table className="w-full">
+            <thead style={{ backgroundColor: "var(--bg)" }}>
+              <tr>
+                <th
+                  className="text-left p-4 font-bold"
+                  style={{ color: "var(--text-primary)" }}
+                >
+                  Image
+                </th>
+                <th
+                  className="text-left p-4 font-bold"
+                  style={{ color: "var(--text-primary)" }}
+                >
+                  Title
+                </th>
+                <th
+                  className="text-left p-4 font-bold"
+                  style={{ color: "var(--text-primary)" }}
+                >
+                  Category
+                </th>
+                <th
+                  className="text-left p-4 font-bold"
+                  style={{ color: "var(--text-primary)" }}
+                >
+                  Interest Rate
+                </th>
+                <th
+                  className="text-left p-4 font-bold"
+                  style={{ color: "var(--text-primary)" }}
+                >
+                  Max Loan
+                </th>
+                <th
+                  className="text-center p-4 font-bold"
+                  style={{ color: "var(--text-primary)" }}
+                >
+                  Visibility
+                </th>
+                <th
+                  className="text-center p-4 font-bold"
+                  style={{ color: "var(--text-primary)" }}
+                >
+                  Actions
+                </th>
+              </tr>
+            </thead>
+            <tbody>
+              {filteredLoans.length === 0 ? (
+                <tr>
+                  <td colSpan="7" className="text-center p-8">
+                    <AlertCircle
+                      className="w-12 h-12 mx-auto mb-4 opacity-30"
+                      style={{ color: "var(--text-secondary)" }}
+                    />
+                    <p style={{ color: "var(--text-secondary)" }}>
+                      {loans.length === 0
+                        ? "No loans created yet. Create your first loan!"
+                        : "No loans match your search criteria"}
+                    </p>
+                    {loans.length === 0 && (
+                      <motion.button
+                        whileHover={{ scale: 1.05 }}
+                        whileTap={{ scale: 0.95 }}
+                        onClick={() => navigate("/dashboard/add-loan")}
+                        className="mt-4 px-6 py-2 rounded-lg font-semibold"
+                        style={{
+                          backgroundColor: "var(--primary)",
+                          color: "white",
+                        }}
+                      >
+                        Create First Loan
+                      </motion.button>
+                    )}
+                  </td>
+                </tr>
+              ) : (
+                filteredLoans.map((loan, index) => (
+                  <motion.tr
+                    key={loan._id}
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
+                    transition={{ delay: index * 0.05 }}
+                    className="border-t hover:bg-opacity-5"
+                    style={{ borderColor: "var(--border)" }}
+                  >
+                    {/* Image */}
+                    <td className="p-4">
+                      <div
+                        className="w-16 h-16 rounded-lg overflow-hidden"
+                        style={{ backgroundColor: "var(--bg)" }}
+                      >
+                        {loan.loanImage ? (
+                          <img
+                            src={loan.loanImage}
+                            alt={loan.loanTitle}
+                            className="w-full h-full object-cover"
+                            onError={(e) => {
+                              e.target.style.display = "none";
+                              e.target.parentElement.innerHTML = `
+                                <div class="w-full h-full flex items-center justify-center">
+                                  <svg class="w-6 h-6" style="color: var(--text-secondary)" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
+                                  </svg>
+                                </div>
+                              `;
+                            }}
+                          />
+                        ) : (
+                          <div className="w-full h-full flex items-center justify-center">
+                            <ImageIcon
+                              className="w-6 h-6"
+                              style={{ color: "var(--text-secondary)" }}
+                            />
+                          </div>
+                        )}
+                      </div>
+                    </td>
+
+                    {/* Title */}
+                    <td className="p-4">
+                      <p
+                        className="font-bold"
+                        style={{ color: "var(--text-primary)" }}
+                      >
+                        {loan.loanTitle}
+                      </p>
+                      <p
+                        className="text-sm line-clamp-1"
+                        style={{ color: "var(--text-secondary)" }}
+                      >
+                        {loan.shortDescription}
+                      </p>
+                    </td>
+
+                    {/* Category */}
+                    <td className="p-4">
+                      <span
+                        className="px-3 py-1 rounded-full text-sm font-semibold"
+                        style={{
+                          backgroundColor: "var(--primary)",
+                          opacity: 0.1,
+                          color: "var(--accent)",
+                        }}
+                      >
+                        {loan.category}
+                      </span>
+                    </td>
+
+                    {/* Interest Rate */}
+                    <td className="p-4">
+                      <div className="flex items-center gap-2">
+                        <Percent
+                          className="w-4 h-4"
+                          style={{ color: "var(--secondary)" }}
+                        />
+                        <span
+                          className="font-semibold"
+                          style={{ color: "var(--secondary)" }}
+                        >
+                          {loan.interestRate}
+                        </span>
+                      </div>
+                    </td>
+
+                    {/* Max Loan */}
+                    <td className="p-4">
+                      <span
+                        className="font-bold text-lg"
+                        style={{ color: "var(--success)" }}
+                      >
+                        {loan.maxLimit}
+                      </span>
+                    </td>
+
+                    {/* Visibility Toggle */}
+                    <td className="p-4">
+                      <div className="flex justify-center">
+                        <motion.button
+                          whileHover={{ scale: 1.1 }}
+                          whileTap={{ scale: 0.9 }}
+                          onClick={() => toggleVisibility(loan)}
+                          className="p-2 rounded-lg"
+                          style={{
+                            backgroundColor: loan.showOnHome
+                              ? "var(--success)"
+                              : "var(--text-secondary)",
+                            opacity: 0.1,
+                          }}
+                          title={
+                            loan.showOnHome
+                              ? "Visible on Home"
+                              : "Hidden from Home"
+                          }
+                        >
+                          {loan.showOnHome ? (
+                            <Eye
+                              className="w-5 h-5"
+                              style={{ color: "var(--success)" }}
+                            />
+                          ) : (
+                            <EyeOff
+                              className="w-5 h-5"
+                              style={{ color: "var(--text-secondary)" }}
+                            />
+                          )}
+                        </motion.button>
+                      </div>
+                    </td>
+
+                    {/* Actions */}
+                    <td className="p-4">
+                      <div className="flex items-center justify-center gap-2">
+                        {/* Edit Button */}
+                        <motion.button
+                          whileHover={{ scale: 1.1 }}
+                          whileTap={{ scale: 0.9 }}
+                          onClick={() => handleUpdate(loan._id)}
+                          className="p-2 rounded-lg"
+                          style={{
+                            backgroundColor: "var(--primary)",
+                            opacity: 0.1,
+                          }}
+                          title="Edit Loan"
+                        >
+                          <Edit
+                            className="w-4 h-4"
+                            style={{ color: "var(--primary)" }}
+                          />
+                        </motion.button>
+
+                        {/* Delete Button */}
+                        <motion.button
+                          whileHover={{ scale: 1.1 }}
+                          whileTap={{ scale: 0.9 }}
+                          onClick={() => handleDelete(loan)}
+                          disabled={deleting === loan._id}
+                          className="p-2 rounded-lg disabled:opacity-50"
+                          style={{
+                            backgroundColor: "var(--error)",
+                            opacity: 0.1,
+                          }}
+                          title="Delete Loan"
+                        >
+                          {deleting === loan._id ? (
+                            <Loader
+                              className="w-4 h-4 animate-spin"
+                              style={{ color: "var(--error)" }}
+                            />
+                          ) : (
+                            <Trash2
+                              className="w-4 h-4"
+                              style={{ color: "var(--error)" }}
+                            />
+                          )}
+                        </motion.button>
+                      </div>
+                    </td>
+                  </motion.tr>
+                ))
+              )}
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      {/* Empty State Actions */}
+      {loans.length === 0 && (
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          className="mt-8 text-center p-12 rounded-2xl"
+          style={{
+            backgroundColor: "var(--surface)",
+            border: "2px dashed var(--border)",
+          }}
+        >
+          <DollarSign
+            className="w-20 h-20 mx-auto mb-4 opacity-30"
+            style={{ color: "var(--primary)" }}
+          />
+          <h3
+            className="text-2xl font-bold mb-2"
+            style={{ color: "var(--text-primary)" }}
+          >
+            No Loans Created Yet
+          </h3>
+          <p className="mb-6" style={{ color: "var(--text-secondary)" }}>
+            Start by creating your first loan product
+          </p>
+          <motion.button
+            whileHover={{ scale: 1.05 }}
+            whileTap={{ scale: 0.95 }}
+            onClick={() => navigate("/dashboard/add-loan")}
+            className="btn-primary px-8 py-3"
+          >
+            <Plus className="w-5 h-5 inline mr-2" />
+            Create First Loan
+          </motion.button>
+        </motion.div>
+      )}
+    </div>
+  );
 };
 
 export default ManageLoans;

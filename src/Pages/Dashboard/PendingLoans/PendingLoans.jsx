@@ -1,34 +1,33 @@
 // PendingLoans.jsx
-import React, { useState, useEffect } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
-import { 
-  Clock,
-  CheckCircle,
-  XCircle,
-  Eye,
-  Search,
-  Filter,
-  Loader,
+import axios from "axios";
+import { AnimatePresence, motion } from "framer-motion";
+import {
   AlertCircle,
-  X,
-  DollarSign,
+  Briefcase,
   Calendar,
-  User,
-  Mail,
-  Phone,
-  MapPin,
+  CheckCircle,
+  Clock,
+  DollarSign,
+  Eye,
   FileText,
-  Briefcase
-} from 'lucide-react';
-import axios from 'axios';
-import Swal from 'sweetalert2';
+  Loader,
+  Mail,
+  MapPin,
+  Phone,
+  Search,
+  User,
+  X,
+  XCircle,
+} from "lucide-react";
+import { useEffect, useState } from "react";
+import Swal from "sweetalert2";
 
 const PendingLoans = () => {
   // ========== STATE ==========
   const [applications, setApplications] = useState([]);
   const [filteredApplications, setFilteredApplications] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [searchQuery, setSearchQuery] = useState('');
+  const [searchQuery, setSearchQuery] = useState("");
   const [showModal, setShowModal] = useState(false);
   const [selectedApplication, setSelectedApplication] = useState(null);
   const [processing, setProcessing] = useState(false);
@@ -41,20 +40,24 @@ const PendingLoans = () => {
   const fetchApplications = async () => {
     try {
       setLoading(true);
-      const response = await axios.get('http://localhost:3000/loan-applications');
-      
+      const response = await axios.get(
+        "http://localhost:3000/loan-applications"
+      );
+
       // Filter only pending applications
-      const pendingApps = response.data.filter(app => app.status === 'Pending');
-      
-      console.log('✅ Pending applications:', pendingApps);
+      const pendingApps = response.data.filter(
+        (app) => app.status === "Pending"
+      );
+
+      console.log("✅ Pending applications:", pendingApps);
       setApplications(pendingApps);
       setFilteredApplications(pendingApps);
     } catch (error) {
-      console.error('❌ Error fetching applications:', error);
+      console.error("❌ Error fetching applications:", error);
       Swal.fire({
-        icon: 'error',
-        title: 'Error',
-        text: 'Failed to load applications'
+        icon: "error",
+        title: "Error",
+        text: "Failed to load applications",
       });
     } finally {
       setLoading(false);
@@ -64,11 +67,12 @@ const PendingLoans = () => {
   // ========== FILTER APPLICATIONS ==========
   useEffect(() => {
     if (searchQuery) {
-      const filtered = applications.filter(app =>
-        app.firstName?.toLowerCase().includes(searchQuery.toLowerCase()) ||
-        app.lastName?.toLowerCase().includes(searchQuery.toLowerCase()) ||
-        app.userEmail?.toLowerCase().includes(searchQuery.toLowerCase()) ||
-        app.loanTitle?.toLowerCase().includes(searchQuery.toLowerCase())
+      const filtered = applications.filter(
+        (app) =>
+          app.firstName?.toLowerCase().includes(searchQuery.toLowerCase()) ||
+          app.lastName?.toLowerCase().includes(searchQuery.toLowerCase()) ||
+          app.userEmail?.toLowerCase().includes(searchQuery.toLowerCase()) ||
+          app.loanTitle?.toLowerCase().includes(searchQuery.toLowerCase())
       );
       setFilteredApplications(filtered);
     } else {
@@ -79,16 +83,18 @@ const PendingLoans = () => {
   // ========== APPROVE APPLICATION ==========
   const handleApprove = (application) => {
     Swal.fire({
-      title: 'Approve Loan?',
+      title: "Approve Loan?",
       html: `
-        <p>Approve loan application for <strong>${application.firstName} ${application.lastName}</strong>?</p>
+        <p>Approve loan application for <strong>${application.firstName} ${
+        application.lastName
+      }</strong>?</p>
         <p class="text-sm mt-2">Amount: <strong>$${application.loanAmount?.toLocaleString()}</strong></p>
       `,
-      icon: 'question',
+      icon: "question",
       showCancelButton: true,
-      confirmButtonText: 'Yes, Approve',
-      confirmButtonColor: 'var(--success)',
-      cancelButtonText: 'Cancel'
+      confirmButtonText: "Yes, Approve",
+      confirmButtonColor: "var(--success)",
+      cancelButtonText: "Cancel",
     }).then(async (result) => {
       if (result.isConfirmed) {
         try {
@@ -96,30 +102,31 @@ const PendingLoans = () => {
 
           await axios.patch(
             `http://localhost:3000/loan-applications/${application._id}`,
-            { 
-              status: 'Approved',
+            {
+              status: "Approved",
               approvedAt: new Date(),
-              approvedBy: 'Admin' // You can pass actual admin email
+              approvedBy: "Admin", // You can pass actual admin email
             }
           );
 
           // Remove from pending list
-          setApplications(applications.filter(app => app._id !== application._id));
+          setApplications(
+            applications.filter((app) => app._id !== application._id)
+          );
 
           Swal.fire({
-            icon: 'success',
-            title: 'Approved!',
-            text: 'Loan application has been approved',
+            icon: "success",
+            title: "Approved!",
+            text: "Loan application has been approved",
             timer: 2000,
-            showConfirmButton: false
+            showConfirmButton: false,
           });
-
         } catch (error) {
-          console.error('❌ Error approving application:', error);
+          console.error("❌ Error approving application:", error);
           Swal.fire({
-            icon: 'error',
-            title: 'Failed',
-            text: 'Could not approve application'
+            icon: "error",
+            title: "Failed",
+            text: "Could not approve application",
           });
         } finally {
           setProcessing(false);
@@ -131,20 +138,20 @@ const PendingLoans = () => {
   // ========== REJECT APPLICATION ==========
   const handleReject = (application) => {
     Swal.fire({
-      title: 'Reject Loan?',
+      title: "Reject Loan?",
       html: `
         <p>Are you sure you want to reject this loan application?</p>
         <textarea id="rejection-reason" class="w-full mt-4 p-3 border rounded" placeholder="Reason for rejection (optional)"></textarea>
       `,
-      icon: 'warning',
+      icon: "warning",
       showCancelButton: true,
-      confirmButtonText: 'Yes, Reject',
-      confirmButtonColor: 'var(--error)',
-      cancelButtonText: 'Cancel',
+      confirmButtonText: "Yes, Reject",
+      confirmButtonColor: "var(--error)",
+      cancelButtonText: "Cancel",
       preConfirm: () => {
-        const reason = document.getElementById('rejection-reason').value;
+        const reason = document.getElementById("rejection-reason").value;
         return reason;
-      }
+      },
     }).then(async (result) => {
       if (result.isConfirmed) {
         try {
@@ -152,31 +159,32 @@ const PendingLoans = () => {
 
           await axios.patch(
             `http://localhost:3000/loan-applications/${application._id}`,
-            { 
-              status: 'Rejected',
+            {
+              status: "Rejected",
               rejectedAt: new Date(),
-              rejectedBy: 'Admin',
-              rejectionReason: result.value || 'No reason provided'
+              rejectedBy: "Admin",
+              rejectionReason: result.value || "No reason provided",
             }
           );
 
           // Remove from pending list
-          setApplications(applications.filter(app => app._id !== application._id));
+          setApplications(
+            applications.filter((app) => app._id !== application._id)
+          );
 
           Swal.fire({
-            icon: 'success',
-            title: 'Rejected',
-            text: 'Loan application has been rejected',
+            icon: "success",
+            title: "Rejected",
+            text: "Loan application has been rejected",
             timer: 2000,
-            showConfirmButton: false
+            showConfirmButton: false,
           });
-
         } catch (error) {
-          console.error('❌ Error rejecting application:', error);
+          console.error("❌ Error rejecting application:", error);
           Swal.fire({
-            icon: 'error',
-            title: 'Failed',
-            text: 'Could not reject application'
+            icon: "error",
+            title: "Failed",
+            text: "Could not reject application",
           });
         } finally {
           setProcessing(false);
@@ -195,7 +203,10 @@ const PendingLoans = () => {
   if (loading) {
     return (
       <div className="flex items-center justify-center h-96">
-        <Loader className="w-12 h-12 animate-spin" style={{ color: 'var(--primary)' }} />
+        <Loader
+          className="w-12 h-12 animate-spin"
+          style={{ color: "var(--primary)" }}
+        />
       </div>
     );
   }
@@ -205,11 +216,13 @@ const PendingLoans = () => {
     <div>
       {/* Header */}
       <div className="mb-8">
-        <h1 className="text-3xl md:text-4xl font-black mb-2" 
-            style={{ color: 'var(--text-primary)' }}>
+        <h1
+          className="text-3xl md:text-4xl font-black mb-2"
+          style={{ color: "var(--text-primary)" }}
+        >
           Pending Loan Applications
         </h1>
-        <p style={{ color: 'var(--text-secondary)' }}>
+        <p style={{ color: "var(--text-secondary)" }}>
           Review and approve/reject loan applications
         </p>
       </div>
@@ -217,27 +230,29 @@ const PendingLoans = () => {
       {/* Stats */}
       <div className="grid md:grid-cols-3 gap-6 mb-8">
         {[
-          { 
-            label: 'Total Pending', 
-            value: applications.length, 
-            icon: Clock, 
-            color: 'var(--accent)' 
+          {
+            label: "Total Pending",
+            value: applications.length,
+            icon: Clock,
+            color: "var(--accent)",
           },
-          { 
-            label: 'Total Amount Requested', 
-            value: `$${applications.reduce((sum, app) => sum + (app.loanAmount || 0), 0).toLocaleString()}`, 
-            icon: DollarSign, 
-            color: 'var(--primary)' 
+          {
+            label: "Total Amount Requested",
+            value: `$${applications
+              .reduce((sum, app) => sum + (app.loanAmount || 0), 0)
+              .toLocaleString()}`,
+            icon: DollarSign,
+            color: "var(--primary)",
           },
-          { 
-            label: 'Today\'s Applications', 
-            value: applications.filter(app => {
+          {
+            label: "Today's Applications",
+            value: applications.filter((app) => {
               const today = new Date().toDateString();
               return new Date(app.appliedAt).toDateString() === today;
-            }).length, 
-            icon: Calendar, 
-            color: 'var(--success)' 
-          }
+            }).length,
+            icon: Calendar,
+            color: "var(--success)",
+          },
         ].map((stat, index) => (
           <motion.div
             key={index}
@@ -246,17 +261,23 @@ const PendingLoans = () => {
             transition={{ delay: index * 0.1 }}
             className="p-6 rounded-xl"
             style={{
-              backgroundColor: 'var(--surface)',
-              border: '2px solid var(--border)'
+              backgroundColor: "var(--surface)",
+              border: "2px solid var(--border)",
             }}
           >
             <div className="flex items-center justify-between mb-2">
               <stat.icon className="w-6 h-6" style={{ color: stat.color }} />
-              <span className="text-2xl font-black" style={{ color: stat.color }}>
+              <span
+                className="text-2xl font-black"
+                style={{ color: stat.color }}
+              >
                 {stat.value}
               </span>
             </div>
-            <p className="text-sm font-semibold" style={{ color: 'var(--text-secondary)' }}>
+            <p
+              className="text-sm font-semibold"
+              style={{ color: "var(--text-secondary)" }}
+            >
               {stat.label}
             </p>
           </motion.div>
@@ -266,8 +287,10 @@ const PendingLoans = () => {
       {/* Search */}
       <div className="mb-6">
         <div className="relative max-w-md">
-          <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5" 
-                  style={{ color: 'var(--text-secondary)' }} />
+          <Search
+            className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5"
+            style={{ color: "var(--text-secondary)" }}
+          />
           <input
             type="text"
             placeholder="Search by name, email, or loan type..."
@@ -275,40 +298,60 @@ const PendingLoans = () => {
             onChange={(e) => setSearchQuery(e.target.value)}
             className="w-full pl-10 pr-4 py-3 rounded-lg outline-none"
             style={{
-              backgroundColor: 'var(--surface)',
-              border: '2px solid var(--border)',
-              color: 'var(--text-primary)'
+              backgroundColor: "var(--surface)",
+              border: "2px solid var(--border)",
+              color: "var(--text-primary)",
             }}
           />
         </div>
       </div>
 
       {/* Applications Table */}
-      <div className="rounded-xl overflow-hidden"
-           style={{
-             backgroundColor: 'var(--surface)',
-             border: '2px solid var(--border)'
-           }}>
+      <div
+        className="rounded-xl overflow-hidden"
+        style={{
+          backgroundColor: "var(--surface)",
+          border: "2px solid var(--border)",
+        }}
+      >
         <div className="overflow-x-auto">
           <table className="w-full">
-            <thead style={{ backgroundColor: 'var(--bg)' }}>
+            <thead style={{ backgroundColor: "var(--bg)" }}>
               <tr>
-                <th className="text-left p-4 font-bold" style={{ color: 'var(--text-primary)' }}>
+                <th
+                  className="text-left p-4 font-bold"
+                  style={{ color: "var(--text-primary)" }}
+                >
                   Loan ID
                 </th>
-                <th className="text-left p-4 font-bold" style={{ color: 'var(--text-primary)' }}>
+                <th
+                  className="text-left p-4 font-bold"
+                  style={{ color: "var(--text-primary)" }}
+                >
                   User Info
                 </th>
-                <th className="text-left p-4 font-bold" style={{ color: 'var(--text-primary)' }}>
+                <th
+                  className="text-left p-4 font-bold"
+                  style={{ color: "var(--text-primary)" }}
+                >
                   Loan Type
                 </th>
-                <th className="text-left p-4 font-bold" style={{ color: 'var(--text-primary)' }}>
+                <th
+                  className="text-left p-4 font-bold"
+                  style={{ color: "var(--text-primary)" }}
+                >
                   Amount
                 </th>
-                <th className="text-left p-4 font-bold" style={{ color: 'var(--text-primary)' }}>
+                <th
+                  className="text-left p-4 font-bold"
+                  style={{ color: "var(--text-primary)" }}
+                >
                   Date Applied
                 </th>
-                <th className="text-center p-4 font-bold" style={{ color: 'var(--text-primary)' }}>
+                <th
+                  className="text-center p-4 font-bold"
+                  style={{ color: "var(--text-primary)" }}
+                >
                   Actions
                 </th>
               </tr>
@@ -317,12 +360,14 @@ const PendingLoans = () => {
               {filteredApplications.length === 0 ? (
                 <tr>
                   <td colSpan="6" className="text-center p-8">
-                    <AlertCircle className="w-12 h-12 mx-auto mb-4 opacity-30" 
-                                 style={{ color: 'var(--text-secondary)' }} />
-                    <p style={{ color: 'var(--text-secondary)' }}>
-                      {applications.length === 0 
-                        ? 'No pending applications' 
-                        : 'No applications match your search'}
+                    <AlertCircle
+                      className="w-12 h-12 mx-auto mb-4 opacity-30"
+                      style={{ color: "var(--text-secondary)" }}
+                    />
+                    <p style={{ color: "var(--text-secondary)" }}>
+                      {applications.length === 0
+                        ? "No pending applications"
+                        : "No applications match your search"}
                     </p>
                   </td>
                 </tr>
@@ -334,12 +379,14 @@ const PendingLoans = () => {
                     animate={{ opacity: 1 }}
                     transition={{ delay: index * 0.05 }}
                     className="border-t hover:bg-opacity-5"
-                    style={{ borderColor: 'var(--border)' }}
+                    style={{ borderColor: "var(--border)" }}
                   >
                     {/* Loan ID */}
                     <td className="p-4">
-                      <span className="font-mono text-sm font-semibold" 
-                            style={{ color: 'var(--text-primary)' }}>
+                      <span
+                        className="font-mono text-sm font-semibold"
+                        style={{ color: "var(--text-primary)" }}
+                      >
                         #{application._id.slice(-8).toUpperCase()}
                       </span>
                     </td>
@@ -348,15 +395,24 @@ const PendingLoans = () => {
                     <td className="p-4">
                       <div className="flex items-center gap-3">
                         <img
-                          src={application.userPhoto || 'https://via.placeholder.com/40'}
+                          src={
+                            application.userPhoto ||
+                            "https://via.placeholder.com/40"
+                          }
                           alt={application.firstName}
                           className="w-10 h-10 rounded-full object-cover"
                         />
                         <div>
-                          <p className="font-bold" style={{ color: 'var(--text-primary)' }}>
+                          <p
+                            className="font-bold"
+                            style={{ color: "var(--text-primary)" }}
+                          >
                             {application.firstName} {application.lastName}
                           </p>
-                          <p className="text-sm" style={{ color: 'var(--text-secondary)' }}>
+                          <p
+                            className="text-sm"
+                            style={{ color: "var(--text-secondary)" }}
+                          >
                             {application.userEmail}
                           </p>
                         </div>
@@ -365,19 +421,24 @@ const PendingLoans = () => {
 
                     {/* Loan Type */}
                     <td className="p-4">
-                      <span className="px-3 py-1 rounded-full text-sm font-semibold"
-                            style={{ 
-                              backgroundColor: 'var(--primary)', 
-                              opacity: 0.1,
-                              color: 'var(--primary)' 
-                            }}>
+                      <span
+                        className="px-3 py-1 rounded-full text-sm font-semibold"
+                        style={{
+                          backgroundColor: "var(--primary)",
+                          opacity: 0.1,
+                          color: "var(--primary)",
+                        }}
+                      >
                         {application.loanTitle}
                       </span>
                     </td>
 
                     {/* Amount */}
                     <td className="p-4">
-                      <span className="text-lg font-black" style={{ color: 'var(--success)' }}>
+                      <span
+                        className="text-lg font-black"
+                        style={{ color: "var(--success)" }}
+                      >
                         ${application.loanAmount?.toLocaleString()}
                       </span>
                     </td>
@@ -385,8 +446,14 @@ const PendingLoans = () => {
                     {/* Date */}
                     <td className="p-4">
                       <div className="flex items-center gap-2">
-                        <Calendar className="w-4 h-4" style={{ color: 'var(--text-secondary)' }} />
-                        <span className="text-sm" style={{ color: 'var(--text-secondary)' }}>
+                        <Calendar
+                          className="w-4 h-4"
+                          style={{ color: "var(--text-secondary)" }}
+                        />
+                        <span
+                          className="text-sm"
+                          style={{ color: "var(--text-secondary)" }}
+                        >
                           {new Date(application.appliedAt).toLocaleDateString()}
                         </span>
                       </div>
@@ -401,10 +468,16 @@ const PendingLoans = () => {
                           whileTap={{ scale: 0.9 }}
                           onClick={() => handleViewDetails(application)}
                           className="p-2 rounded-lg"
-                          style={{ backgroundColor: 'var(--primary)', opacity: 0.1 }}
+                          style={{
+                            backgroundColor: "var(--primary)",
+                            opacity: 0.1,
+                          }}
                           title="View Details"
                         >
-                          <Eye className="w-4 h-4" style={{ color: 'var(--primary)' }} />
+                          <Eye
+                            className="w-4 h-4"
+                            style={{ color: "var(--primary)" }}
+                          />
                         </motion.button>
 
                         {/* Approve Button */}
@@ -414,10 +487,16 @@ const PendingLoans = () => {
                           onClick={() => handleApprove(application)}
                           disabled={processing}
                           className="p-2 rounded-lg disabled:opacity-50"
-                          style={{ backgroundColor: 'var(--success)', opacity: 0.1 }}
+                          style={{
+                            backgroundColor: "var(--success)",
+                            opacity: 0.1,
+                          }}
                           title="Approve"
                         >
-                          <CheckCircle className="w-4 h-4" style={{ color: 'var(--success)' }} />
+                          <CheckCircle
+                            className="w-4 h-4"
+                            style={{ color: "var(--success)" }}
+                          />
                         </motion.button>
 
                         {/* Reject Button */}
@@ -427,10 +506,16 @@ const PendingLoans = () => {
                           onClick={() => handleReject(application)}
                           disabled={processing}
                           className="p-2 rounded-lg disabled:opacity-50"
-                          style={{ backgroundColor: 'var(--error)', opacity: 0.1 }}
+                          style={{
+                            backgroundColor: "var(--error)",
+                            opacity: 0.1,
+                          }}
                           title="Reject"
                         >
-                          <XCircle className="w-4 h-4" style={{ color: 'var(--error)' }} />
+                          <XCircle
+                            className="w-4 h-4"
+                            style={{ color: "var(--error)" }}
+                          />
                         </motion.button>
                       </div>
                     </td>
@@ -458,65 +543,121 @@ const PendingLoans = () => {
               onClick={(e) => e.stopPropagation()}
               className="w-full max-w-3xl p-8 rounded-2xl my-8"
               style={{
-                backgroundColor: 'var(--surface)',
-                border: '2px solid var(--border)'
+                backgroundColor: "var(--surface)",
+                border: "2px solid var(--border)",
               }}
             >
               {/* Header */}
               <div className="flex items-center justify-between mb-6">
-                <h3 className="text-2xl font-black" style={{ color: 'var(--text-primary)' }}>
+                <h3
+                  className="text-2xl font-black"
+                  style={{ color: "var(--text-primary)" }}
+                >
                   Application Details
                 </h3>
                 <button
                   onClick={() => setShowModal(false)}
                   className="w-8 h-8 rounded-lg flex items-center justify-center"
-                  style={{ backgroundColor: 'var(--bg)' }}
+                  style={{ backgroundColor: "var(--bg)" }}
                 >
-                  <X className="w-5 h-5" style={{ color: 'var(--text-primary)' }} />
+                  <X
+                    className="w-5 h-5"
+                    style={{ color: "var(--text-primary)" }}
+                  />
                 </button>
               </div>
 
               {/* Content */}
               <div className="space-y-6">
-                
                 {/* Applicant Info */}
-                <div className="p-6 rounded-xl" style={{ backgroundColor: 'var(--bg)' }}>
-                  <h4 className="text-lg font-bold mb-4" style={{ color: 'var(--text-primary)' }}>
+                <div
+                  className="p-6 rounded-xl"
+                  style={{ backgroundColor: "var(--bg)" }}
+                >
+                  <h4
+                    className="text-lg font-bold mb-4"
+                    style={{ color: "var(--text-primary)" }}
+                  >
                     Applicant Information
                   </h4>
                   <div className="grid md:grid-cols-2 gap-4">
                     <div className="flex items-center gap-3">
-                      <User className="w-5 h-5" style={{ color: 'var(--primary)' }} />
+                      <User
+                        className="w-5 h-5"
+                        style={{ color: "var(--primary)" }}
+                      />
                       <div>
-                        <p className="text-sm" style={{ color: 'var(--text-secondary)' }}>Full Name</p>
-                        <p className="font-semibold" style={{ color: 'var(--text-primary)' }}>
-                          {selectedApplication.firstName} {selectedApplication.lastName}
+                        <p
+                          className="text-sm"
+                          style={{ color: "var(--text-secondary)" }}
+                        >
+                          Full Name
+                        </p>
+                        <p
+                          className="font-semibold"
+                          style={{ color: "var(--text-primary)" }}
+                        >
+                          {selectedApplication.firstName}{" "}
+                          {selectedApplication.lastName}
                         </p>
                       </div>
                     </div>
                     <div className="flex items-center gap-3">
-                      <Mail className="w-5 h-5" style={{ color: 'var(--primary)' }} />
+                      <Mail
+                        className="w-5 h-5"
+                        style={{ color: "var(--primary)" }}
+                      />
                       <div>
-                        <p className="text-sm" style={{ color: 'var(--text-secondary)' }}>Email</p>
-                        <p className="font-semibold" style={{ color: 'var(--text-primary)' }}>
+                        <p
+                          className="text-sm"
+                          style={{ color: "var(--text-secondary)" }}
+                        >
+                          Email
+                        </p>
+                        <p
+                          className="font-semibold"
+                          style={{ color: "var(--text-primary)" }}
+                        >
                           {selectedApplication.userEmail}
                         </p>
                       </div>
                     </div>
                     <div className="flex items-center gap-3">
-                      <Phone className="w-5 h-5" style={{ color: 'var(--primary)' }} />
+                      <Phone
+                        className="w-5 h-5"
+                        style={{ color: "var(--primary)" }}
+                      />
                       <div>
-                        <p className="text-sm" style={{ color: 'var(--text-secondary)' }}>Contact</p>
-                        <p className="font-semibold" style={{ color: 'var(--text-primary)' }}>
+                        <p
+                          className="text-sm"
+                          style={{ color: "var(--text-secondary)" }}
+                        >
+                          Contact
+                        </p>
+                        <p
+                          className="font-semibold"
+                          style={{ color: "var(--text-primary)" }}
+                        >
                           {selectedApplication.contactNumber}
                         </p>
                       </div>
                     </div>
                     <div className="flex items-center gap-3">
-                      <FileText className="w-5 h-5" style={{ color: 'var(--primary)' }} />
+                      <FileText
+                        className="w-5 h-5"
+                        style={{ color: "var(--primary)" }}
+                      />
                       <div>
-                        <p className="text-sm" style={{ color: 'var(--text-secondary)' }}>National ID</p>
-                        <p className="font-semibold" style={{ color: 'var(--text-primary)' }}>
+                        <p
+                          className="text-sm"
+                          style={{ color: "var(--text-secondary)" }}
+                        >
+                          National ID
+                        </p>
+                        <p
+                          className="font-semibold"
+                          style={{ color: "var(--text-primary)" }}
+                        >
                           {selectedApplication.nationalId}
                         </p>
                       </div>
@@ -525,32 +666,70 @@ const PendingLoans = () => {
                 </div>
 
                 {/* Loan Details */}
-                <div className="p-6 rounded-xl" style={{ backgroundColor: 'var(--bg)' }}>
-                  <h4 className="text-lg font-bold mb-4" style={{ color: 'var(--text-primary)' }}>
+                <div
+                  className="p-6 rounded-xl"
+                  style={{ backgroundColor: "var(--bg)" }}
+                >
+                  <h4
+                    className="text-lg font-bold mb-4"
+                    style={{ color: "var(--text-primary)" }}
+                  >
                     Loan Information
                   </h4>
                   <div className="grid md:grid-cols-2 gap-4">
                     <div>
-                      <p className="text-sm mb-1" style={{ color: 'var(--text-secondary)' }}>Loan Type</p>
-                      <p className="font-bold text-lg" style={{ color: 'var(--primary)' }}>
+                      <p
+                        className="text-sm mb-1"
+                        style={{ color: "var(--text-secondary)" }}
+                      >
+                        Loan Type
+                      </p>
+                      <p
+                        className="font-bold text-lg"
+                        style={{ color: "var(--primary)" }}
+                      >
                         {selectedApplication.loanTitle}
                       </p>
                     </div>
                     <div>
-                      <p className="text-sm mb-1" style={{ color: 'var(--text-secondary)' }}>Requested Amount</p>
-                      <p className="font-black text-2xl" style={{ color: 'var(--success)' }}>
+                      <p
+                        className="text-sm mb-1"
+                        style={{ color: "var(--text-secondary)" }}
+                      >
+                        Requested Amount
+                      </p>
+                      <p
+                        className="font-black text-2xl"
+                        style={{ color: "var(--success)" }}
+                      >
                         ${selectedApplication.loanAmount?.toLocaleString()}
                       </p>
                     </div>
                     <div>
-                      <p className="text-sm mb-1" style={{ color: 'var(--text-secondary)' }}>Interest Rate</p>
-                      <p className="font-semibold" style={{ color: 'var(--text-primary)' }}>
+                      <p
+                        className="text-sm mb-1"
+                        style={{ color: "var(--text-secondary)" }}
+                      >
+                        Interest Rate
+                      </p>
+                      <p
+                        className="font-semibold"
+                        style={{ color: "var(--text-primary)" }}
+                      >
                         {selectedApplication.interestRate}
                       </p>
                     </div>
                     <div>
-                      <p className="text-sm mb-1" style={{ color: 'var(--text-secondary)' }}>Reason</p>
-                      <p className="font-semibold" style={{ color: 'var(--text-primary)' }}>
+                      <p
+                        className="text-sm mb-1"
+                        style={{ color: "var(--text-secondary)" }}
+                      >
+                        Reason
+                      </p>
+                      <p
+                        className="font-semibold"
+                        style={{ color: "var(--text-primary)" }}
+                      >
                         {selectedApplication.reasonForLoan}
                       </p>
                     </div>
@@ -558,25 +737,53 @@ const PendingLoans = () => {
                 </div>
 
                 {/* Financial Info */}
-                <div className="p-6 rounded-xl" style={{ backgroundColor: 'var(--bg)' }}>
-                  <h4 className="text-lg font-bold mb-4" style={{ color: 'var(--text-primary)' }}>
+                <div
+                  className="p-6 rounded-xl"
+                  style={{ backgroundColor: "var(--bg)" }}
+                >
+                  <h4
+                    className="text-lg font-bold mb-4"
+                    style={{ color: "var(--text-primary)" }}
+                  >
                     Financial Information
                   </h4>
                   <div className="grid md:grid-cols-2 gap-4">
                     <div className="flex items-center gap-3">
-                      <Briefcase className="w-5 h-5" style={{ color: 'var(--success)' }} />
+                      <Briefcase
+                        className="w-5 h-5"
+                        style={{ color: "var(--success)" }}
+                      />
                       <div>
-                        <p className="text-sm" style={{ color: 'var(--text-secondary)' }}>Income Source</p>
-                        <p className="font-semibold" style={{ color: 'var(--text-primary)' }}>
+                        <p
+                          className="text-sm"
+                          style={{ color: "var(--text-secondary)" }}
+                        >
+                          Income Source
+                        </p>
+                        <p
+                          className="font-semibold"
+                          style={{ color: "var(--text-primary)" }}
+                        >
                           {selectedApplication.incomeSource}
                         </p>
                       </div>
                     </div>
                     <div className="flex items-center gap-3">
-                      <DollarSign className="w-5 h-5" style={{ color: 'var(--success)' }} />
+                      <DollarSign
+                        className="w-5 h-5"
+                        style={{ color: "var(--success)" }}
+                      />
                       <div>
-                        <p className="text-sm" style={{ color: 'var(--text-secondary)' }}>Monthly Income</p>
-                        <p className="font-semibold" style={{ color: 'var(--text-primary)' }}>
+                        <p
+                          className="text-sm"
+                          style={{ color: "var(--text-secondary)" }}
+                        >
+                          Monthly Income
+                        </p>
+                        <p
+                          className="font-semibold"
+                          style={{ color: "var(--text-primary)" }}
+                        >
                           ${selectedApplication.monthlyIncome?.toLocaleString()}
                         </p>
                       </div>
@@ -585,12 +792,23 @@ const PendingLoans = () => {
                 </div>
 
                 {/* Address */}
-                <div className="p-6 rounded-xl" style={{ backgroundColor: 'var(--bg)' }}>
+                <div
+                  className="p-6 rounded-xl"
+                  style={{ backgroundColor: "var(--bg)" }}
+                >
                   <div className="flex items-start gap-3">
-                    <MapPin className="w-5 h-5 mt-1" style={{ color: 'var(--primary)' }} />
+                    <MapPin
+                      className="w-5 h-5 mt-1"
+                      style={{ color: "var(--primary)" }}
+                    />
                     <div className="flex-1">
-                      <p className="text-sm mb-1" style={{ color: 'var(--text-secondary)' }}>Address</p>
-                      <p style={{ color: 'var(--text-primary)' }}>
+                      <p
+                        className="text-sm mb-1"
+                        style={{ color: "var(--text-secondary)" }}
+                      >
+                        Address
+                      </p>
+                      <p style={{ color: "var(--text-primary)" }}>
                         {selectedApplication.address}
                       </p>
                     </div>
@@ -599,11 +817,17 @@ const PendingLoans = () => {
 
                 {/* Extra Notes */}
                 {selectedApplication.extraNotes && (
-                  <div className="p-6 rounded-xl" style={{ backgroundColor: 'var(--bg)' }}>
-                    <p className="text-sm mb-2 font-semibold" style={{ color: 'var(--text-secondary)' }}>
+                  <div
+                    className="p-6 rounded-xl"
+                    style={{ backgroundColor: "var(--bg)" }}
+                  >
+                    <p
+                      className="text-sm mb-2 font-semibold"
+                      style={{ color: "var(--text-secondary)" }}
+                    >
                       Additional Notes:
                     </p>
-                    <p style={{ color: 'var(--text-primary)' }}>
+                    <p style={{ color: "var(--text-primary)" }}>
                       {selectedApplication.extraNotes}
                     </p>
                   </div>
@@ -617,7 +841,10 @@ const PendingLoans = () => {
                       handleApprove(selectedApplication);
                     }}
                     className="flex-1 py-3 rounded-xl font-bold flex items-center justify-center gap-2"
-                    style={{ backgroundColor: 'var(--success)', color: 'white' }}
+                    style={{
+                      backgroundColor: "var(--success)",
+                      color: "white",
+                    }}
                   >
                     <CheckCircle className="w-5 h-5" />
                     Approve Loan
@@ -628,7 +855,7 @@ const PendingLoans = () => {
                       handleReject(selectedApplication);
                     }}
                     className="flex-1 py-3 rounded-xl font-bold flex items-center justify-center gap-2"
-                    style={{ backgroundColor: 'var(--error)', color: 'white' }}
+                    style={{ backgroundColor: "var(--error)", color: "white" }}
                   >
                     <XCircle className="w-5 h-5" />
                     Reject Loan
