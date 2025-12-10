@@ -1,82 +1,429 @@
-import React from 'react';
-import { Link, NavLink, Outlet } from 'react-router';
-import { CiDeliveryTruck } from "react-icons/ci";
-import { FaMotorcycle, FaRegCreditCard  } from "react-icons/fa";
+// DashboardLayout.jsx
+import React, { useState } from 'react';
+import { Link, NavLink, Outlet, useNavigate } from 'react-router';
+import { motion, AnimatePresence } from 'framer-motion';
+import { 
+  Home,
+  FileText,
+  DollarSign,
+  CreditCard,
+  Users,
+  Settings,
+  LogOut,
+  Menu,
+  X,
+  ChevronLeft,
+  ChevronRight,
+  Bell,
+  Search,
+  User,
+  LayoutDashboard,
+  UserCircle,
+  DollarSignIcon,
+  PlaneLanding,
+  Clock
+} from 'lucide-react';
+import useAuth from '../../hooks/useAuth';
+import { useTheme } from '../../components/ThemeContext';
+import Swal from 'sweetalert2';
+import { FcApprove } from 'react-icons/fc';
 
-const DashBoardLayout = () => {
-       return (
-              <div className="drawer lg:drawer-open max-w-7xl mx-auto">
-  <input id="my-drawer-4" type="checkbox" className="drawer-toggle" />
-  <div className="drawer-content">
-    {/* Navbar */}
-    <nav className="navbar w-full bg-base-300">
-      <label htmlFor="my-drawer-4" aria-label="open sidebar" className="btn btn-square btn-ghost">
-        {/* Sidebar toggle icon */}
-        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" strokeLinejoin="round" strokeLinecap="round" strokeWidth="2" fill="none" stroke="currentColor" className="my-1.5 inline-block size-4"><path d="M4 4m0 2a2 2 0 0 1 2 -2h12a2 2 0 0 1 2 2v12a2 2 0 0 1 -2 2h-12a2 2 0 0 1 -2 -2z"></path><path d="M9 4v16"></path><path d="M14 10l2 2l-2 2"></path></svg>
-      </label>
-      <div className="px-4">goParcel Dashboard</div>
-    </nav>
-    {/* Page content here */}
-    <Outlet></Outlet>
+
+const DashboardLayout = () => {
+  const { user, logOut } = useAuth();
+  const { isDark, toggleTheme } = useTheme();
+  const navigate = useNavigate();
+  
+  const [isSidebarOpen, setIsSidebarOpen] = useState(true);
+  const [isMobileSidebarOpen, setIsMobileSidebarOpen] = useState(false);
+
+  // ========== NAVIGATION ITEMS ==========
+  const navigationItems = [
+    {
+      name: 'Dashboard',
+      path: '/dashboard',
+      icon: LayoutDashboard,
+      end: true
+    },
+    {
+      name: 'My Applications',
+      path: '/dashboard/my-applications',
+      icon: FileText
+    },
     
-  </div>
+   
+    // {
+    //   name: 'Approve Riders',
+    //   path: '/dashboard/approve-riders',
+    //   icon: Users,
+    //   adminOnly: true
+    // },
+    
+    {
+      name: 'Manage Users',
+      path: '/dashboard/manage-users',
+      icon: Users,
+      adminOnly: true
+    },
+    {
+      name: 'All Loan Admin',
+      path: '/dashboard/all-loan',
+      icon: DollarSignIcon,
+      adminOnly: true
+    },
+    {
+      name: 'Pending Loans',
+      path: '/dashboard/pending-loans',
+      icon: Clock,
+      adminOnly: true
+    },
+    {
+      name: 'Approved Loans',
+      path: '/dashboard/approved-loans',
+      icon: FcApprove,
+      adminOnly: true
+    },
+    {
+      name: 'Payment History',
+      path: '/dashboard/payments-history',
+      icon: CreditCard
+    },
+     {
+      name: 'My Profile',
+      path: '/dashboard/profile',
+      icon: UserCircle
+    },
+  ];
 
-  <div className="drawer-side is-drawer-close:overflow-visible">
-    <label htmlFor="my-drawer-4" aria-label="close sidebar" className="drawer-overlay"></label>
-    <div className="flex min-h-full flex-col items-start bg-base-200 is-drawer-close:w-14 is-drawer-open:w-64">
-      {/* Sidebar content here */}
-      <ul className="menu w-full grow">
-        {/* List item */}
-        <li>
-          <Link to='/' className="is-drawer-close:tooltip is-drawer-close:tooltip-right" data-tip="Homepage">
-            {/* Home icon */}
-            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" strokeLinejoin="round" strokeLinecap="round" strokeWidth="2" fill="none" stroke="currentColor" className="my-1.5 inline-block size-4"><path d="M15 21v-8a1 1 0 0 0-1-1h-4a1 1 0 0 0-1 1v8"></path><path d="M3 10a2 2 0 0 1 .709-1.528l7-5.999a2 2 0 0 1 2.582 0l7 5.999A2 2 0 0 1 21 10v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path></svg>
-            <span className="is-drawer-close:hidden">Homepage</span>
-          </Link>
-        </li>
+  // ========== HANDLE LOGOUT ==========
+  const handleLogout = () => {
+    Swal.fire({
+      title: 'Logout',
+      text: 'Are you sure you want to logout?',
+      icon: 'question',
+      showCancelButton: true,
+      confirmButtonText: 'Yes, Logout',
+      cancelButtonText: 'Cancel',
+      confirmButtonColor: 'var(--error)',
+      cancelButtonColor: 'var(--border)'
+    }).then((result) => {
+      if (result.isConfirmed) {
+        logOut().then(() => {
+          navigate('/');
+          Swal.fire({
+            icon: 'success',
+            title: 'Logged Out',
+            text: 'You have been logged out successfully',
+            timer: 1500,
+            showConfirmButton: false
+          });
+        });
+      }
+    });
+  };
 
-        {/* my parcels  */}
-        <li>
-              <NavLink 
-              className="is-drawer-close:tooltip is-drawer-close:tooltip-right" data-tip="MyParcels"
-               to="/dashboard/my-parcels">
-                <CiDeliveryTruck />
-                <span className="is-drawer-close:hidden">My Parcels</span>
+  return (
+    <div className="min-h-screen" style={{ backgroundColor: 'var(--bg)' }}>
+      
+      {/* Top Navbar */}
+      <motion.nav 
+        initial={{ y: -100 }}
+        animate={{ y: 0 }}
+        className="fixed top-0 left-0 right-0 z-50 px-4 py-4"
+        style={{ 
+          backgroundColor: 'var(--surface)',
+          borderBottom: '2px solid var(--border)'
+        }}
+      >
+        <div className="max-w-full mx-auto flex items-center justify-between">
+          
+          {/* Left: Menu Toggle + Logo */}
+          <div className="flex items-center gap-4">
+            {/* Desktop Sidebar Toggle */}
+            <button
+              onClick={() => setIsSidebarOpen(!isSidebarOpen)}
+              className="hidden lg:flex items-center justify-center w-10 h-10 rounded-lg hover:bg-opacity-10 transition-all"
+              style={{ backgroundColor: 'var(--primary)', opacity: 0.1 }}
+            >
+              {isSidebarOpen ? (
+                <ChevronLeft className="w-5 h-5" style={{ color: 'var(--primary)' }} />
+              ) : (
+                <ChevronRight className="w-5 h-5" style={{ color: 'var(--primary)' }} />
+              )}
+            </button>
+
+            {/* Mobile Menu Toggle */}
+            <button
+              onClick={() => setIsMobileSidebarOpen(!isMobileSidebarOpen)}
+              className="lg:hidden flex items-center justify-center w-10 h-10 rounded-lg"
+              style={{ backgroundColor: 'var(--primary)', opacity: 0.1 }}
+            >
+              <Menu className="w-5 h-5" style={{ color: 'var(--primary)' }} />
+            </button>
+
+            {/* Logo */}
+            <Link to="/" className="flex items-center gap-2">
+              <div className="w-10 h-10 rounded-lg flex items-center justify-center"
+                   style={{ backgroundColor: 'var(--primary)' }}>
+                <DollarSign className="w-6 h-6 text-white" />
+              </div>
+              <span className="text-xl font-black hidden sm:block" 
+                    style={{ color: 'var(--text-primary)' }}>
+                LoanLink Dashboard
+              </span>
+            </Link>
+          </div>
+
+          {/* Right: Search, Notifications, Profile */}
+          <div className="flex items-center gap-4">
+            
+            {/* Search (Hidden on mobile) */}
+            <div className="hidden md:flex items-center gap-2 px-4 py-2 rounded-lg"
+                 style={{ backgroundColor: 'var(--bg)', border: '1px solid var(--border)' }}>
+              <Search className="w-4 h-4" style={{ color: 'var(--text-secondary)' }} />
+              <input
+                type="text"
+                placeholder="Search..."
+                className="bg-transparent outline-none text-sm"
+                style={{ color: 'var(--text-primary)' }}
+              />
+            </div>
+
+            {/* Theme Toggle */}
+            <button
+              onClick={toggleTheme}
+              className="w-10 h-10 rounded-lg flex items-center justify-center"
+              style={{ backgroundColor: 'var(--bg)' }}
+            >
+              {isDark ? '🌙' : '☀️'}
+            </button>
+
+            {/* Notifications */}
+            <button className="relative w-10 h-10 rounded-lg flex items-center justify-center"
+                    style={{ backgroundColor: 'var(--bg)' }}>
+              <Bell className="w-5 h-5" style={{ color: 'var(--text-primary)' }} />
+              <span className="absolute top-1 right-1 w-2 h-2 rounded-full"
+                    style={{ backgroundColor: 'var(--error)' }} />
+            </button>
+
+            {/* User Profile */}
+            <div className="flex items-center gap-3 px-3 py-2 rounded-lg"
+                 style={{ backgroundColor: 'var(--bg)' }}>
+              <img
+                src={user?.photoURL || 'https://via.placeholder.com/40'}
+                alt="Profile"
+                className="w-8 h-8 rounded-full object-cover"
+              />
+              <div className="hidden md:block">
+                <p className="text-sm font-semibold" style={{ color: 'var(--text-primary)' }}>
+                  {user?.displayName || 'User'}
+                </p>
+                <p className="text-xs" style={{ color: 'var(--text-secondary)' }}>
+                  {user?.email}
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </motion.nav>
+
+      {/* Sidebar */}
+      <div className="flex pt-20">
+        
+        {/* Desktop Sidebar */}
+        <motion.aside
+          initial={false}
+          animate={{ width: isSidebarOpen ? 280 : 80 }}
+          className="hidden lg:block fixed left-0 top-20 bottom-0 overflow-hidden"
+          style={{ 
+            backgroundColor: 'var(--surface)',
+            borderRight: '2px solid var(--border)'
+          }}
+        >
+          <div className="h-full flex flex-col py-6">
+            
+            {/* Navigation Items */}
+            <nav className="flex-1 px-4 space-y-2">
+              {navigationItems.map((item, index) => (
+                <NavLink
+                  key={index}
+                  to={item.path}
+                  end={item.end}
+                  className={({ isActive }) => `
+                    flex items-center gap-4 px-4 py-3 rounded-xl transition-all
+                    ${isActive ? 'shadow-lg' : 'hover:shadow-md'}
+                  `}
+                  style={({ isActive }) => ({
+                    backgroundColor: isActive ? 'var(--primary)' : 'transparent',
+                    color: isActive ? 'white' : 'var(--text-primary)'
+                  })}
+                >
+                  <item.icon className="w-5 h-5 flex-shrink-0" />
+                  <AnimatePresence>
+                    {isSidebarOpen && (
+                      <motion.span
+                        initial={{ opacity: 0, width: 0 }}
+                        animate={{ opacity: 1, width: 'auto' }}
+                        exit={{ opacity: 0, width: 0 }}
+                        className="font-semibold whitespace-nowrap overflow-hidden"
+                      >
+                        {item.name}
+                      </motion.span>
+                    )}
+                  </AnimatePresence>
                 </NavLink>
-        </li>
+              ))}
+            </nav>
 
-         {/* payment history  */}
-        <li>
-              <NavLink 
-              className="is-drawer-close:tooltip is-drawer-close:tooltip-right" data-tip="Payments History"
-               to="/dashboard/payments-history">
-                <FaRegCreditCard />
-                <span className="is-drawer-close:hidden">Payments History</span>
-                </NavLink>
-        </li>
-         {/* Approve Riders  */}
-        <li>
-              <NavLink 
-              className="is-drawer-close:tooltip is-drawer-close:tooltip-right" data-tip="Approve Riders"
-               to="/dashboard/approve-riders">
-                <FaMotorcycle />
-                <span className="is-drawer-close:hidden">Approve Riders</span>
-                </NavLink>
-        </li>
+            {/* Bottom Actions */}
+            <div className="px-4 space-y-2 border-t pt-4" style={{ borderColor: 'var(--border)' }}>
+              <Link
+                to="/"
+                className="flex items-center gap-4 px-4 py-3 rounded-xl transition-all hover:shadow-md"
+                style={{ color: 'var(--text-primary)' }}
+              >
+                <Home className="w-5 h-5 flex-shrink-0" />
+                {isSidebarOpen && (
+                  <span className="font-semibold">Back to Home</span>
+                )}
+              </Link>
 
-        {/* List item */}
-        <li>
-          <button className="is-drawer-close:tooltip is-drawer-close:tooltip-right" data-tip="Settings">
-            {/* Settings icon */}
-            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" strokeLinejoin="round" strokeLinecap="round" strokeWidth="2" fill="none" stroke="currentColor" className="my-1.5 inline-block size-4"><path d="M20 7h-9"></path><path d="M14 17H5"></path><circle cx="17" cy="17" r="3"></circle><circle cx="7" cy="7" r="3"></circle></svg>
-            <span className="is-drawer-close:hidden">Settings</span>
-          </button>
-        </li>
-      </ul>
+              <button
+                className="w-full flex items-center gap-4 px-4 py-3 rounded-xl transition-all hover:shadow-md"
+                style={{ color: 'var(--text-primary)' }}
+              >
+                <Settings className="w-5 h-5 flex-shrink-0" />
+                {isSidebarOpen && (
+                  <span className="font-semibold">Settings</span>
+                )}
+              </button>
+
+              <button
+                onClick={handleLogout}
+                className="w-full flex items-center gap-4 px-4 py-3 rounded-xl transition-all hover:shadow-md"
+                style={{ color: 'var(--error)' }}
+              >
+                <LogOut className="w-5 h-5 flex-shrink-0" />
+                {isSidebarOpen && (
+                  <span className="font-semibold">Logout</span>
+                )}
+              </button>
+            </div>
+          </div>
+        </motion.aside>
+
+        {/* Mobile Sidebar */}
+        <AnimatePresence>
+          {isMobileSidebarOpen && (
+            <>
+              {/* Overlay */}
+              <motion.div
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                exit={{ opacity: 0 }}
+                onClick={() => setIsMobileSidebarOpen(false)}
+                className="lg:hidden fixed inset-0 bg-black bg-opacity-50 z-40 top-20"
+              />
+
+              {/* Sidebar */}
+              <motion.aside
+                initial={{ x: -300 }}
+                animate={{ x: 0 }}
+                exit={{ x: -300 }}
+                className="lg:hidden fixed left-0 top-20 bottom-0 w-72 z-50 overflow-y-auto"
+                style={{ 
+                  backgroundColor: 'var(--surface)',
+                  borderRight: '2px solid var(--border)'
+                }}
+              >
+                <div className="h-full flex flex-col py-6">
+                  
+                  {/* Close Button */}
+                  <button
+                    onClick={() => setIsMobileSidebarOpen(false)}
+                    className="absolute top-4 right-4 w-8 h-8 rounded-lg flex items-center justify-center"
+                    style={{ backgroundColor: 'var(--bg)' }}
+                  >
+                    <X className="w-5 h-5" style={{ color: 'var(--text-primary)' }} />
+                  </button>
+
+                  {/* Navigation Items */}
+                  <nav className="flex-1 px-4 space-y-2">
+                    {navigationItems.map((item, index) => (
+                      <NavLink
+                        key={index}
+                        to={item.path}
+                        end={item.end}
+                        onClick={() => setIsMobileSidebarOpen(false)}
+                        className={({ isActive }) => `
+                          flex items-center gap-4 px-4 py-3 rounded-xl transition-all
+                          ${isActive ? 'shadow-lg' : ''}
+                        `}
+                        style={({ isActive }) => ({
+                          backgroundColor: isActive ? 'var(--primary)' : 'transparent',
+                          color: isActive ? 'white' : 'var(--text-primary)'
+                        })}
+                      >
+                        <item.icon className="w-5 h-5" />
+                        <span className="font-semibold">{item.name}</span>
+                      </NavLink>
+                    ))}
+                  </nav>
+
+                  {/* Bottom Actions */}
+                  <div className="px-4 space-y-2 border-t pt-4" style={{ borderColor: 'var(--border)' }}>
+                    <Link
+                      to="/"
+                      onClick={() => setIsMobileSidebarOpen(false)}
+                      className="flex items-center gap-4 px-4 py-3 rounded-xl"
+                      style={{ color: 'var(--text-primary)' }}
+                    >
+                      <Home className="w-5 h-5" />
+                      <span className="font-semibold">Back to Home</span>
+                    </Link>
+
+                    <button
+                      className="w-full flex items-center gap-4 px-4 py-3 rounded-xl"
+                      style={{ color: 'var(--text-primary)' }}
+                    >
+                      <Settings className="w-5 h-5" />
+                      <span className="font-semibold">Settings</span>
+                    </button>
+
+                    <button
+                      onClick={handleLogout}
+                      className="w-full flex items-center gap-4 px-4 py-3 rounded-xl"
+                      style={{ color: 'var(--error)' }}
+                    >
+                      <LogOut className="w-5 h-5" />
+                      <span className="font-semibold">Logout</span>
+                    </button>
+                  </div>
+                </div>
+              </motion.aside>
+            </>
+          )}
+        </AnimatePresence>
+
+        {/* Main Content */}
+        <motion.main
+          initial={false}
+          animate={{ 
+            marginLeft: isSidebarOpen ? 280 : 80,
+            width: isSidebarOpen ? 'calc(100% - 280px)' : 'calc(100% - 80px)'
+          }}
+          className="flex-1 p-6 lg:p-8 hidden lg:block"
+        >
+          <Outlet />
+        </motion.main>
+
+        {/* Mobile Main Content */}
+        <main className="lg:hidden flex-1 p-6">
+          <Outlet />
+        </main>
+      </div>
     </div>
-  </div>
-</div>
-       );
+  );
 };
 
-export default DashBoardLayout;
+export default DashboardLayout;

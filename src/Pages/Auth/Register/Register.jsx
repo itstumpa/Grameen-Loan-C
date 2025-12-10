@@ -78,7 +78,7 @@ const Register = () => {
           Swal.fire({
             icon: 'success',
             title: 'Registration Successful!',
-            text: 'Welcome to LoanLink',
+            text: 'Welcome to Grameen Lone',
             confirmButtonColor: '#1E3A8A',
             confirmButtonText: 'Continue'
           }).then(() => {
