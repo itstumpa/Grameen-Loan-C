@@ -46,8 +46,13 @@ const DashboardLayout = () => {
       end: true
     },
     {
-      name: 'My Applications',
-      path: '/dashboard/my-applications',
+      name: 'Loan Applications',
+      path: '/dashboard/loan-applications',
+      icon: FileText
+    },
+    {
+      name: 'My Loans',
+      path: '/dashboard/my-loans',
       icon: FileText
     },
     

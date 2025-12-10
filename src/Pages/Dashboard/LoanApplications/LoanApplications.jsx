@@ -19,7 +19,7 @@ import axios from 'axios';
 import useAuth from '../../../hooks/useAuth';
 import Swal from 'sweetalert2';
 
-const MyApplications = () => {
+const LoanApplications = () => {
   const { user } = useAuth();
   const navigate = useNavigate();
 
@@ -392,4 +392,4 @@ const MyApplications = () => {
   );
 };
 
-export default MyApplications;
+export default LoanApplications;

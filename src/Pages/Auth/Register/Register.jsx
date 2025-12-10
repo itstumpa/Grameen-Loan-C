@@ -120,6 +120,27 @@ const Register = () => {
       .then((result) => {
         console.log(result.user);
 
+ // ✅ Save user to MongoDB after Google login
+      const userInfo = {
+        name: result.user.displayName,
+        email: result.user.email,
+        photoURL: result.user.photoURL,
+        role: 'user',
+        createdAt: new Date()
+      };
+      
+      axios.post('http://localhost:3000/users', userInfo)
+        .then((res) => {
+          console.log('User saved to DB:', res.data);
+        })
+         .catch(err => {
+          if (err.response?.status === 409) {
+            console.log('ℹ️ User already exists');
+          } else {
+            console.error('❌ Error saving user:', err);
+          }
+        });
+
         Swal.fire({
           icon: "success",
           title: "Login Successful!",

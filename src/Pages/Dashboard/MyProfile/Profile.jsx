@@ -116,10 +116,13 @@ const Profile = () => {
 
   // ========== UPDATE PROFILE ==========
   const handleUpdateProfile = async (e) => {
+     console.log('🔥 Form submitted!'); // ADD THIS
+  console.log('📝 Form data:', formData); // ADD THIS
     e.preventDefault();
     setUpdating(true);
 
     try {
+       console.log(' 1️⃣ Updating Firebase...'); // ADD THIS
       // 1. Update Firebase Auth Profile
       await updateProfile(auth.currentUser, {
         displayName: formData.displayName,
@@ -498,6 +501,7 @@ const Profile = () => {
             </div>
 
             {/* Profile Information Form */}
+            
             <div className="p-8 rounded-2xl"
                  style={{
                    backgroundColor: 'var(--surface)',

@@ -36,12 +36,13 @@ import Contact from "../Pages/Contact/Contact.jsx";
 import AllLoans from "../Pages/AllLoans/AllLoans.jsx";
 import LoanDetails from "../Pages/AllLoans/LoanDetails.jsx";
 import ApplyLoan from "../Pages/ApplyLoan/ApplyLoan.jsx";
-import MyApplications from "../Pages/Dashboard/MyApplications/MyApplications.jsx";
 import ManageUsers from "../Pages/Dashboard/ManageUsers/ManageUsers.jsx";
 import AllLoansAdmin from "../Pages/Dashboard/AllLoansAdmin/AllLoansAdmin.jsx";
 import PendingLoans from "../Pages/Dashboard/PendingLoans/PendingLoans.jsx";
 import ApprovedLoans from "../Pages/Dashboard/ApprovedLoans/ApprovedLoans.jsx";
 import Profile from "../Pages/Dashboard/MyProfile/Profile.jsx";
+import LoanApplications from "../Pages/Dashboard/LoanApplications/LoanApplications.jsx";
+import MyLoans from "../Pages/Dashboard/MyLoans/MyLoans.jsx";
 
 // Route definitions // Public routes
 const router = createBrowserRouter([
@@ -139,11 +140,12 @@ const router = createBrowserRouter([
       { path: "payment-cancel", element: <PaymentCancel /> },
       { path: "payments-history", element: <PaymentsHistory /> },
       { path: "approve-riders", element: <ApproveRiders /> },
-      { path: "my-applications", element: <MyApplications /> },
+      { path: "loan-applications", element: <LoanApplications /> },
       { path: "manage-users", element: <ManageUsers /> },
       { path: "all-loan", element: <AllLoansAdmin /> },
       { path: "pending-loans", element: <PendingLoans /> },
       { path: "approved-loans", element: <ApprovedLoans /> },
+      { path: "my-loans", element: <MyLoans /> },
       { path: "profile", element: <Profile /> },
     ],
   },
