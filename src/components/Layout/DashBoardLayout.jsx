@@ -55,6 +55,11 @@ const DashboardLayout = () => {
       path: '/dashboard/my-loans',
       icon: FileText
     },
+    {
+      name: 'Add Loan',
+      path: '/dashboard/add-loan',
+      icon: FileText
+    },
     
    
     // {

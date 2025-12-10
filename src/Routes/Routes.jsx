@@ -43,6 +43,8 @@ import ApprovedLoans from "../Pages/Dashboard/ApprovedLoans/ApprovedLoans.jsx";
 import Profile from "../Pages/Dashboard/MyProfile/Profile.jsx";
 import LoanApplications from "../Pages/Dashboard/LoanApplications/LoanApplications.jsx";
 import MyLoans from "../Pages/Dashboard/MyLoans/MyLoans.jsx";
+import AddLoan from "../Pages/Dashboard/AddLoan/AddLoan.jsx";
+import ManageLoans from "../Pages/Dashboard/ManageLoans/ManageLoans.jsx";
 
 // Route definitions // Public routes
 const router = createBrowserRouter([
@@ -140,12 +142,19 @@ const router = createBrowserRouter([
       { path: "payment-cancel", element: <PaymentCancel /> },
       { path: "payments-history", element: <PaymentsHistory /> },
       { path: "approve-riders", element: <ApproveRiders /> },
+      // admin 
       { path: "loan-applications", element: <LoanApplications /> },
       { path: "manage-users", element: <ManageUsers /> },
       { path: "all-loan", element: <AllLoansAdmin /> },
       { path: "pending-loans", element: <PendingLoans /> },
       { path: "approved-loans", element: <ApprovedLoans /> },
+      
+      // manager 
+      { path: "add-loan", element: <AddLoan /> },
+
+      // users 
       { path: "my-loans", element: <MyLoans /> },
+      { path: "manage-loans", element: <ManageLoans /> },
       { path: "profile", element: <Profile /> },
     ],
   },
