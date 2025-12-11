@@ -1,411 +1,318 @@
-// LoanCategories.jsx
-import { motion } from "framer-motion";
-import {
-  ArrowRight,
-  Briefcase,
-  CheckCircle,
-  DollarSign,
-  GraduationCap,
-  Home,
-  ShoppingCart,
-  Stethoscope,
-  TrendingUp,
-  Zap,
-} from "lucide-react";
+import React, { useState, useEffect } from 'react';
+import { motion } from 'framer-motion';
+import { useNavigate } from 'react-router';
+import { 
+  TrendingUp, 
+  DollarSign, 
+  ArrowRight, 
+  Filter,
+  Search,
+  Loader
+} from 'lucide-react';
+import { useTheme } from '../../../components/ThemeContext';
+import axios from 'axios';
 
 const LoanCategories = () => {
-  const categories = [
-    {
-      id: 1,
-      icon: Briefcase,
-      title: "Business Loan",
-      description:
-        "Fuel your entrepreneurial dreams with flexible business financing for inventory, equipment, or expansion.",
-      maxLoan: "$25,000",
-      interestRate: "8% - 15%",
-      tenure: "3 - 36 months",
-      image:
-        "https://images.unsplash.com/photo-1454165804606-c3d57bc86b40?w=500&h=300&fit=crop",
-      gradient: "from-blue-500 to-indigo-600",
-      color: "var(--primary)",
-      features: ["Quick approval", "No collateral", "Flexible repayment"],
-    },
-    {
-      id: 2,
-      icon: GraduationCap,
-      title: "Education Loan",
-      description:
-        "Invest in your future with education loans for tuition, books, and living expenses. Build your career without financial stress.",
-      maxLoan: "$15,000",
-      interestRate: "6% - 12%",
-      tenure: "12 - 60 months",
-      image:
-        "https://images.unsplash.com/photo-1523050854058-8df90110c9f1?w=500&h=300&fit=crop",
-      gradient: "from-purple-500 to-pink-600",
-      color: "var(--primary)",
-      features: ["Student friendly", "Deferred payments", "Low interest"],
-    },
-    {
-      id: 3,
-      icon: Home,
-      title: "Home Improvement",
-      description:
-        "Renovate, repair, or upgrade your home. Turn your house into your dream home with affordable financing.",
-      maxLoan: "$20,000",
-      interestRate: "9% - 16%",
-      tenure: "6 - 48 months",
-      image:
-        "https://images.unsplash.com/photo-1484154218962-a197022b5858?w=500&h=300&fit=crop",
-      gradient: "from-emerald-500 to-teal-600",
-      color: "var(--primary)",
-      features: ["Same-day approval", "Flexible terms", "Direct payment"],
-    },
-    {
-      id: 4,
-      icon: ShoppingCart,
-      title: "Personal Loan",
-      description:
-        "For any personal need—weddings, travel, debt consolidation, or unexpected expenses. No questions asked.",
-      maxLoan: "$10,000",
-      interestRate: "10% - 18%",
-      tenure: "3 - 24 months",
-      image:
-        "https://images.unsplash.com/photo-1556742049-0cfed4f6a45d?w=500&h=300&fit=crop",
-      gradient: "from-amber-500 to-orange-600",
-      color: "var(--primary)",
-      features: ["Instant approval", "No documentation", "Quick disbursal"],
-    },
-    {
-      id: 5,
-      icon: Stethoscope,
-      title: "Medical Emergency",
-      description:
-        "Healthcare can't wait. Get instant funding for medical treatments, surgeries, or hospital bills without delays.",
-      maxLoan: "$12,000",
-      interestRate: "7% - 14%",
-      tenure: "6 - 36 months",
-      image:
-        "https://images.unsplash.com/photo-1576091160399-112ba8d25d1d?w=500&h=300&fit=crop",
-      gradient: "from-red-500 to-pink-600",
-      color: "var(--primary)",
-      features: ["24/7 available", "Emergency support", "Flexible EMI"],
-    },
-    {
-      id: 6,
-      icon: Zap,
-      title: "Quick Cash Loan",
-      description:
-        "Need money urgently? Get quick cash for any short-term need with minimal paperwork and instant approval.",
-      maxLoan: "$5,000",
-      interestRate: "12% - 20%",
-      tenure: "1 - 12 months",
-      image:
-        "https://images.unsplash.com/photo-1579621970563-ebec7560ff3e?w=500&h=300&fit=crop",
-      gradient: "from-violet-500 to-purple-600",
-      color: "var(--primary)",
-      features: ["2-hour approval", "Minimal docs", "Instant transfer"],
-    },
-  ];
+  // ========== HOOKS & CONTEXT ==========
+  const { isDark } = useTheme();
+  const navigate = useNavigate();
 
-  const containerVariants = {
-    hidden: { opacity: 0 },
-    visible: {
-      opacity: 1,
-      transition: {
-        staggerChildren: 0.1,
-        delayChildren: 0.3,
-      },
-    },
+  // ========== STATE ==========
+  const [loans, setLoans] = useState([]);
+  const [filteredLoans, setFilteredLoans] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [selectedCategory, setSelectedCategory] = useState('All');
+  const [searchQuery, setSearchQuery] = useState('');
+
+
+
+  // ✅ Fetch data from backend
+  useEffect(() => {
+    axios
+      .get("http://localhost:3000/all-loans")
+      .then((res) => {
+        setLoans(res.data);
+        setFilteredLoans(res.data);
+      })
+      .catch((err) => {
+        console.error("Error fetching loans:", err);
+      })
+      .finally(() => setLoading(false));
+  }, []);
+
+
+  // ========== FILTER BY CATEGORY ==========
+  useEffect(() => {
+    let result = loans;
+
+    // Filter by category
+    if (selectedCategory !== 'All') {
+      result = result.filter(loan => loan.category === selectedCategory);
+    }
+
+    // Filter by search query
+    if (searchQuery) {
+      result = result.filter(loan => 
+        loan.loanTitle.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        loan.category.toLowerCase().includes(searchQuery.toLowerCase())
+        // loan.shortDescription.toLowerCase().includes(searchQuery.toLowerCase())
+      );
+    }
+
+    setFilteredLoans(result);
+  }, [selectedCategory, searchQuery, loans]);
+
+  // ========== GET UNIQUE CATEGORIES ==========
+  const categories = ['All', ...new Set(loans.map(loan => loan.category))];
+
+  // ========== NAVIGATE TO DETAILS ==========
+  const handleViewDetails = (loanId) => {
+    navigate(`/loan-details/${loanId}`);
   };
 
-  const cardVariants = {
-    hidden: { opacity: 0, y: 50 },
-    visible: {
-      opacity: 1,
-      y: 0,
-      transition: {
-        duration: 0.6,
-        ease: "easeOut",
-      },
-    },
-  };
+  // ========== LOADING STATE ==========
+  if (loading) {
+    return (
+      <div className={`min-h-screen flex items-center justify-center ${isDark ? 'bg-slate-900' : 'bg-slate-50'}`}>
+        <div className="flex flex-col items-center gap-4">
+          <Loader className={`animate-spin ${isDark ? 'text-blue-400' : 'text-blue-600'}`} size={48} />
+          <p className={isDark ? 'text-slate-400' : 'text-slate-600'}>Loading loans...</p>
+        </div>
+      </div>
+    );
+  }
 
   return (
-    <section
-      className="py-14 px-4 md:px-8"
-      style={{ backgroundColor: "var(--bg)" }}
-    >
-      <div className="max-w-7xl mx-auto">
-        {/* Section Header */}
-        <motion.div
-          initial={{ opacity: 0, y: 30 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.6 }}
-          className="text-center mb-16"
-        >
-          <motion.div
-            initial={{ scale: 0 }}
-            whileInView={{ scale: 1 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.5, type: "spring" }}
-            className="inline-flex items-center gap-2 px-4 py-2 rounded-full mb-6"
-            style={{ backgroundColor: "var(--primary)", opacity: 0.1 }}
-          >
-            <TrendingUp
-              className="w-4 h-4"
-              style={{ color: "var(--primary)" }}
-            />
-            <span
-              className="text-sm font-semibold"
-              style={{ color: "var(--primary)" }}
-            >
-              Loans For Every Need
-            </span>
-          </motion.div>
-
-          <h2
-            className="text-3xl md:text-5xl font-black mb-4"
-            style={{ color: "var(--text-primary)" }}
-          >
-            Explore Loan Categories
-          </h2>
-          <p
-            className="text-lg max-w-2xl mx-auto"
-            style={{ color: "var(--text-secondary)" }}
-          >
-            From business growth to personal needs, we've got the perfect loan
-            solution for you. Choose what fits your goals.
-          </p>
-        </motion.div>
-
-        {/* Cards Grid */}
-        <motion.div
-          variants={containerVariants}
-          initial="hidden"
-          whileInView="visible"
-          viewport={{ once: true, margin: "-100px" }}
-          className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8"
-        >
-          {categories.map((category, index) => (
-            <motion.div
-              key={category.id}
-              variants={cardVariants}
-              whileHover={{ y: -10 }}
-              className="group rounded-2xl overflow-hidden shadow-lg relative"
-              style={{
-                backgroundColor: "var(--surface)",
-                border: "2px solid var(--border)",
-              }}
-            >
-              {/* Image Container */}
-              <div className="relative h-48 overflow-hidden">
-                <motion.img
-                  whileHover={{ scale: 1.1 }}
-                  transition={{ duration: 0.6 }}
-                  src={category.image}
-                  alt={category.title}
-                  className="w-full h-full object-cover"
-                />
-
-                {/* Gradient Overlay */}
-                {/* <div className={`absolute inset-0 bg-gradient-to-br ${category.gradient} opacity-60`} /> */}
-
-                {/* Icon Badge */}
-                <motion.div
-                  initial={{ scale: 0 }}
-                  whileInView={{ scale: 1 }}
-                  viewport={{ once: true }}
-                  transition={{ delay: index * 0.1 + 0.3, type: "spring" }}
-                  className="absolute top-4 left-4 w-14 h-14 bg-white rounded-xl flex items-center justify-center shadow-lg"
-                >
-                  <category.icon
-                    className="w-8 h-8"
-                    style={{ color: category.color }}
-                  />
-                </motion.div>
-
-                {/* Max Loan Badge */}
-                <motion.div
-                  initial={{ x: 100, opacity: 0 }}
-                  whileInView={{ x: 0, opacity: 1 }}
-                  viewport={{ once: true }}
-                  transition={{ delay: index * 0.1 + 0.4 }}
-                  className="absolute top-4 right-4 bg-white px-3 py-1 rounded-full shadow-lg"
-                >
-                  <span
-                    className="text-xs font-bold"
-                    style={{ color: category.color }}
-                  >
-                    Up to {category.maxLoan}
-                  </span>
-                </motion.div>
-              </div>
-
-              {/* Content */}
-              <div className="p-6">
-                {/* Title */}
-                <h3
-                  className="text-2xl font-bold mb-3"
-                  style={{ color: "var(--text-primary)" }}
-                >
-                  {category.title}
-                </h3>
-
-                {/* Description */}
-                <p
-                  className="text-sm leading-relaxed mb-4 line-clamp-3"
-                  style={{ color: "var(--text-secondary)" }}
-                >
-                  {category.description}
-                </p>
-
-                {/* Loan Details */}
-                <div className="grid grid-cols-2 gap-3 mb-4">
-                  <div
-                    className="p-3 rounded-lg"
-                    style={{ backgroundColor: "var(--bg)" }}
-                  >
-                    <div className="flex items-center gap-2 mb-1">
-                      <DollarSign
-                        className="w-4 h-4"
-                        style={{ color: category.color }}
-                      />
-                      <span
-                        className="text-xs font-semibold"
-                        style={{ color: "var(--text-secondary)" }}
-                      >
-                        Interest Rate
-                      </span>
-                    </div>
-                    <p
-                      className="text-sm font-bold"
-                      style={{ color: "var(--text-primary)" }}
-                    >
-                      {category.interestRate}
-                    </p>
-                  </div>
-
-                  <div
-                    className="p-3 rounded-lg"
-                    style={{ backgroundColor: "var(--bg)" }}
-                  >
-                    <div className="flex items-center gap-2 mb-1">
-                      <TrendingUp
-                        className="w-4 h-4"
-                        style={{ color: category.color }}
-                      />
-                      <span
-                        className="text-xs font-semibold"
-                        style={{ color: "var(--text-secondary)" }}
-                      >
-                        Tenure
-                      </span>
-                    </div>
-                    <p
-                      className="text-sm font-bold"
-                      style={{ color: "var(--text-primary)" }}
-                    >
-                      {category.tenure}
-                    </p>
-                  </div>
-                </div>
-
-                {/* Features */}
-                <div className="space-y-2 mb-6">
-                  {category.features.map((feature, idx) => (
-                    <motion.div
-                      key={idx}
-                      initial={{ opacity: 0, x: -20 }}
-                      whileInView={{ opacity: 1, x: 0 }}
-                      viewport={{ once: true }}
-                      transition={{ delay: index * 0.1 + idx * 0.1 }}
-                      className="flex items-center gap-2"
-                    >
-                      <CheckCircle
-                        className="w-4 h-4 flex-shrink-0"
-                        style={{ color: category.color }}
-                      />
-                      <span
-                        className="text-xs"
-                        style={{ color: "var(--text-secondary)" }}
-                      >
-                        {feature}
-                      </span>
-                    </motion.div>
-                  ))}
-                </div>
-
-                {/* View Details Button */}
-                <motion.button
-                  whileHover={{ scale: 1.02 }}
-                  whileTap={{ scale: 0.98 }}
-                  className="w-full py-3 px-4 rounded-xl font-bold flex items-center justify-center gap-2 group/btn transition-all"
-                  style={{
-                    backgroundColor: category.color,
-                    color: "white",
-                  }}
-                >
-                  View Details
-                  <ArrowRight className="w-5 h-5 group-hover/btn:translate-x-1 transition-transform" />
-                </motion.button>
-              </div>
-
-              {/* Hover Border Effect */}
-              <motion.div
-                className="absolute inset-0 rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none"
-                style={{ border: `3px solid ${category.color}` }}
-              />
-            </motion.div>
-          ))}
-        </motion.div>
-
-        {/* Bottom CTA */}
+    <div className={`min-h-screen pt-28 pb-16 ${isDark ? 'bg-slate-900' : 'bg-slate-50'} transition-colors duration-300`}>
+      <div className="container mx-auto px-4 sm:px-6 lg:px-8">
+        
+        {/* ========== PAGE HEADER ========== */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ delay: 0.5 }}
-          className="text-center mt-16 p-8 rounded-2xl"
-          style={{
-            backgroundColor: "var(--surface)",
-            border: "2px solid var(--border)",
-          }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.5 }}
+          className="mb-8"
         >
-          <h3
-            className="text-2xl font-bold mb-3"
-            style={{ color: "var(--text-primary)" }}
-          >
-            Not Sure Which Loan Is Right For You?
-          </h3>
-          <p
-            className="mb-6 max-w-2xl mx-auto"
-            style={{ color: "var(--text-secondary)" }}
-          >
-            Our loan experts are here to help you choose the perfect option
-            based on your needs and financial situation.
+          <h1 className={`text-4xl sm:text-5xl font-extrabold mb-4 ${isDark ? 'text-white' : 'text-slate-900'}`}>
+            All Loan <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-600 to-sky-500">Products</span>
+          </h1>
+          <p className={`text-lg ${isDark ? 'text-slate-400' : 'text-slate-600'}`}>
+            Explore our wide range of loan products designed to meet your financial needs
           </p>
-          <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <motion.button
-              whileHover={{ scale: 1.05 }}
-              whileTap={{ scale: 0.95 }}
-              className="btn-primary inline-flex items-center gap-2"
-            >
-              Talk to an Expert
-              <ArrowRight className="w-5 h-5" />
-            </motion.button>
-            <motion.button
-              whileHover={{ scale: 1.05 }}
-              whileTap={{ scale: 0.95 }}
-              className="btn-outline inline-flex items-center gap-2"
-            >
-              Compare All Loans
-              <TrendingUp className="w-5 h-5" />
-            </motion.button>
+        </motion.div>
+
+        {/* ========== SEARCH & FILTER BAR ========== */}
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.5, delay: 0.1 }}
+          className="mb-8"
+        >
+          <div className="flex flex-col lg:flex-row gap-4">
+            
+            {/* Search Bar */}
+            <div className="flex-1">
+              <div className="relative">
+                <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
+                  <Search className={isDark ? 'text-slate-500' : 'text-slate-400'} size={20} />
+                </div>
+                <input
+                  type="text"
+                  placeholder="Search loans by title or category"
+                  value={searchQuery}
+                  onChange={(e) => setSearchQuery(e.target.value)}
+                  className={`w-full pl-12 pr-4 py-3 rounded-lg border-2 transition-all
+                    ${isDark 
+                      ? 'bg-slate-800 border-slate-700 text-white placeholder-slate-500 focus:border-blue-500' 
+                      : 'bg-white border-slate-300 text-slate-900 placeholder-slate-400 focus:border-blue-600'
+                    } focus:outline-none focus:ring-2 focus:ring-blue-500/20`}
+                />
+              </div>
+            </div>
+
+            {/* Category Filter */}
+            <div className="flex items-center gap-2 flex-wrap">
+              <Filter className={isDark ? 'text-slate-400' : 'text-slate-600'} size={20} />
+              {categories.map((category) => (
+                <button
+                  key={category}
+                  onClick={() => setSelectedCategory(category)}
+                  className={`px-4 py-2 rounded-lg font-semibold transition-all
+                    ${selectedCategory === category
+                      ? isDark
+                        ? 'bg-blue-600 text-white'
+                        : 'bg-blue-900 text-white'
+                      : isDark
+                        ? 'bg-slate-800 text-slate-300 hover:bg-slate-700'
+                        : 'bg-white text-slate-700 hover:bg-slate-100 border border-slate-300'
+                    }`}
+                >
+                  {category}
+                </button>
+              ))}
+            </div>
           </div>
         </motion.div>
+
+        {/* ========== RESULTS COUNT ========== */}
+        <motion.div
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ duration: 0.3 }}
+          className={`mb-6 ${isDark ? 'text-slate-400' : 'text-slate-600'}`}
+        >
+          Showing <span className="font-bold">{filteredLoans.length}</span> loan{filteredLoans.length !== 1 ? 's' : ''}
+          {selectedCategory !== 'All' && ` in ${selectedCategory}`}
+          {searchQuery && ` matching "${searchQuery}"`}
+        </motion.div>
+
+        {/* ========== LOANS GRID ========== */}
+        {filteredLoans.length === 0 ? (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            className={`text-center py-20 rounded-2xl border-2 ${isDark ? 'bg-slate-800 border-slate-700' : 'bg-white border-slate-200'}`}
+          >
+            <p className={`text-xl font-semibold mb-2 ${isDark ? 'text-white' : 'text-slate-900'}`}>
+              No loans found
+            </p>
+            <p className={isDark ? 'text-slate-400' : 'text-slate-600'}>
+              Try adjusting your search or filter criteria
+            </p>
+          </motion.div>
+        ) : (
+          <div className="grid  sm:grid-cols-2 lg:grid-cols-3 gap-6">
+            {filteredLoans.map((loan, index) => (
+              <motion.div
+                key={loan._id}
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.5, delay: index * 0.1 }}
+                whileHover={{ y: -8 }}
+                className={`rounded-2xl overflow-hidden border-2 shadow-lg transition-all
+                  ${isDark 
+                    ? 'bg-slate-800 border-slate-700 hover:border-blue-600' 
+                    : 'bg-white border-slate-200 hover:border-blue-600'
+                  }`}
+              >
+                {/* Loan Image */}
+                <div className="relative h-48 overflow-hidden">
+                  <img
+                    src={loan.loanImage}
+                    alt={loan.loanTitle}
+                    className="w-full h-full object-cover transition-transform duration-300 hover:scale-110"
+                  />
+                  {/* Category Badge */}
+                  <div className="absolute top-4 right-4">
+                    <span className={`px-3 py-1 rounded-full text-xs font-bold backdrop-blur-md
+                      ${isDark 
+                        ? 'bg-blue-900/80 text-blue-200' 
+                        : 'bg-white/90 text-blue-900'
+                      }`}
+                    >
+                      {loan.category}
+                    </span>
+                  </div>
+                  {/* Featured Badge */}
+                  {loan.isFeatured && (
+                    <div className="absolute top-4 left-4">
+                      <span className="px-3 py-1 rounded-full text-xs font-bold bg-amber-500 text-white backdrop-blur-md">
+                        ⭐ Featured
+                      </span>
+                    </div>
+                  )}
+                </div>
+
+                {/* Card Content */}
+                <div className="p-6">
+                  {/* Title */}
+                  <h3 className={`text-xl font-bold mb-2 line-clamp-1 ${isDark ? 'text-white' : 'text-slate-900'}`}>
+                    {loan.loanTitle}
+                  </h3>
+
+                  {/* Description */}
+                  <p className={`text-sm mb-4 line-clamp-1 ${isDark ? 'text-slate-400' : 'text-slate-600 '}`}>
+                    {loan.shortDescription} 
+                  </p>
+
+                  {/* Loan Details */}
+                  <div className="space-y-3 mb-6">
+                    {/* Interest Rate */}
+                    <div className="flex items-center justify-between">
+                      <div className="flex items-center gap-2">
+                        <TrendingUp className={isDark ? 'text-green-400' : 'text-green-600'} size={18} />
+                        <span className={`text-sm font-medium ${isDark ? 'text-slate-400' : 'text-slate-600'}`}>
+                          Interest Rate
+                        </span>
+                      </div>
+                      <span className={`text-lg font-bold ${isDark ? 'text-green-400' : 'text-green-600'}`}>
+                        {loan.interestRate}%
+                      </span>
+                    </div>
+
+                    {/* Max Limit */}
+                    <div className="flex items-center justify-between">
+                      <div className="flex items-center gap-2">
+                        <DollarSign className={isDark ? 'text-blue-400' : 'text-blue-600'} size={18} />
+                        <span className={`text-sm font-medium ${isDark ? 'text-slate-400' : 'text-slate-600'}`}>
+                          Max Limit
+                        </span>
+                      </div>
+                      <span className={`text-lg font-bold ${isDark ? 'text-blue-400' : 'text-blue-600'}`}>
+                        ${loan.maxLimit}
+                      </span>
+                    </div>
+                  </div>
+
+                  {/* View Details Button */}
+                  <motion.button
+                    whileHover={{ scale: 1.02 }}
+                    whileTap={{ scale: 0.98 }}
+                    onClick={() => handleViewDetails(loan._id)}
+                    className="w-full bg-blue-900 hover:bg-blue-800 text-white py-3 rounded-lg font-bold flex items-center justify-center gap-2 transition-all shadow-lg hover:shadow-xl"
+                  >
+                    <span>
+                      View Details
+                      </span>
+                    <ArrowRight size={20} />
+                  </motion.button>
+                </div>
+              </motion.div>
+            ))}
+          </div>
+        )}
+
+        {/* ========== BOTTOM CTA ========== */}
+        {filteredLoans.length > 0 && (
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5, delay: 0.5 }}
+            className={`mt-16 rounded-2xl p-8 text-center border-2
+              ${isDark 
+                ? 'bg-gradient-to-br from-blue-900/30 to-slate-800 border-slate-700' 
+                : 'bg-gradient-to-br from-blue-50 to-white border-blue-200'
+              }`}
+          >
+            <h2 className={`text-2xl font-bold mb-4 ${isDark ? 'text-white' : 'text-slate-900'}`}>
+              Can't Find What You're Looking For?
+            </h2>
+            <p className={`text-lg mb-6 ${isDark ? 'text-slate-300' : 'text-slate-700'}`}>
+              Our loan specialists are here to help you find the perfect loan solution
+            </p>
+            <motion.button
+              whileHover={{ scale: 1.05 }}
+              whileTap={{ scale: 0.95 }}
+              onClick={() => navigate('/contact')}
+              className="bg-blue-900 hover:bg-blue-800 text-white px-8 py-3 rounded-lg font-bold text-lg shadow-lg transition-all"
+            >
+              Contact Us
+            </motion.button>
+          </motion.div>
+        )}
+
       </div>
-    </section>
+    </div>
   );
 };
 
