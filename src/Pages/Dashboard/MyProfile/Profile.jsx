@@ -82,7 +82,7 @@ const Profile = () => {
         monthlyIncome: data.monthlyIncome || "",
       });
     } catch (error) {
-      console.error("❌ Error fetching user data:", error);
+      console.error(" Error fetching user data:", error);
     } finally {
       setLoading(false);
     }
@@ -112,7 +112,6 @@ const Profile = () => {
     }
   };
 
-  // ========== HANDLE INPUT CHANGE ==========
   const handleInputChange = (e) => {
     setFormData({
       ...formData,
@@ -120,22 +119,17 @@ const Profile = () => {
     });
   };
 
-  // ========== UPDATE PROFILE ==========
   const handleUpdateProfile = async (e) => {
-    console.log("🔥 Form submitted!"); // ADD THIS
-    console.log("📝 Form data:", formData); // ADD THIS
     e.preventDefault();
     setUpdating(true);
 
     try {
-      console.log(" 1️⃣ Updating Firebase..."); // ADD THIS
-      // 1. Update Firebase Auth Profile
+      console.log("Updating Firebase...");
       await updateProfile(auth.currentUser, {
         displayName: formData.displayName,
         photoURL: formData.photoURL,
       });
 
-      // 2. Update MongoDB Database
       await axios.patch(`http://localhost:3000/users/${user.email}`, {
         name: formData.displayName,
         photoURL: formData.photoURL,
@@ -147,14 +141,11 @@ const Profile = () => {
         updatedAt: new Date(),
       });
 
-      // 3. Reload Firebase user data
       await auth.currentUser.reload();
 
-      // 4. Update local state
       setUserData({ ...userData, ...formData });
       setEditMode(false);
 
-      // 5. Show success message
       toast.success("Profile updated successfully!");
 
       Swal.fire({
@@ -165,7 +156,7 @@ const Profile = () => {
         showConfirmButton: false,
       });
     } catch (error) {
-      console.error("❌ Error updating profile:", error);
+      console.error("Error updating profile:", error);
       toast.error(error.message || "Failed to update profile");
 
       Swal.fire({
@@ -178,7 +169,6 @@ const Profile = () => {
     }
   };
 
-  // ========== HANDLE LOGOUT ==========
   const handleLogout = () => {
     Swal.fire({
       title: "Logout",
@@ -206,7 +196,6 @@ const Profile = () => {
     });
   };
 
-  // ========== HANDLE PROFILE PHOTO UPLOAD ==========
   const handlePhotoUpload = async (e) => {
     const file = e.target.files[0];
     if (!file) return;
@@ -250,7 +239,7 @@ const Profile = () => {
       // Reload to show new photo
       await auth.currentUser.reload();
     } catch (error) {
-      console.error("❌ Error uploading photo:", error);
+      console.error("Error uploading photo:", error);
       toast.error("Failed to upload photo");
 
       Swal.fire({
@@ -263,7 +252,6 @@ const Profile = () => {
     }
   };
 
-  // ========== LOADING STATE ==========
   if (authLoading || loading) {
     return (
       <div
@@ -281,7 +269,6 @@ const Profile = () => {
     );
   }
 
-  // ========== NO USER STATE ==========
   if (!user) {
     return (
       <div
@@ -308,7 +295,6 @@ const Profile = () => {
     );
   }
 
-  // ========== MAIN RENDER ==========
   return (
     <div
       className="min-h-screen py-8 px-4"
@@ -393,43 +379,24 @@ const Profile = () => {
               </p>
 
               {/* Role Badge */}
+              <div className="flex items-center gap-2 justify-center">
+
+              
               <div
-                className="inline-flex items-center gap-2 px-4 py-2 rounded-full mb-6"
-                style={{ backgroundColor: "var(--primary)", opacity: 0.1 }}
+                className="inline-flex items-center gap-1 px-4 py-2 rounded-full mb-6"
+                style={{ backgroundColor: "var(--primary)", }}
               >
                 <Shield
                   className="w-4 h-4"
-                  style={{ color: "var(--primary)" }}
+                  style={{ color: "white" }}
                 />
                 <span
                   className="text-sm font-bold capitalize"
-                  style={{ color: "var(--primary)" }}
+                  style={{ color: "white" }}
                 >
                   {userData?.role || "User"}
                 </span>
               </div>
-
-              {/* Provider Badge */}
-              <div
-                className="inline-flex items-center gap-2 px-4 py-2 rounded-full mb-6"
-                style={{
-                  backgroundColor: "var(--success)",
-                  opacity: 0.1,
-                  border: "1px solid var(--success)",
-                }}
-              >
-                <CheckCircle
-                  className="w-4 h-4"
-                  style={{ color: "var(--success)" }}
-                />
-                <span
-                  className="text-sm font-semibold"
-                  style={{ color: "var(--success)" }}
-                >
-                  {user?.providerData?.[0]?.providerId === "google.com"
-                    ? "Google Account"
-                    : "Email Account"}
-                </span>
               </div>
 
               {/* Member Since */}
