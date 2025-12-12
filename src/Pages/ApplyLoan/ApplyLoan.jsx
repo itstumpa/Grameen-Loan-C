@@ -135,7 +135,7 @@ const ApplyLoan = () => {
         confirmButtonText: "View My Applications",
       }).then((result) => {
         if (result.isConfirmed) {
-          navigate("/my-applications");
+          navigate("/dashboard/my-loans");
         } else {
           navigate("/");
         }

@@ -138,10 +138,16 @@ const MyLoans = () => {
     }).then(async (result) => {
       if (result.isConfirmed) {
         try {
-          await axios.delete(`http://localhost:3000/loan-applications/${application._id}`);
+          await axios.delete(
+            `http://localhost:3000/loan-applications/${application._id}`
+          );
 
-          setApplications(applications.filter((a) => a._id !== application._id));
-          setFilteredApplications(filteredApplications.filter((a) => a._id !== application._id));
+          setApplications(
+            applications.filter((a) => a._id !== application._id)
+          );
+          setFilteredApplications(
+            filteredApplications.filter((a) => a._id !== application._id)
+          );
 
           Swal.fire({
             icon: "success",
@@ -162,11 +168,17 @@ const MyLoans = () => {
   };
 
   // ========== VIEW DETAILS ==========
-   const handleViewDetails = (applicationId, status, userEmail, monthlyIncome, contactNumber, interestRate) => {
-      
-      Swal.fire({
-        title: "Application Details",
-        html: `
+  const handleViewDetails = (
+    applicationId,
+    status,
+    userEmail,
+    monthlyIncome,
+    contactNumber,
+    interestRate
+  ) => {
+    Swal.fire({
+      title: "Application Details",
+      html: `
           <div class="text-left">
            <p><strong>Application ID:</strong> ${applicationId}</p>
               <p><strong>Email:</strong> ${userEmail}</p>
@@ -176,10 +188,10 @@ const MyLoans = () => {
               <p><strong>Interest Rate:</strong> ${interestRate}</p>
           </div>
         `,
-        confirmButtonText: "Close",
-      });
-    };
-  
+      confirmButtonText: "Close",
+    });
+  };
+
   // ========== LOADING STATE ==========
   if (loading) {
     return (
@@ -489,7 +501,7 @@ const MyLoans = () => {
                   </div>
 
                   {/* Right: Status & Actions */}
-<div className="flex flex-col items-end gap-3">
+                  <div className="flex flex-col items-end gap-3">
                     {getStatusBadge(application.approvedAt)}
 
                     {/* Actions */}
@@ -533,8 +545,17 @@ const MyLoans = () => {
                   <div className="flex flex-col items-end gap-3">
                     {getStatusBadge(application.status)}
 
-                   <button
-                      onClick={() => handleViewDetails(application._id, application.status, application.userEmail,  application.monthlyIncome, application.contactNumber, application.interestRate)}
+                    <button
+                      onClick={() =>
+                        handleViewDetails(
+                          application._id,
+                          application.status,
+                          application.userEmail,
+                          application.monthlyIncome,
+                          application.contactNumber,
+                          application.interestRate
+                        )
+                      }
                       className="flex items-center gap-2 px-4 py-2 rounded-lg font-semibold transition-all"
                       style={{
                         backgroundColor: "var(--primary)",
