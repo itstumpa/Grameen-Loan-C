@@ -587,13 +587,12 @@ const ManageUsers = () => {
                           className="p-2 rounded-lg"
                           style={{
                             backgroundColor: "var(--primary)",
-                            opacity: 0.1,
                           }}
                           title="Edit Role"
                         >
                           <Edit
                             className="w-4 h-4"
-                            style={{ color: "var(--primary)" }}
+                            style={{ color: "white" }}
                           />
                         </motion.button>
 
@@ -605,7 +604,6 @@ const ManageUsers = () => {
                             className="p-2 rounded-lg"
                             style={{
                               backgroundColor: "var(--success)",
-                              opacity: 0.1,
                             }}
                             title="Activate User"
                           >
@@ -622,14 +620,13 @@ const ManageUsers = () => {
                             className="p-2 rounded-lg"
                             style={{
                               backgroundColor: "var(--error)",
-                              opacity: 0.1,
                             }}
                             title="Suspend User"
                             disabled={userData.email === user?.email}
                           >
                             <UserX
                               className="w-4 h-4"
-                              style={{ color: "var(--error)" }}
+                              style={{ color: "white" }}
                             />
                           </motion.button>
                         )}
@@ -641,14 +638,13 @@ const ManageUsers = () => {
                           className="p-2 rounded-lg"
                           style={{
                             backgroundColor: "var(--error)",
-                            opacity: 0.1,
                           }}
                           title="Delete User"
                           disabled={userData.email === user?.email}
                         >
                           <Trash2
                             className="w-4 h-4"
-                            style={{ color: "var(--error)" }}
+                            style={{ color: "white" }}
                           />
                         </motion.button>
                       </div>

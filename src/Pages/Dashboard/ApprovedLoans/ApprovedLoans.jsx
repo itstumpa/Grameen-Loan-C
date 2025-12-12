@@ -466,11 +466,10 @@ const ApprovedLoans = () => {
                     {/* Loan Type */}
                     <td className="p-4">
                       <span
-                        className="px-3 py-1 rounded-full text-sm font-semibold"
+                        className=" py-1 rounded-full text-sm font-semibold"
                         style={{
-                          backgroundColor: "var(--primary)",
-                          opacity: 0.1,
-                          color: "var(--primary)",
+                          
+                          color: "var(--secondary)",
                         }}
                       >
                         {application.loanTitle}
@@ -519,7 +518,7 @@ const ApprovedLoans = () => {
                     <td className="p-4">
                       <span
                         className="text-sm font-semibold"
-                        style={{ color: "var(--text-primary)" }}
+                        style={{ color: "var(--Primary)" }}
                       >
                         {application.approvedBy || "Admin"}
                       </span>
@@ -534,14 +533,13 @@ const ApprovedLoans = () => {
                           onClick={() => handleViewDetails(application)}
                           className="p-2 rounded-lg"
                           style={{
-                            backgroundColor: "var(--primary)",
-                            opacity: 0.1,
+                            backgroundColor: "var(--success)",
                           }}
                           title="View Details"
                         >
                           <Eye
                             className="w-4 h-4"
-                            style={{ color: "var(--primary)" }}
+                            style={{ color: "white" }}
                           />
                         </motion.button>
                       </div>
@@ -574,8 +572,8 @@ const ApprovedLoans = () => {
                 border: "2px solid var(--border)",
               }}
             >
-              {/* Header */}
-              <div className="flex items-center justify-between mb-6">
+              {/* details modal */}
+              <div className="flex mt-20 items-center justify-between mb-6">
                 <div className="flex items-center gap-3">
                   <div
                     className="w-12 h-12 rounded-full flex items-center justify-center"
