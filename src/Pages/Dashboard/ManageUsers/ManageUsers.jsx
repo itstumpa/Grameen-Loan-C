@@ -5,6 +5,8 @@ import {
   AlertCircle,
   Ban,
   CheckCircle,
+  ChevronLeft,
+  ChevronRight,
   Edit,
   Loader,
   Search,
@@ -32,7 +34,13 @@ const ManageUsers = () => {
   const [showModal, setShowModal] = useState(false);
   const [selectedUser, setSelectedUser] = useState(null);
   const [updating, setUpdating] = useState(false);
-const axiosSecure = useAxiosSecure();
+
+  // PAGINATION
+  const [currentPage, setCurrentPage] = useState(1);
+  const itemsPerPage = 5;
+
+  const axiosSecure = useAxiosSecure();
+
   useEffect(() => {
     fetchUsers();
   }, []);
@@ -56,7 +64,6 @@ const axiosSecure = useAxiosSecure();
     }
   };
 
-
   useEffect(() => {
     let result = users;
 
@@ -77,7 +84,34 @@ const axiosSecure = useAxiosSecure();
     }
 
     setFilteredUsers(result);
+
+    // PAGINATION 2
+
+    setCurrentPage(1);
   }, [selectedRole, selectedStatus, searchQuery, users]);
+
+  //  PAGINATION 3
+  const totalPages = Math.ceil(filteredUsers.length / itemsPerPage);
+  const lastIndex = currentPage * itemsPerPage;
+  const firstIndex = lastIndex - itemsPerPage;
+  const currentItems = filteredUsers.slice(firstIndex, lastIndex);
+
+  // PAGINATION 4
+  const nextPage = () => {
+    if (currentPage < totalPages) {
+      setCurrentPage(currentPage + 1);
+    }
+  };
+
+  const prevPage = () => {
+    if (currentPage > 1) {
+      setCurrentPage(currentPage - 1);
+    }
+  };
+
+  const goToPage = (pageNumber) => {
+    setCurrentPage(pageNumber);
+  };
 
   const handleEdit = (userData) => {
     setSelectedUser({
@@ -105,7 +139,6 @@ const axiosSecure = useAxiosSecure();
         updateData
       );
 
-      // Update local state
       setUsers(
         users.map((u) =>
           u.email === selectedUser.email ? { ...u, ...updateData } : u
@@ -134,7 +167,6 @@ const axiosSecure = useAxiosSecure();
     }
   };
 
-  // suspend user
   const handleSuspend = (userData) => {
     Swal.fire({
       title: "Suspend User?",
@@ -176,7 +208,6 @@ const axiosSecure = useAxiosSecure();
     });
   };
 
-  // activate user
   const handleActivate = async (userData) => {
     try {
       await axios.patch(`http://localhost:3000/users/${userData.email}`, {
@@ -206,7 +237,6 @@ const axiosSecure = useAxiosSecure();
     }
   };
 
-// delete 
   const handleDelete = (userData) => {
     Swal.fire({
       title: "Delete User?",
@@ -241,7 +271,6 @@ const axiosSecure = useAxiosSecure();
     });
   };
 
-
   const getRoleBadge = (role) => {
     const roleConfig = {
       admin: {
@@ -254,11 +283,6 @@ const axiosSecure = useAxiosSecure();
         bg: "rgba(30, 58, 138, 0.1)",
         icon: UserCheck,
       },
-      // borrower: {
-      //   color: "var(--success)",
-      //   bg: "rgba(5, 150, 105, 0.1)",
-      //   icon: Users,
-      // },
       user: {
         color: "var(--text-secondary)",
         bg: "rgba(100, 116, 139, 0.1)",
@@ -285,7 +309,6 @@ const axiosSecure = useAxiosSecure();
     );
   };
 
-  //status
   const getStatusBadge = (status) => {
     if (status === "suspended") {
       return (
@@ -331,7 +354,6 @@ const axiosSecure = useAxiosSecure();
     );
   }
 
-  // main 
   return (
     <div>
       {/* Header */}
@@ -407,7 +429,6 @@ const axiosSecure = useAxiosSecure();
 
       {/* Filters */}
       <div className="mb-6 flex flex-col md:flex-row gap-4">
-        {/* Search */}
         <div className="flex-1 relative">
           <Search
             className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5"
@@ -427,7 +448,6 @@ const axiosSecure = useAxiosSecure();
           />
         </div>
 
-        {/* Role Filter */}
         <select
           value={selectedRole}
           onChange={(e) => setSelectedRole(e.target.value)}
@@ -441,11 +461,9 @@ const axiosSecure = useAxiosSecure();
           <option value="All">All Roles</option>
           <option value="admin">Admin</option>
           <option value="manager">Manager</option>
-          {/* <option value="borrower">Borrower</option> */}
           <option value="user">User</option>
         </select>
 
-        {/* Status Filter */}
         <select
           value={selectedStatus}
           onChange={(e) => setSelectedStatus(e.target.value)}
@@ -464,7 +482,7 @@ const axiosSecure = useAxiosSecure();
 
       {/* Users Table */}
       <div
-        className="rounded-xl overflow-hidden"
+        className="rounded-xl overflow-hidden mb-6"
         style={{
           backgroundColor: "var(--surface)",
           border: "2px solid var(--border)",
@@ -507,7 +525,9 @@ const axiosSecure = useAxiosSecure();
               </tr>
             </thead>
             <tbody>
-              {filteredUsers.length === 0 ? (
+              {/*  PAGINATION 5 */
+}
+              {currentItems.length === 0 ? (
                 <tr>
                   <td colSpan="5" className="text-center p-8">
                     <AlertCircle
@@ -520,7 +540,7 @@ const axiosSecure = useAxiosSecure();
                   </td>
                 </tr>
               ) : (
-                filteredUsers.map((userData, index) => (
+                currentItems.map((userData, index) => (
                   <motion.tr
                     key={userData._id || index}
                     initial={{ opacity: 0 }}
@@ -529,7 +549,6 @@ const axiosSecure = useAxiosSecure();
                     className="border-t"
                     style={{ borderColor: "var(--border)" }}
                   >
-                    {/* Name with Avatar */}
                     <td className="p-4">
                       <div className="flex items-center gap-3">
                         <img
@@ -549,23 +568,18 @@ const axiosSecure = useAxiosSecure();
                       </div>
                     </td>
 
-                    {/* Email */}
                     <td className="p-4">
                       <span style={{ color: "var(--text-secondary)" }}>
                         {userData.email}
                       </span>
                     </td>
 
-                    {/* --------------------------------Role */}
                     <td className="p-4">{getRoleBadge(userData.role)}</td>
 
-                    {/* Status */}
                     <td className="p-4">{getStatusBadge(userData.status)}</td>
 
-                    {/* Actions */}
                     <td className="p-4">
                       <div className="flex items-center justify-center gap-2">
-                        {/* Edit Button */}
                         <motion.button
                           whileHover={{ scale: 1.1 }}
                           whileTap={{ scale: 0.9 }}
@@ -583,7 +597,6 @@ const axiosSecure = useAxiosSecure();
                           />
                         </motion.button>
 
-                        {/* Suspend/Activate Button */}
                         {userData.status === "suspended" ? (
                           <motion.button
                             whileHover={{ scale: 1.1 }}
@@ -621,7 +634,6 @@ const axiosSecure = useAxiosSecure();
                           </motion.button>
                         )}
 
-                        {/* Delete Button */}
                         <motion.button
                           whileHover={{ scale: 1.1 }}
                           whileTap={{ scale: 0.9 }}
@@ -649,11 +661,95 @@ const axiosSecure = useAxiosSecure();
         </div>
       </div>
 
+      {/*  PAGINATION: 6*/}
+      {filteredUsers.length > itemsPerPage && (
+        <div
+          className="flex items-center justify-between p-4 rounded-xl mb-6"
+          style={{
+            backgroundColor: "var(--surface)",
+            border: "2px solid var(--border)",
+          }}
+        >
+          {/* Info Text */}
+          <div>
+            <p
+              className="text-sm font-semibold"
+              style={{ color: "var(--text-secondary)" }}
+            >
+              Showing {firstIndex + 1} to{" "}
+              {lastIndex > filteredUsers.length
+                ? filteredUsers.length
+                : lastIndex}{" "}
+              of {filteredUsers.length} users
+            </p>
+          </div>
+
+          {/* Pagination Buttons */}
+          <div className="flex items-center gap-2">
+            {/* Previous Button */}
+            <motion.button
+              whileHover={{ scale: currentPage === 1 ? 1 : 1.05 }}
+              whileTap={{ scale: currentPage === 1 ? 1 : 0.95 }}
+              onClick={prevPage}
+              disabled={currentPage === 1}
+              className="flex items-center gap-2 px-4 py-2 rounded-lg font-semibold disabled:opacity-30 disabled:cursor-not-allowed"
+              style={{
+                backgroundColor: "var(--bg)",
+                color: "var(--text-primary)",
+              }}
+            >
+              <ChevronLeft className="w-4 h-4" />
+              <span className="hidden sm:inline">Previous</span>
+            </motion.button>
+
+            {/* Page Numbers */}
+            <div className="flex items-center gap-1">
+              {Array.from({ length: totalPages }, (_, i) => i + 1).map(
+                (pageNum) => (
+                  <motion.button
+                    key={pageNum}
+                    whileHover={{ scale: 1.1 }}
+                    whileTap={{ scale: 0.9 }}
+                    onClick={() => goToPage(pageNum)}
+                    className="w-10 h-10 rounded-lg font-bold transition-all"
+                    style={{
+                      backgroundColor:
+                        currentPage === pageNum
+                          ? "var(--primary)"
+                          : "var(--bg)",
+                      color:
+                        currentPage === pageNum ? "white" : "var(--text-primary)",
+                    }}
+                  >
+                    {pageNum}
+                  </motion.button>
+                )
+              )}
+            </div>
+
+            {/* Next Button */}
+            <motion.button
+              whileHover={{ scale: currentPage === totalPages ? 1 : 1.05 }}
+              whileTap={{ scale: currentPage === totalPages ? 1 : 0.95 }}
+              onClick={nextPage}
+              disabled={currentPage === totalPages}
+              className="flex items-center gap-2 px-4 py-2 rounded-lg font-semibold disabled:opacity-30 disabled:cursor-not-allowed"
+              style={{
+                backgroundColor: "var(--bg)",
+                color: "var(--text-primary)",
+              }}
+            >
+              <span className="hidden sm:inline">Next</span>
+              <ChevronRight className="w-4 h-4" />
+            </motion.button>
+          </div>
+        </div>
+      )}
+
       {/* Edit Modal */}
       <AnimatePresence>
         {showModal && selectedUser && (
           <>
-            {/* Overlay */}
             <motion.div
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
@@ -661,7 +757,6 @@ const axiosSecure = useAxiosSecure();
               onClick={() => setShowModal(false)}
               className="fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center p-4"
             >
-              {/* Modal */}
               <motion.div
                 initial={{ scale: 0.9, opacity: 0 }}
                 animate={{ scale: 1, opacity: 1 }}
@@ -673,7 +768,6 @@ const axiosSecure = useAxiosSecure();
                   border: "2px solid var(--border)",
                 }}
               >
-                {/* Header */}
                 <div className="flex items-center justify-between mb-6">
                   <h3
                     className="text-2xl font-black"
@@ -693,7 +787,6 @@ const axiosSecure = useAxiosSecure();
                   </button>
                 </div>
 
-                {/* User Info */}
                 <div
                   className="flex items-center gap-3 mb-6 p-4 rounded-lg"
                   style={{ backgroundColor: "var(--bg)" }}
@@ -721,7 +814,6 @@ const axiosSecure = useAxiosSecure();
                   </div>
                 </div>
 
-                {/* Role Selection */}
                 <div className="mb-6">
                   <label
                     className="block text-sm font-semibold mb-2"
@@ -745,13 +837,11 @@ const axiosSecure = useAxiosSecure();
                     }}
                   >
                     <option value="user">User</option>
-                    {/* <option value="borrower">Borrower</option> */}
                     <option value="manager">Manager</option>
                     <option value="admin">Admin</option>
                   </select>
                 </div>
 
-                {/* Status Selection */}
                 <div className="mb-6">
                   <label
                     className="block text-sm font-semibold mb-2"
@@ -779,7 +869,6 @@ const axiosSecure = useAxiosSecure();
                   </select>
                 </div>
 
-                {/* Actions */}
                 <div className="flex gap-4">
                   <button
                     onClick={handleUpdate}
