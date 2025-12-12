@@ -1,4 +1,3 @@
-// PendingLoans.jsx
 import axios from "axios";
 import { AnimatePresence, motion } from "framer-motion";
 import {
@@ -23,7 +22,7 @@ import { useEffect, useState } from "react";
 import Swal from "sweetalert2";
 
 const PendingLoans = () => {
-  // ========== STATE ==========
+
   const [applications, setApplications] = useState([]);
   const [filteredApplications, setFilteredApplications] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -32,7 +31,6 @@ const PendingLoans = () => {
   const [selectedApplication, setSelectedApplication] = useState(null);
   const [processing, setProcessing] = useState(false);
 
-  // ========== FETCH PENDING APPLICATIONS ==========
   useEffect(() => {
     fetchApplications();
   }, []);
@@ -53,7 +51,7 @@ const PendingLoans = () => {
       setApplications(pendingApps);
       setFilteredApplications(pendingApps);
     } catch (error) {
-      console.error("❌ Error fetching applications:", error);
+      console.error("Error fetching applications:", error);
       Swal.fire({
         icon: "error",
         title: "Error",
@@ -64,7 +62,7 @@ const PendingLoans = () => {
     }
   };
 
-  // ========== FILTER APPLICATIONS ==========
+
   useEffect(() => {
     if (searchQuery) {
       const filtered = applications.filter(
@@ -80,7 +78,6 @@ const PendingLoans = () => {
     }
   }, [searchQuery, applications]);
 
-  // ========== APPROVE APPLICATION ==========
   const handleApprove = (application) => {
     Swal.fire({
       title: "Approve Loan?",
@@ -105,7 +102,7 @@ const PendingLoans = () => {
             {
               status: "Approved",
               approvedAt: new Date(),
-              approvedBy: "Admin", // You can pass actual admin email
+              approvedBy: "Admin",
             }
           );
 
@@ -122,7 +119,7 @@ const PendingLoans = () => {
             showConfirmButton: false,
           });
         } catch (error) {
-          console.error("❌ Error approving application:", error);
+          console.error("Error approving application:", error);
           Swal.fire({
             icon: "error",
             title: "Failed",
@@ -135,7 +132,7 @@ const PendingLoans = () => {
     });
   };
 
-  // ========== REJECT APPLICATION ==========
+// reject application 
   const handleReject = (application) => {
     Swal.fire({
       title: "Reject Loan?",
@@ -180,7 +177,7 @@ const PendingLoans = () => {
             showConfirmButton: false,
           });
         } catch (error) {
-          console.error("❌ Error rejecting application:", error);
+          console.error("Error rejecting application:", error);
           Swal.fire({
             icon: "error",
             title: "Failed",
@@ -193,13 +190,13 @@ const PendingLoans = () => {
     });
   };
 
-  // ========== VIEW DETAILS ==========
+
   const handleViewDetails = (application) => {
     setSelectedApplication(application);
     setShowModal(true);
   };
 
-  // ========== LOADING STATE ==========
+
   if (loading) {
     return (
       <div className="flex items-center justify-center h-96">
@@ -211,7 +208,6 @@ const PendingLoans = () => {
     );
   }
 
-  // ========== MAIN RENDER ==========
   return (
     <div>
       {/* Header */}
@@ -422,11 +418,11 @@ const PendingLoans = () => {
                     {/* Loan Type */}
                     <td className="p-4">
                       <span
-                        className="px-3 py-1 rounded-full text-sm font-semibold"
+                        className=" py-1 rounded-full text-sm font-semibold"
                         style={{
-                          backgroundColor: "var(--primary)",
-                          opacity: 0.1,
-                          color: "var(--primary)",
+                          // backgroundColor: "var(--success)",
+                          // opacity: 0.1,
+                          color: "var(--secondary)",
                         }}
                       >
                         {application.loanTitle}
@@ -461,7 +457,7 @@ const PendingLoans = () => {
 
                     {/* Actions */}
                     <td className="p-4">
-                      <div className="flex items-center justify-center gap-2">
+                      <div className=" px-1 flex items-center justify-center gap-2">
                         {/* View Button */}
                         <motion.button
                           whileHover={{ scale: 1.1 }}
@@ -470,13 +466,12 @@ const PendingLoans = () => {
                           className="p-2 rounded-lg"
                           style={{
                             backgroundColor: "var(--primary)",
-                            opacity: 0.1,
                           }}
                           title="View Details"
                         >
                           <Eye
                             className="w-4 h-4"
-                            style={{ color: "var(--primary)" }}
+                            style={{ color: "white" }}
                           />
                         </motion.button>
 
@@ -489,13 +484,12 @@ const PendingLoans = () => {
                           className="p-2 rounded-lg disabled:opacity-50"
                           style={{
                             backgroundColor: "var(--success)",
-                            opacity: 0.1,
                           }}
                           title="Approve"
                         >
                           <CheckCircle
                             className="w-4 h-4"
-                            style={{ color: "var(--success)" }}
+                            style={{ color: "white" }}
                           />
                         </motion.button>
 
@@ -508,13 +502,12 @@ const PendingLoans = () => {
                           className="p-2 rounded-lg disabled:opacity-50"
                           style={{
                             backgroundColor: "var(--error)",
-                            opacity: 0.1,
                           }}
                           title="Reject"
                         >
                           <XCircle
                             className="w-4 h-4"
-                            style={{ color: "var(--error)" }}
+                            style={{ color: "white" }}
                           />
                         </motion.button>
                       </div>
