@@ -570,12 +570,12 @@ const AllLoansAdmin = () => {
                           {loan.showOnHome ? (
                             <Eye
                               className="w-5 h-5"
-                              style={{ color: "text(--success)" }}
+                              style={{ color: "white" }}
                             />
                           ) : (
                             <EyeOff
                               className="w-5 h-5"
-                              style={{ color: "var(--text-third)" }}
+                              style={{ color: "white" }}
                             />
                           )}
                         </button>
