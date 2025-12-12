@@ -18,11 +18,11 @@ import {
 import { useEffect, useState } from "react";
 import Swal from "sweetalert2";
 import useAuth from "../../../hooks/useAuth";
+import useAxiosSecure from "../../../hooks/useAxiosSecure";
 
 const ManageUsers = () => {
   const { user } = useAuth();
 
-  // ========== STATE ==========
   const [users, setUsers] = useState([]);
   const [filteredUsers, setFilteredUsers] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -32,8 +32,7 @@ const ManageUsers = () => {
   const [showModal, setShowModal] = useState(false);
   const [selectedUser, setSelectedUser] = useState(null);
   const [updating, setUpdating] = useState(false);
-
-  // ========== FETCH USERS ==========
+const axiosSecure = useAxiosSecure();
   useEffect(() => {
     fetchUsers();
   }, []);
@@ -41,12 +40,12 @@ const ManageUsers = () => {
   const fetchUsers = async () => {
     try {
       setLoading(true);
-      const response = await axios.get("http://localhost:3000/users");
-      console.log("✅ Users fetched:", response.data);
+      const response = await axiosSecure.get("http://localhost:3000/users");
+      console.log(" Users fetched:", response.data);
       setUsers(response.data);
       setFilteredUsers(response.data);
     } catch (error) {
-      console.error("❌ Error fetching users:", error);
+      console.error(" Error fetching users:", error);
       Swal.fire({
         icon: "error",
         title: "Error",
@@ -57,21 +56,18 @@ const ManageUsers = () => {
     }
   };
 
-  // ========== FILTER USERS ==========
+
   useEffect(() => {
     let result = users;
 
-    // Filter by role
     if (selectedRole !== "All") {
       result = result.filter((u) => u.role === selectedRole);
     }
 
-    // Filter by status
     if (selectedStatus !== "All") {
       result = result.filter((u) => u.status === selectedStatus);
     }
 
-    // Filter by search query
     if (searchQuery) {
       result = result.filter(
         (u) =>
@@ -83,7 +79,6 @@ const ManageUsers = () => {
     setFilteredUsers(result);
   }, [selectedRole, selectedStatus, searchQuery, users]);
 
-  // ========== OPEN EDIT MODAL ==========
   const handleEdit = (userData) => {
     setSelectedUser({
       ...userData,
@@ -93,7 +88,6 @@ const ManageUsers = () => {
     setShowModal(true);
   };
 
-  // ========== UPDATE USER ==========
   const handleUpdate = async () => {
     if (!selectedUser) return;
 
@@ -129,7 +123,7 @@ const ManageUsers = () => {
       setShowModal(false);
       setSelectedUser(null);
     } catch (error) {
-      console.error("❌ Error updating user:", error);
+      console.error("Error updating user:", error);
       Swal.fire({
         icon: "error",
         title: "Update Failed",
@@ -140,7 +134,7 @@ const ManageUsers = () => {
     }
   };
 
-  // ========== SUSPEND USER ==========
+  // suspend user
   const handleSuspend = (userData) => {
     Swal.fire({
       title: "Suspend User?",
@@ -182,7 +176,7 @@ const ManageUsers = () => {
     });
   };
 
-  // ========== ACTIVATE USER ==========
+  // activate user
   const handleActivate = async (userData) => {
     try {
       await axios.patch(`http://localhost:3000/users/${userData.email}`, {
@@ -212,7 +206,7 @@ const ManageUsers = () => {
     }
   };
 
-  // ========== DELETE USER ==========
+// delete 
   const handleDelete = (userData) => {
     Swal.fire({
       title: "Delete User?",
@@ -247,7 +241,7 @@ const ManageUsers = () => {
     });
   };
 
-  // ========== ROLE BADGE ==========
+
   const getRoleBadge = (role) => {
     const roleConfig = {
       admin: {
@@ -260,11 +254,11 @@ const ManageUsers = () => {
         bg: "rgba(30, 58, 138, 0.1)",
         icon: UserCheck,
       },
-      borrower: {
-        color: "var(--success)",
-        bg: "rgba(5, 150, 105, 0.1)",
-        icon: Users,
-      },
+      // borrower: {
+      //   color: "var(--success)",
+      //   bg: "rgba(5, 150, 105, 0.1)",
+      //   icon: Users,
+      // },
       user: {
         color: "var(--text-secondary)",
         bg: "rgba(100, 116, 139, 0.1)",
@@ -291,7 +285,7 @@ const ManageUsers = () => {
     );
   };
 
-  // ========== STATUS BADGE ==========
+  //status
   const getStatusBadge = (status) => {
     if (status === "suspended") {
       return (
@@ -326,7 +320,6 @@ const ManageUsers = () => {
     );
   };
 
-  // ========== LOADING STATE ==========
   if (loading) {
     return (
       <div className="flex items-center justify-center h-96">
@@ -338,7 +331,7 @@ const ManageUsers = () => {
     );
   }
 
-  // ========== MAIN RENDER ==========
+  // main 
   return (
     <div>
       {/* Header */}
@@ -373,11 +366,11 @@ const ManageUsers = () => {
             label: "Managers",
             value: users.filter((u) => u.role === "manager").length,
             icon: UserCheck,
-            color: "var(--primary)",
+            color: "var(--secondary)",
           },
           {
-            label: "Borrowers",
-            value: users.filter((u) => u.role === "borrower").length,
+            label: "users",
+            value: users.filter((u) => u.role === "user").length,
             icon: Users,
             color: "var(--success)",
           },
@@ -448,7 +441,7 @@ const ManageUsers = () => {
           <option value="All">All Roles</option>
           <option value="admin">Admin</option>
           <option value="manager">Manager</option>
-          <option value="borrower">Borrower</option>
+          {/* <option value="borrower">Borrower</option> */}
           <option value="user">User</option>
         </select>
 
@@ -563,7 +556,7 @@ const ManageUsers = () => {
                       </span>
                     </td>
 
-                    {/* Role */}
+                    {/* --------------------------------Role */}
                     <td className="p-4">{getRoleBadge(userData.role)}</td>
 
                     {/* Status */}
@@ -752,7 +745,7 @@ const ManageUsers = () => {
                     }}
                   >
                     <option value="user">User</option>
-                    <option value="borrower">Borrower</option>
+                    {/* <option value="borrower">Borrower</option> */}
                     <option value="manager">Manager</option>
                     <option value="admin">Admin</option>
                   </select>
