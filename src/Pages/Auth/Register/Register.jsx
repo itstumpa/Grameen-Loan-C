@@ -279,7 +279,7 @@ const Register = () => {
                         } focus:outline-none focus:ring-2 focus:ring-blue-500/20`}
                     >
                       <option value="">Select Role</option>
-                      <option value="borrower">Borrower</option>
+                      <option value="user">User</option>
                       <option value="manager">Manager</option>
                     </select>
                     {errors.role && (

@@ -45,6 +45,8 @@ import LoanApplications from "../Pages/Dashboard/LoanApplications/LoanApplicatio
 import MyLoans from "../Pages/Dashboard/MyLoans/MyLoans.jsx";
 import AddLoan from "../Pages/Dashboard/AddLoan/AddLoan.jsx";
 import ManageLoans from "../Pages/Dashboard/ManageLoans/ManageLoans.jsx";
+import AdminRoute from "./AdminRoute.jsx";
+import ManagerRoute from "./ManagerRoute.jsx";
 
 // Route definitions // Public routes
 const router = createBrowserRouter([
@@ -127,13 +129,8 @@ const router = createBrowserRouter([
 
   // Dashboard routes
   {
-    path: "dashboard",
-    element: (
-      <PrivateRoute>
-        {" "}
-        <DashBoardLayout></DashBoardLayout>{" "}
-      </PrivateRoute>
-    ),
+    path: "dashboard", 
+    element: (<PrivateRoute>{" "}<DashBoardLayout></DashBoardLayout>{" "} </PrivateRoute>),
     children: [
       { path: "my-parcels", element: <MyParcels /> },
       // { path: "payment/:id", element: <Payment /> },
@@ -142,20 +139,22 @@ const router = createBrowserRouter([
       { path: "payment-cancel", element: <PaymentCancel /> },
       { path: "payments-history", element: <PaymentsHistory /> },
       { path: "approve-riders", element: <ApproveRiders /> },
+
+
       // admin 
-      { path: "loan-applications", element: <LoanApplications /> },
-      { path: "manage-users", element: <ManageUsers /> },
-      { path: "all-loan", element: <AllLoansAdmin /> },
-      { path: "pending-loans", element: <PendingLoans /> },
-      { path: "approved-loans", element: <ApprovedLoans /> },
+      { path: "loan-applications", element:<AdminRoute> <LoanApplications /> </AdminRoute>},
+      { path: "manage-users", element:<AdminRoute> <ManageUsers /> </AdminRoute>},
+      { path: "all-loan", element:<AdminRoute> <AllLoansAdmin /> </AdminRoute>},
+      { path: "pending-loans", element:<AdminRoute> <PendingLoans /> </AdminRoute>},
+      { path: "approved-loans", element:<AdminRoute> <ApprovedLoans /> </AdminRoute>},
       
       // manager 
-      { path: "add-loan", element: <AddLoan /> },
+      { path: "add-loan", element:<ManagerRoute><AddLoan /></ManagerRoute>  },
+      { path: "manage-loans", element: <ManagerRoute> <ManageLoans /> </ManagerRoute>},
 
       // users 
-      { path: "my-loans", element: <MyLoans /> },
-      { path: "manage-loans", element: <ManageLoans /> },
-      { path: "profile", element: <Profile /> },
+      { path: "my-loans", element:  <MyLoans /> },
+      { path: "profile", element:<Profile /> },
     ],
   },
 

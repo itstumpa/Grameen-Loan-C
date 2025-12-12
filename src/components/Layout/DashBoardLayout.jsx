@@ -19,10 +19,11 @@ import {
   Users,
   X,
 } from "lucide-react";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { FcApprove } from "react-icons/fc";
 import { Link, NavLink, Outlet, useNavigate } from "react-router";
 import Swal from "sweetalert2";
+import axios from "axios";
 import { useTheme } from "../../components/ThemeContext";
 import useAuth from "../../hooks/useAuth";
 
@@ -33,6 +34,25 @@ const DashboardLayout = () => {
 
   const [isSidebarOpen, setIsSidebarOpen] = useState(true);
   const [isMobileSidebarOpen, setIsMobileSidebarOpen] = useState(false);
+  const [userRole, setUserRole] = useState('user');
+  const [loading, setLoading] = useState(true);
+
+  // ========== FETCH USER ROLE ==========
+  useEffect(() => {
+    if (user?.email) {
+      axios.get(`http://localhost:3000/users/${user.email}`)
+        .then(response => {
+          const userData = response.data.user || response.data;
+          setUserRole(userData.role || 'user');
+          setLoading(false);
+        })
+        .catch(error => {
+          console.error('Error fetching user role:', error);
+          setUserRole('user');
+          setLoading(false);
+        });
+    }
+  }, [user]);
 
   // ========== NAVIGATION ITEMS ==========
   const navigationItems = [
@@ -41,70 +61,73 @@ const DashboardLayout = () => {
       path: "/dashboard",
       icon: LayoutDashboard,
       end: true,
+      roles: ['admin', 'user', 'manager'],
     },
     {
       name: "Loan Applications",
       path: "/dashboard/loan-applications",
       icon: FileText,
+      roles: ['admin'],
     },
     {
       name: "My Loans",
       path: "/dashboard/my-loans",
       icon: FileText,
+      roles: ['admin', 'manager', 'user'],
     },
     {
       name: "Add Loan",
       path: "/dashboard/add-loan",
       icon: FileText,
+      roles: ['manager'],
     },
     {
       name: "Manage Loans",
       path: "/dashboard/manage-loans",
       icon: FileText,
+      roles: ['manager'],
     },
-
-    // {
-    //   name: 'Approve Riders',
-    //   path: '/dashboard/approve-riders',
-    //   icon: Users,
-    //   adminOnly: true
-    // },
-
     {
       name: "Manage Users",
       path: "/dashboard/manage-users",
       icon: Users,
-      adminOnly: true,
+      roles: ['admin'],
     },
     {
-      name: "All Loan Admin",
+      name: "All Loans",
       path: "/dashboard/all-loan",
       icon: DollarSignIcon,
-      adminOnly: true,
+      roles: ['admin'],
     },
     {
       name: "Pending Loans",
       path: "/dashboard/pending-loans",
       icon: Clock,
-      adminOnly: true,
+      roles: ['admin'],
     },
     {
       name: "Approved Loans",
       path: "/dashboard/approved-loans",
       icon: FcApprove,
-      adminOnly: true,
+      roles: ['admin'],
     },
     {
       name: "Payment History",
       path: "/dashboard/payments-history",
       icon: CreditCard,
+      roles: ['admin'],
     },
     {
       name: "My Profile",
       path: "/dashboard/profile",
       icon: UserCircle,
+      roles: ['admin', 'user', 'manager'],
     },
   ];
+
+  const filteredNavItems = navigationItems.filter(item => 
+    item.roles.includes(userRole)
+  );
 
   // ========== HANDLE LOGOUT ==========
   const handleLogout = () => {
@@ -152,17 +175,17 @@ const DashboardLayout = () => {
             <button
               onClick={() => setIsSidebarOpen(!isSidebarOpen)}
               className="hidden lg:flex items-center justify-center w-10 h-10 rounded-lg hover:bg-opacity-10 transition-all"
-              style={{ backgroundColor: "var(--primary)", opacity: 0.1 }}
+              style={{ backgroundColor: "var(--secondary)"}}
             >
               {isSidebarOpen ? (
                 <ChevronLeft
                   className="w-5 h-5"
-                  style={{ color: "var(--primary)" }}
+                  style={{ color: "--text(-third)" }}
                 />
               ) : (
                 <ChevronRight
                   className="w-5 h-5"
-                  style={{ color: "var(--primary)" }}
+                  style={{ color: "--text(-third)" }}
                 />
               )}
             </button>
@@ -178,17 +201,12 @@ const DashboardLayout = () => {
 
             {/* Logo */}
             <Link to="/" className="flex items-center gap-2">
-              <div
-                className="w-10 h-10 rounded-lg flex items-center justify-center"
-                style={{ backgroundColor: "var(--primary)" }}
-              >
-                <DollarSign className="w-6 h-6 text-white" />
-              </div>
+              
               <span
                 className="text-xl font-black hidden sm:block"
                 style={{ color: "var(--text-primary)" }}
               >
-                GrameenLoan Dashboard
+              Dashboard
               </span>
             </Link>
           </div>
@@ -283,7 +301,7 @@ const DashboardLayout = () => {
           <div className="h-full flex flex-col py-6">
             {/* Navigation Items */}
             <nav className="flex-1 px-4 space-y-2">
-              {navigationItems.map((item, index) => (
+              {filteredNavItems.map((item, index) => (
                 <NavLink
                   key={index}
                   to={item.path}
@@ -332,7 +350,7 @@ const DashboardLayout = () => {
                 )}
               </Link>
 
-              <button
+              {/* <button
                 className="w-full flex items-center gap-4 px-4 py-3 rounded-xl transition-all hover:shadow-md"
                 style={{ color: "var(--text-primary)" }}
               >
@@ -340,7 +358,7 @@ const DashboardLayout = () => {
                 {isSidebarOpen && (
                   <span className="font-semibold">Settings</span>
                 )}
-              </button>
+              </button> */}
 
               <button
                 onClick={handleLogout}
@@ -393,7 +411,7 @@ const DashboardLayout = () => {
 
                   {/* Navigation Items */}
                   <nav className="flex-1 px-4 space-y-2">
-                    {navigationItems.map((item, index) => (
+                    {filteredNavItems.map((item, index) => (
                       <NavLink
                         key={index}
                         to={item.path}
@@ -431,13 +449,13 @@ const DashboardLayout = () => {
                       <span className="font-semibold">Back to Home</span>
                     </Link>
 
-                    <button
+                    {/* <button
                       className="w-full flex items-center gap-4 px-4 py-3 rounded-xl"
                       style={{ color: "var(--text-primary)" }}
                     >
                       <Settings className="w-5 h-5" />
                       <span className="font-semibold">Settings</span>
-                    </button>
+                    </button> */}
 
                     <button
                       onClick={handleLogout}
