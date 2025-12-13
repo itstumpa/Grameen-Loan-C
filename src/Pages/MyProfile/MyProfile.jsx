@@ -8,16 +8,13 @@ import { auth } from '../../firebase/firebase.config';
 import { useTheme } from '../../components/ThemeContext';
 
 const MyProfile = () => {
-  // ========== HOOKS & CONTEXT ==========
   const { user, loading } = useAuth();
   const { isDark } = useTheme();
 
-  // ========== FORM STATES ==========
   const [displayName, setDisplayName] = useState('');
   const [photoURL, setPhotoURL] = useState('');
   const [updating, setUpdating] = useState(false);
 
-  // ========== EFFECTS ==========
   useEffect(() => {
     if (user) {
       setDisplayName(user.displayName || '');
@@ -25,7 +22,6 @@ const MyProfile = () => {
     }
   }, [user]);
 
-  // ========== LOADING STATE ==========
   if (loading) {
     return (
       <div className={`flex justify-center items-center min-h-screen ${isDark ? 'bg-slate-900' : 'bg-slate-50'}`}>
@@ -37,7 +33,6 @@ const MyProfile = () => {
     );
   }
 
-  // ========== NO USER STATE ==========
   if (!user) {
     return (
       <div className={`min-h-screen flex items-center justify-center px-4 ${isDark ? 'bg-slate-900' : 'bg-slate-50'}`}>
@@ -53,7 +48,6 @@ const MyProfile = () => {
     );
   }
 
-  // ========== HANDLER ==========
   const handleUpdateProfile = async (e) => {
     e.preventDefault();
     setUpdating(true);
@@ -78,7 +72,6 @@ const MyProfile = () => {
     <div className={`min-h-screen pt-24 pb-16 px-4 sm:px-6 lg:px-8 ${isDark ? 'bg-slate-900' : 'bg-slate-50'} transition-colors duration-300`}>
       <div className="max-w-4xl mx-auto">
         
-        {/* ========== PAGE HEADER ========== */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
@@ -94,8 +87,8 @@ const MyProfile = () => {
         </motion.div>
 
         <div className="grid lg:grid-cols-3 gap-6">
-          
-          {/* ========== LEFT SIDEBAR - PROFILE CARD ========== */}
+
+{/* left sidebar            */}
           <motion.div
             initial={{ opacity: 0, x: -20 }}
             animate={{ opacity: 1, x: 0 }}
@@ -168,7 +161,7 @@ const MyProfile = () => {
             </div>
           </motion.div>
 
-          {/* ========== RIGHT CONTENT - EDIT FORM ========== */}
+{/* right sidebar  */}
           <motion.div
             initial={{ opacity: 0, x: 20 }}
             animate={{ opacity: 1, x: 0 }}

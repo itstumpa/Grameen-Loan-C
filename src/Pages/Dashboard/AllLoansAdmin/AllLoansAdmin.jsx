@@ -50,11 +50,10 @@ const AllLoansAdmin = () => {
     try {
       setLoading(true);
       const response = await axios.get("http://localhost:3000/all-loans");
-      console.log("Loans fetched:", response.data);
       setLoans(response.data);
       setFilteredLoans(response.data);
     } catch (error) {
-      console.error("Error fetching loans:", error);
+      // console.error("Error fetching loans:", error);
       Swal.fire({
         icon: "error",
         title: "Error",

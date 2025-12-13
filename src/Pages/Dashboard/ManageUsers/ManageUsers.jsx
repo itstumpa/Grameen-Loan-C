@@ -49,7 +49,6 @@ const ManageUsers = () => {
     try {
       setLoading(true);
       const response = await axiosSecure.get("http://localhost:3000/users");
-      console.log(" Users fetched:", response.data);
       setUsers(response.data);
       setFilteredUsers(response.data);
     } catch (error) {

@@ -127,50 +127,62 @@ const MyLoans = () => {
     );
   };
 
-  // ========== DELETE LOAN ==========
-  const handleDelete = async (application) => {
+  // ========== DELETE LOAN (PENDING ONLY) ==========
+const handleDelete = async (application) => {
+  if (application.status === 'Approved') {
     Swal.fire({
-      title: "Delete Application?",
-      text: `Are you sure you want to delete "${application.loanTitle}"?`,
-      icon: "warning",
-      showCancelButton: true,
-      confirmButtonText: "Yes, Delete",
+      icon: "error",
+      title: "Cannot Delete",
+      text: "Approved applications cannot be deleted. Please contact support if needed.",
       confirmButtonColor: "var(--error)",
-      cancelButtonText: "Cancel",
-    }).then(async (result) => {
-      if (result.isConfirmed) {
-        try {
-          await axios.delete(
-            `http://localhost:3000/loan-applications/${application._id}`
-          );
-
-          setApplications(
-            applications.filter((a) => a._id !== application._id)
-          );
-          setFilteredApplications(
-            filteredApplications.filter((a) => a._id !== application._id)
-          );
-
-          Swal.fire({
-            icon: "success",
-            title: "Deleted!",
-            text: "Application deleted successfully",
-            timer: 2000,
-            showConfirmButton: false,
-          });
-        } catch (error) {
-          Swal.fire({
-            icon: "error",
-            title: "Failed",
-            text: "Could not delete application",
-          });
-        }
-      }
     });
-  };
+    return;
+  }
 
-  // ========== VIEW DETAILS ==========
-  const handleViewDetails = (
+ 
+  //  DELETE FOR PENDING APPLICATIONS
+  Swal.fire({
+    title: "Delete Application?",
+    text: `Are you sure you want to delete "${application.loanTitle}"?`,
+    icon: "warning",
+    showCancelButton: true,
+    confirmButtonText: "Yes, Delete",
+    confirmButtonColor: "var(--error)",
+    cancelButtonText: "Cancel",
+  }).then(async (result) => {
+    if (result.isConfirmed) {
+      try {
+        await axios.delete(
+          `http://localhost:3000/loan-applications/${application._id}`
+        );
+
+        setApplications(
+          applications.filter((a) => a._id !== application._id)
+        );
+        setFilteredApplications(
+          filteredApplications.filter((a) => a._id !== application._id)
+        );
+
+        Swal.fire({
+          icon: "success",
+          title: "Deleted!",
+          text: "Application deleted successfully",
+          timer: 2000,
+          showConfirmButton: false,
+        });
+      } catch (error) {
+        Swal.fire({
+          icon: "error",
+          title: "Failed",
+          text: error.response?.data?.message || "Could not delete application",
+        });
+      }
+    }
+  });
+};
+
+// view details 
+const handleViewDetails = (
     applicationId,
     status,
     userEmail,

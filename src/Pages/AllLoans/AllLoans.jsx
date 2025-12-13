@@ -13,11 +13,9 @@ import { useTheme } from '../../components/ThemeContext';
 import axios from 'axios';
 
 const AllLoans = () => {
-  // ========== HOOKS & CONTEXT ==========
   const { isDark } = useTheme();
   const navigate = useNavigate();
 
-  // ========== STATE ==========
   const [loans, setLoans] = useState([]);
   const [filteredLoans, setFilteredLoans] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -26,7 +24,6 @@ const AllLoans = () => {
 
 
 
-  // ✅ Fetch data from backend
   useEffect(() => {
     axios
       .get("http://localhost:3000/all-loans")
@@ -41,7 +38,6 @@ const AllLoans = () => {
   }, []);
 
 
-  // ========== FILTER BY CATEGORY ==========
   useEffect(() => {
     let result = loans;
 
@@ -62,15 +58,12 @@ const AllLoans = () => {
     setFilteredLoans(result);
   }, [selectedCategory, searchQuery, loans]);
 
-  // ========== GET UNIQUE CATEGORIES ==========
   const categories = ['All', ...new Set(loans.map(loan => loan.category))];
 
-  // ========== NAVIGATE TO DETAILS ==========
   const handleViewDetails = (loanId) => {
     navigate(`/loan-details/${loanId}`);
   };
 
-  // ========== LOADING STATE ==========
   if (loading) {
     return (
       <div className={`min-h-screen flex items-center justify-center ${isDark ? 'bg-slate-900' : 'bg-slate-50'}`}>
@@ -86,7 +79,6 @@ const AllLoans = () => {
     <div className={`min-h-screen pt-28 pb-16 ${isDark ? 'bg-slate-900' : 'bg-slate-50'} transition-colors duration-300`}>
       <div className="container mx-auto px-4 sm:px-6 lg:px-8">
         
-        {/* ========== PAGE HEADER ========== */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
@@ -101,7 +93,6 @@ const AllLoans = () => {
           </p>
         </motion.div>
 
-        {/* ========== SEARCH & FILTER BAR ========== */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
@@ -154,7 +145,6 @@ const AllLoans = () => {
           </div>
         </motion.div>
 
-        {/* ========== RESULTS COUNT ========== */}
         <motion.div
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
@@ -166,7 +156,6 @@ const AllLoans = () => {
           {searchQuery && ` matching "${searchQuery}"`}
         </motion.div>
 
-        {/* ========== LOANS GRID ========== */}
         {filteredLoans.length === 0 ? (
           <motion.div
             initial={{ opacity: 0 }}
@@ -282,7 +271,6 @@ const AllLoans = () => {
           </div>
         )}
 
-        {/* ========== BOTTOM CTA ========== */}
         {filteredLoans.length > 0 && (
           <motion.div
             initial={{ opacity: 0, y: 20 }}

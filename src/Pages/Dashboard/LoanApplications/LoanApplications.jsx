@@ -23,7 +23,6 @@ const LoanApplications = () => {
   const { user } = useAuth();
   const navigate = useNavigate();
 
-  // ========== STATE ==========
   const [applications, setApplications] = useState([]);
   const [filteredApplications, setFilteredApplications] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -31,7 +30,6 @@ const LoanApplications = () => {
   const [selectedStatus, setSelectedStatus] = useState("All");
   const [searchQuery, setSearchQuery] = useState("");
 
-  // ========== FETCH APPLICATIONS ==========
   useEffect(() => {
     const fetchApplications = async () => {
       if (!user?.email) {
@@ -43,17 +41,14 @@ const LoanApplications = () => {
         setLoading(true);
         setError(null);
 
-        console.log("🔄 Fetching applications for:", user.email);
 
         const response = await axios.get(
-          `http://localhost:3000/loan-applications/user/${user.email}`
+          `http://localhost:3000/loan-applications`
         );
 
-        console.log("Applications fetched:", response.data);
         setApplications(response.data);
         setFilteredApplications(response.data);
       } catch (err) {
-        console.error("Error fetching applications:", err);
         setError("Failed to load applications");
       } finally {
         setLoading(false);
@@ -194,26 +189,25 @@ const LoanApplications = () => {
 
   return (
     <div
-      className="min-h-screen py-20 px-4 md:px-8"
+      className="min-h-screen py-4 px-4 md:px-8"
       style={{ backgroundColor: "var(--bg)" }}
     >
       <div className="max-w-7xl mx-auto">
         {/* Header */}
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          className="mb-12"
+        <div
+         
+          className="mb-8"
         >
           <h1
             className="text-4xl md:text-5xl font-black mb-4"
             style={{ color: "var(--text-primary)" }}
           >
-            My Applications
+            All Loan Applications
           </h1>
           <p className="text-lg" style={{ color: "var(--text-secondary)" }}>
             Track and manage your loan applications
           </p>
-        </motion.div>
+        </div>
 
         {/* Stats Cards */}
         <div className="grid md:grid-cols-4 gap-6 mb-8">

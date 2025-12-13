@@ -32,7 +32,6 @@ const Profile = () => {
   const { user, logOut, loading: authLoading } = useAuth();
   const navigate = useNavigate();
 
-  // ========== STATE ==========
   const [userData, setUserData] = useState(null);
   const [loading, setLoading] = useState(true);
   const [editMode, setEditMode] = useState(false);
@@ -108,7 +107,8 @@ const Profile = () => {
           .reduce((sum, app) => sum + (app.loanAmount || 0), 0),
       });
     } catch (error) {
-      console.error("❌ Error fetching stats:", error);
+      console.error(" Error fetching stats:", error);
+
     }
   };
 

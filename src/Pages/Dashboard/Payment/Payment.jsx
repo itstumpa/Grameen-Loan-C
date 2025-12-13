@@ -90,8 +90,8 @@ const Payment = () => {
           {/* Header */}
           <div className={`relative p-8 text-center
             ${isDark 
-              ? 'bg-gradient-to-br from-blue-900 to-slate-800' 
-              : 'bg-gradient-to-br from-blue-50 to-white'
+              ? 'bg-linear-to-br from-blue-900 to-slate-800' 
+              : 'bg-linear-to-br from-blue-50 to-white'
             }`}
           >
             <motion.div
@@ -186,7 +186,7 @@ const Payment = () => {
                   'Fast-track processing'
                 ].map((item, index) => (
                   <div key={index} className="flex items-center gap-3">
-                    <CheckCircle className="text-green-500 flex-shrink-0" size={20} />
+                    <CheckCircle className="text-green-500 shrink-0" size={20} />
                     <span className={isDark ? 'text-slate-300' : 'text-slate-700'}>
                       {item}
                     </span>
