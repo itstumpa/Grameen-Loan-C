@@ -489,8 +489,8 @@ const ManageLoans = () => {
                         className="px-3 py-1 rounded-full text-sm font-semibold"
                         style={{
                           backgroundColor: "var(--primary)",
-                          opacity: 0.1,
-                          color: "var(--accent)",
+                          // opacity: 0.1,
+                          color: "white",
                         }}
                       >
                         {loan.category}
@@ -535,7 +535,7 @@ const ManageLoans = () => {
                             backgroundColor: loan.showOnHome
                               ? "var(--success)"
                               : "var(--text-secondary)",
-                            opacity: 0.1,
+                            // opacity: 0.1,
                           }}
                           title={
                             loan.showOnHome
@@ -546,12 +546,12 @@ const ManageLoans = () => {
                           {loan.showOnHome ? (
                             <Eye
                               className="w-5 h-5"
-                              style={{ color: "var(--success)" }}
+                              style={{ color: "white" }}
                             />
                           ) : (
                             <EyeOff
                               className="w-5 h-5"
-                              style={{ color: "var(--text-secondary)" }}
+                              style={{ color: "white" }}
                             />
                           )}
                         </motion.button>
@@ -569,13 +569,13 @@ const ManageLoans = () => {
                           className="p-2 rounded-lg"
                           style={{
                             backgroundColor: "var(--primary)",
-                            opacity: 0.1,
+                            // opacity: 0.1,
                           }}
                           title="Edit Loan"
                         >
                           <Edit
                             className="w-4 h-4"
-                            style={{ color: "var(--primary)" }}
+                            style={{ color: "white" }}
                           />
                         </motion.button>
 
@@ -588,7 +588,7 @@ const ManageLoans = () => {
                           className="p-2 rounded-lg disabled:opacity-50"
                           style={{
                             backgroundColor: "var(--error)",
-                            opacity: 0.1,
+                            // opacity: 0.1,
                           }}
                           title="Delete Loan"
                         >
@@ -600,7 +600,7 @@ const ManageLoans = () => {
                           ) : (
                             <Trash2
                               className="w-4 h-4"
-                              style={{ color: "var(--error)" }}
+                              style={{ color: "white" }}
                             />
                           )}
                         </motion.button>
