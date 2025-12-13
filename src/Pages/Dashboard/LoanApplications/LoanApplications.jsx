@@ -5,6 +5,7 @@ import {
   AlertCircle,
   Calendar,
   CheckCircle,
+  CircleDollarSign,
   Clock,
   DollarSign,
   Eye,
@@ -14,7 +15,7 @@ import {
   XCircle,
 } from "lucide-react";
 import { useEffect, useState } from "react";
-import { useNavigate } from "react-router";
+import { Link, useNavigate } from "react-router";
 import Swal from "sweetalert2";
 import useAuth from "../../../hooks/useAuth";
 
@@ -62,7 +63,6 @@ const LoanApplications = () => {
     fetchApplications();
   }, [user, navigate]);
 
-  // ========== FILTER APPLICATIONS ==========
   useEffect(() => {
     let result = applications;
 
@@ -84,7 +84,6 @@ const LoanApplications = () => {
     setFilteredApplications(result);
   }, [selectedStatus, searchQuery, applications]);
 
-  // ========== STATUS BADGE ==========
   const getStatusBadge = (status) => {
     const statusConfig = {
       Pending: {
@@ -120,7 +119,6 @@ const LoanApplications = () => {
     );
   };
 
-  // ========== VIEW DETAILS ==========
   const handleViewDetails = (applicationId, status, userEmail, monthlyIncome, contactNumber, interestRate) => {
     
     Swal.fire({
@@ -139,7 +137,6 @@ const LoanApplications = () => {
     });
   };
 
-  // ========== LOADING STATE ==========
   if (loading) {
     return (
       <div
@@ -167,7 +164,6 @@ const LoanApplications = () => {
     );
   }
 
-  // ========== ERROR STATE ==========
   if (error) {
     return (
       <div
@@ -196,7 +192,6 @@ const LoanApplications = () => {
     );
   }
 
-  // ========== MAIN RENDER ==========
   return (
     <div
       className="min-h-screen py-20 px-4 md:px-8"
@@ -439,6 +434,7 @@ const LoanApplications = () => {
                   {/* Right: Status & Actions */}
                   <div className="flex flex-col items-end gap-3">
                     {getStatusBadge(application.status)}
+
 
                     <button
                       onClick={() => handleViewDetails(application._id, application.status, application.userEmail,  application.monthlyIncome, application.contactNumber, application.interestRate)}

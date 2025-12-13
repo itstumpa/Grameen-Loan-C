@@ -5,6 +5,8 @@ import {
   AlertCircle,
   Calendar,
   CheckCircle,
+  CheckCircle2,
+  CircleDollarSign,
   Clock,
   DollarSign,
   Edit2,
@@ -19,7 +21,7 @@ import {
   XCircle,
 } from "lucide-react";
 import { useEffect, useState } from "react";
-import { useNavigate } from "react-router";
+import { Link, useNavigate } from "react-router";
 import Swal from "sweetalert2";
 import useAuth from "../../../hooks/useAuth";
 
@@ -539,11 +541,44 @@ const MyLoans = () => {
                             style={{ color: "var(--text-third)" }}
                           />
                         </motion.button>
+
+
+                       {application?.paymentStatus === 'Paid' ? (
+  // ✅ PAID STATE - Disabled/Badge Style
+  <button
+    disabled
+    className="flex items-center gap-2 px-4 py-2 rounded-lg font-semibold transition-all cursor-not-allowed opacity-75"
+    style={{
+      backgroundColor: "var(--success)",
+      color: "white",
+    }}
+  >
+    <CheckCircle2 className="w-4 h-4" />
+    Paid
+  </button>
+) : (
+  // 💳 UNPAID STATE - Clickable Payment Link
+  <Link to={`/dashboard/payment/${application._id}`}>
+    <button
+      className="flex items-center gap-2 px-4 py-2 rounded-lg font-semibold transition-all hover:opacity-90"
+      style={{
+        backgroundColor: "var(--success)",
+        color: "white",
+      }}
+    >
+      <CircleDollarSign className="w-4 h-4" />
+      Pay ${application?.cost || '10'}
+    </button>
+  </Link>
+)}
+
                       </div>
                     </td>
                   </div>
                   <div className="flex flex-col items-end gap-3">
                     {getStatusBadge(application.status)}
+
+
 
                     <button
                       onClick={() =>

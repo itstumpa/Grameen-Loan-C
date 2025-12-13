@@ -134,7 +134,7 @@ const router = createBrowserRouter([
     children: [
       { path: "my-parcels", element: <MyParcels /> },
       // { path: "payment/:id", element: <Payment /> },
-      { path: "payment/:parcelId", element: <Payment /> },
+      { path: "payment/:loanId", element: <Payment /> },
       { path: "payment-success", element: <PaymentSuccess /> },
       { path: "payment-cancel", element: <PaymentCancel /> },
       { path: "payments-history", element: <PaymentsHistory /> },

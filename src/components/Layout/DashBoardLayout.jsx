@@ -73,7 +73,7 @@ const DashboardLayout = () => {
       name: "My Loans",
       path: "/dashboard/my-loans",
       icon: FileText,
-      roles: ['admin', 'manager', 'user'],
+      roles: [ 'user'],
     },
     {
       name: "Add Loan",
@@ -103,20 +103,20 @@ const DashboardLayout = () => {
       name: "Pending Loans",
       path: "/dashboard/pending-loans",
       icon: Clock,
-      roles: ['admin'],
+      roles: ['manager'],
     },
     {
       name: "Approved Loans",
       path: "/dashboard/approved-loans",
       icon: FcApprove,
-      roles: ['admin'],
+      roles: ['manager'],
     },
-    {
-      name: "Payment History",
-      path: "/dashboard/payments-history",
-      icon: CreditCard,
-      roles: ['admin'],
-    },
+    // {
+    //   name: "Payment History",
+    //   path: "/dashboard/payments-history",
+    //   icon: CreditCard,
+    //   roles: ['admin'],
+    // },
     {
       name: "My Profile",
       path: "/dashboard/profile",
