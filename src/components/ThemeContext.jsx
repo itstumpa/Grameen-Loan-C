@@ -1,9 +1,7 @@
-import React, { createContext, useContext, useState } from 'react';
+import React, { createContext, useContext, useEffect, useState } from 'react';
 
-// ========== CREATE THEME CONTEXT ==========
 const ThemeContext = createContext();
 
-// ========== CUSTOM HOOK TO USE THEME ==========
 // Use this hook in any component to access theme
 export const useTheme = () => {
   const context = useContext(ThemeContext);
@@ -13,17 +11,26 @@ export const useTheme = () => {
   return context;
 };
 
-// ========== THEME PROVIDER COMPONENT ==========
-// Wrap your entire app with this in App.js
 export const ThemeProvider = ({ children }) => {
-  // State to manage dark/light theme
-  const [isDark, setIsDark] = useState(false);
+  const [isDark, setIsDark] = useState(() => {
+     const saved = localStorage.getItem('darkMode');
+    return saved ? JSON.parse(saved) : false;
+  });
 
-  // Function to toggle theme
+   useEffect(() => {
+    localStorage.setItem('darkMode', JSON.stringify(isDark));
+    document.documentElement.setAttribute('data-theme', isDark ? 'dark' : 'light');
+  }, [isDark]);
+
   const toggleTheme = () => {
     setIsDark(!isDark);
-    document.documentElement.setAttribute('data-theme', isDark ? 'light' : 'dark');
   };
+
+  // // Function to toggle theme
+  // const toggleTheme = () => {
+  //   setIsDark(!isDark);
+  //   document.documentElement.setAttribute('data-theme', isDark ? 'light' : 'dark');
+  // };
 
   // Provide theme state and toggle function to all children
   return (
