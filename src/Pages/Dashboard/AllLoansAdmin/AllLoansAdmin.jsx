@@ -3,7 +3,6 @@ import axios from "axios";
 import { AnimatePresence, motion } from "framer-motion";
 import {
   AlertCircle,
-  Edit,
   Edit2,
   Eye,
   EyeOff,
@@ -11,7 +10,6 @@ import {
   Loader,
   Plus,
   Search,
-  Trash2,
   Trash2Icon,
   Upload,
   X,
@@ -53,7 +51,6 @@ const AllLoansAdmin = () => {
       setLoans(response.data);
       setFilteredLoans(response.data);
     } catch (error) {
-      // console.error("Error fetching loans:", error);
       Swal.fire({
         icon: "error",
         title: "Error",
@@ -113,7 +110,6 @@ const AllLoansAdmin = () => {
     setShowModal(true);
   };
 
-  // ========== HANDLE IMAGE CHANGE ==========
   const handleImageChange = (e) => {
     const file = e.target.files[0];
     if (file) {
@@ -125,7 +121,6 @@ const AllLoansAdmin = () => {
     }
   };
 
-  // ========== SUBMIT FORM ==========
   const onSubmit = async (data) => {
     try {
       setSubmitting(true);
@@ -198,7 +193,7 @@ const AllLoansAdmin = () => {
     }
   };
 
-  // ========== DELETE LOAN ==========
+  // delete loan 
   const handleDelete = (loan) => {
     Swal.fire({
       title: "Delete Loan?",
@@ -241,9 +236,11 @@ const AllLoansAdmin = () => {
         showOnHome: newStatus,
       });
 
-      setLoans(
-        loans.map((l) =>
-          l._id === loan._id ? { ...l, showOnHome: newStatus } : l
+      setLoans(prevLoans =>
+        prevLoans.map((l) =>
+          l._id === loan._id 
+      ? { ...l, showOnHome: newStatus }
+       : l
         )
       );
 
@@ -282,7 +279,7 @@ const AllLoansAdmin = () => {
             className="text-3xl md:text-4xl font-black mb-2"
             style={{ color: "var(--text-primary)" }}
           >
-            Manage Loans
+            Manage All Loans
           </h1>
           <p style={{ color: "var(--text-secondary)" }}>
             Create, edit, and manage loan products

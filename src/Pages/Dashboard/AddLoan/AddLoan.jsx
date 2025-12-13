@@ -27,7 +27,6 @@ const AddLoan = () => {
   const navigate = useNavigate();
   const { register, handleSubmit, formState: { errors }, reset } = useForm();
 
-  // ========== STATE ==========
   const [submitting, setSubmitting] = useState(false);
   const [showOnHome, setShowOnHome] = useState(false);
   const [imagePreview, setImagePreview] = useState('');
@@ -96,19 +95,16 @@ const AddLoan = () => {
     try {
       setSubmitting(true);
 
-      // Validate image
       if (!imagePreview) {
         toast.error('Please upload a loan image');
         return;
       }
 
-      // Validate documents
       if (requiredDocs.length === 0) {
         toast.error('Please add at least one required document');
         return;
       }
 
-      // Validate EMI plans
       if (emiPlans.length === 0) {
         toast.error('Please add at least one EMI plan');
         return;
@@ -132,17 +128,15 @@ const AddLoan = () => {
         status: 'active'
       };
 
-      console.log('Submitting loan data:', loanData);
+      // console.log('Submitting loan data:', loanData);
 
-      // Submit to backend
       const response = await axios.post(
         'http://localhost:3000/all-loans',
         loanData
       );
 
-      console.log('Loan created:', response.data);
+      // console.log('Loan created:', response.data);
 
-      // Show success message
       Swal.fire({
         icon: 'success',
         title: 'Loan Created!',
@@ -170,7 +164,7 @@ const AddLoan = () => {
       toast.success('Loan created successfully!');
 
     } catch (error) {
-      console.error(' Error creating loan:', error);
+      // console.error(' Error creating loan:', error);
       
       Swal.fire({
         icon: 'error',
@@ -185,11 +179,15 @@ const AddLoan = () => {
     }
   };
 
-  // ========== MAIN RENDER ==========
+
   return (
-    <div>
+    <>
+    <div className='items-center flex justify-center pt-5'>
+
+    
+    <div className=''>
       {/* Header */}
-      <div className="mb-8">
+      <div className="mb-8 ">
         <h1 className="text-3xl md:text-4xl font-black mb-2" 
             style={{ color: 'var(--text-primary)' }}>
           Add New Loan
@@ -711,8 +709,9 @@ const AddLoan = () => {
               whileTap={{ scale: 0.98 }}
               className="px-8 py-4 rounded-xl font-semibold"
               style={{
-                backgroundColor: 'var(--bg)',
-                color: 'var(--text-primary)'
+                // backgroundColor: 'var(--error)',
+                color: 'var(--text-primary)',
+                border: '2px solid gray'
               }}
             >
               Cancel
@@ -721,6 +720,8 @@ const AddLoan = () => {
         </div>
       </motion.form>
     </div>
+    </div>
+  </>
   );
 };
 

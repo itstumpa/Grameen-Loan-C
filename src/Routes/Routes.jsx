@@ -18,16 +18,15 @@ import Services from "../Pages/Services/Services.jsx";
 
 import Login from "../Pages/Auth/Login/Login.jsx";
 import Register from "../Pages/Auth/Register/Register.jsx";
-import ForgotPassword from "../Pages/Auth/ForgotPassword.jsx";
-import ResetPassword from "../Pages/Auth/ResetPassword.jsx";
+// import ForgotPassword from "../Pages/Auth/ForgotPassword.jsx";
+// import ResetPassword from "../Pages/Auth/ResetPassword.jsx";
 import SendParcel from "../Pages/SendParcel/SendParcel.jsx";
 import DashBoardLayout from "../components/Layout/DashBoardLayout.jsx";
-import MyParcels from "../Pages/Dashboard/MyParcels/MyParcels.jsx";
+// import MyParcels from "../Pages/Dashboard/MyParcels/MyParcels.jsx";
 import Payment from "../Pages/Dashboard/Payment/Payment.jsx";
 import PaymentSuccess from "../Pages/Dashboard/Payment/PaymentSuccess.jsx";
 import PaymentCancel from "../Pages/Dashboard/Payment/PaymentCancel.jsx";
-import PaymentsHistory from "../Pages/Dashboard/PaymentsHistory/PaymentsHistory.jsx";
-import ApproveRiders from "../Pages/Dashboard/ApproveRiders/ApproveRiders.jsx";
+// import PaymentsHistory from "../Pages/Dashboard/PaymentsHistory/PaymentsHistory.jsx";
 import TermsConditions from "../components/Footer/TermsConditions.jsx";
 import CookiesPolicy from "../components/Footer/CookiesPolicy.jsx";
 import FAQ from "../Pages/Home/Sections/FAQ.jsx";
@@ -66,12 +65,12 @@ const router = createBrowserRouter([
       { path: "/contact", element: <Contact /> },
       { path: "/login", element: <Login /> },
       { path: "/register", element: <Register /> },
-      { path: "all-loans", element: <AllLoans /> }, 
+      { path: "/all-loans", element: <AllLoans /> }, 
       
       
       // fix me  (later add in private route-all these route)  
-      { path: "apply-loan/:id", element: <ApplyLoan /> },  
-      { path: "loan-details/:id", element: <LoanDetails /> },
+      { path: "apply-loan/:id", element:<PrivateRoute><ApplyLoan /></PrivateRoute>  },  
+      { path: "loan-details/:id", element: <PrivateRoute><LoanDetails /></PrivateRoute>  },
 
       
       {
@@ -115,42 +114,31 @@ const router = createBrowserRouter([
     ],
   },
 
-  // Auth routes group
-  // {
-  //   path: "/",
-  //   Component: AuthLayout,
-  //   children: [
-  //     { path: "login", element: <Login /> },
-  //     { path: "register", element: <Register /> },
-  //     { path: "forgot-password", element: <ForgotPassword /> },
-  //     { path: "reset-password", element: <ResetPassword /> },
-  //   ],
-  // },
-
   // Dashboard routes
   {
     path: "dashboard", 
     element: (<PrivateRoute>{" "}<DashBoardLayout></DashBoardLayout>{" "} </PrivateRoute>),
     children: [
-      { path: "my-parcels", element: <MyParcels /> },
+      // { path: "my-parcels", element: <MyParcels /> },
       // { path: "payment/:id", element: <Payment /> },
       { path: "payment/:loanId", element: <Payment /> },
       { path: "payment-success", element: <PaymentSuccess /> },
       { path: "payment-cancel", element: <PaymentCancel /> },
-      { path: "payments-history", element: <PaymentsHistory /> },
-      { path: "approve-riders", element: <ApproveRiders /> },
+      // { path: "payments-history", element: <PaymentsHistory /> },
+      // { path: "approve-riders", element: <ApproveRiders /> },
 
 
       // admin 
-      { path: "loan-applications", element:<AdminRoute> <LoanApplications /> </AdminRoute>},
       { path: "manage-users", element:<AdminRoute> <ManageUsers /> </AdminRoute>},
       { path: "all-loan", element:<AdminRoute> <AllLoansAdmin /> </AdminRoute>},
-      { path: "pending-loans", element:<AdminRoute> <PendingLoans /> </AdminRoute>},
-      { path: "approved-loans", element:<AdminRoute> <ApprovedLoans /> </AdminRoute>},
+      { path: "loan-applications", element:<AdminRoute> <LoanApplications /> </AdminRoute>},
+      
       
       // manager 
       { path: "add-loan", element:<ManagerRoute><AddLoan /></ManagerRoute>  },
       { path: "manage-loans", element: <ManagerRoute> <ManageLoans /> </ManagerRoute>},
+      { path: "pending-loans", element:<ManagerRoute> <PendingLoans /> </ManagerRoute>},
+      { path: "approved-loans", element:<ManagerRoute> <ApprovedLoans /> </ManagerRoute>},
 
       // users 
       { path: "my-loans", element:  <MyLoans /> },

@@ -85,6 +85,8 @@ const LoanCategories = () => {
           <>
             <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
               {displayedLoans.map((loan, index) => (
+                loan.showOnHome && (
+
                 <motion.div
                   key={loan._id}
                   initial={{ opacity: 0, y: 20 }}
@@ -177,7 +179,7 @@ const LoanCategories = () => {
                       <ArrowRight size={20} />
                     </motion.button>
                   </div>
-                </motion.div>
+                </motion.div>)
               ))}
             </div>
             {/* button  */}

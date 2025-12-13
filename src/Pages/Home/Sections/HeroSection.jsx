@@ -83,7 +83,7 @@ const HeroSection = () => {
             {/* CTA Buttons */}
 
             <div className="flex flex-col sm:flex-row gap-4 justify-center lg:justify-start mb-10">
-              <Link to="all-loans">
+              <Link to="/all-loans">
                 <motion.button
                   whileHover={{ scale: 1.05 }}
                   whileTap={{ scale: 0.95 }}
@@ -91,7 +91,7 @@ const HeroSection = () => {
                 font-bold text-lg shadow-xl hover:shadow-2xl transition-all flex items-center 
                 justify-center gap-2"
                 >
-                  Apply for Loan
+                Explore Loans
                   <ArrowRight
                     className="group-hover:translate-x-1 transition-transform"
                     size={22}
@@ -140,8 +140,7 @@ const HeroSection = () => {
               </div>
             </div>
           </motion.div>
-
-          {/* ========== RIGHT CONTENT */}
+{/* right  */}
           <motion.div
             initial={{ opacity: 0, x: 50 }}
             animate={{ opacity: 1, x: 0 }}

@@ -30,6 +30,7 @@ const AllLoans = () => {
       .then((res) => {
         setLoans(res.data);
         setFilteredLoans(res.data);
+        console.log(res.data)
       })
       .catch((err) => {
         console.error("Error fetching loans:", err);
@@ -145,7 +146,7 @@ const AllLoans = () => {
           </div>
         </motion.div>
 
-        <motion.div
+        {/* <motion.div
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ duration: 0.3 }}
@@ -154,7 +155,7 @@ const AllLoans = () => {
           Showing <span className="font-bold">{filteredLoans.length}</span> loan{filteredLoans.length !== 1 ? 's' : ''}
           {selectedCategory !== 'All' && ` in ${selectedCategory}`}
           {searchQuery && ` matching "${searchQuery}"`}
-        </motion.div>
+        </motion.div> */}
 
         {filteredLoans.length === 0 ? (
           <motion.div
@@ -172,6 +173,8 @@ const AllLoans = () => {
         ) : (
           <div className="grid  sm:grid-cols-2 lg:grid-cols-3 gap-6">
             {filteredLoans.map((loan, index) => (
+              
+              loan.showOnHome && (
               <motion.div
                 key={loan._id}
                 initial={{ opacity: 0, y: 20 }}
@@ -266,7 +269,7 @@ const AllLoans = () => {
                     <ArrowRight size={20} />
                   </motion.button>
                 </div>
-              </motion.div>
+              </motion.div>)
             ))}
           </div>
         )}
