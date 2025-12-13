@@ -149,7 +149,7 @@ const ApprovedLoans = () => {
           app.loanTitle,
           app.loanAmount,
           new Date(app.approvedAt).toLocaleDateString(),
-          app.approvedBy || "Admin",
+          app.approvedBy || "Manager",
         ].join(",")
       ),
     ].join("\n");
@@ -520,7 +520,7 @@ const ApprovedLoans = () => {
                         className="text-sm font-semibold"
                         style={{ color: "var(--Primary)" }}
                       >
-                        {application.approvedBy || "Admin"}
+                        {application.approvedBy || "Manager"}
                       </span>
                     </td>
 
@@ -883,7 +883,7 @@ const ApprovedLoans = () => {
                           style={{ color: "var(--text-primary)" }}
                         >
                           Approved by{" "}
-                          {selectedApplication.approvedBy || "Admin"}
+                          {selectedApplication.approvedBy || "Manager"}
                         </p>
                         <p
                           className="text-xs"
