@@ -21,22 +21,20 @@ import { useNavigate, useParams } from "react-router";
 import Swal from "sweetalert2";
 import { useTheme } from "../../components/ThemeContext";
 import useAuth from "../../hooks/useAuth";
+import Loading from "../../components/Loading";
 
 const LoanDetails = () => {
   const { isDark } = useTheme();
 
-  // ========== HOOKS ==========
   const { id } = useParams();
   const navigate = useNavigate();
   const { user } = useAuth();
 
-  // ========== STATE ==========
   const [loan, setLoan] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [applying, setApplying] = useState(false);
 
-  // ========== FETCH LOAN DETAILS ==========
   useEffect(() => {
     const fetchLoanDetails = async () => {
       try {
@@ -64,7 +62,6 @@ const LoanDetails = () => {
     }
   }, [id]);
 
-  // ========== HANDLE APPLY ==========
   const handleApplyNow = () => {
     if (!user) {
       Swal.fire({
@@ -76,7 +73,7 @@ const LoanDetails = () => {
         if (result.isConfirmed) {
           navigate("/login", {
             state: { from: `/apply-loan/${id}` },
-            replace: true, // Don't add login to history
+            replace: true,
           });
         }
       });
@@ -87,35 +84,12 @@ const LoanDetails = () => {
     navigate(`/apply-loan/${id}`, { state: { loan } });
   };
 
-  // ========== LOADING STATE ==========
   if (loading) {
     return (
-      <div
-        className="min-h-screen flex items-center justify-center"
-        style={{ backgroundColor: "var(--bg)" }}
-      >
-        <div className="text-center">
-          <motion.div
-            animate={{ rotate: 360 }}
-            transition={{ duration: 1, repeat: Infinity, ease: "linear" }}
-          >
-            <Loader
-              className="w-12 h-12 mx-auto mb-4"
-              style={{ color: "var(--primary)" }}
-            />
-          </motion.div>
-          <p
-            className="text-lg font-semibold"
-            style={{ color: "var(--text-primary)" }}
-          >
-            Loading loan details...
-          </p>
-        </div>
-      </div>
+      <Loading/>
     );
   }
 
-  // ========== ERROR STATE ==========
   if (error) {
     return (
       <div
@@ -153,7 +127,6 @@ const LoanDetails = () => {
     );
   }
 
-  // ========== NO LOAN DATA ==========
   if (!loan) {
     return (
       <div
@@ -167,7 +140,6 @@ const LoanDetails = () => {
     );
   }
   console.log(loan);
-  // ========== MAIN RENDER ==========
   return (
     <div
       className="min-h-screen py-32 px-4 md:px-8"

@@ -21,6 +21,7 @@ import { useEffect, useState } from "react";
 import Swal from "sweetalert2";
 import useAuth from "../../../hooks/useAuth";
 import useAxiosSecure from "../../../hooks/useAxiosSecure";
+import Loading from "../../../components/Loading";
 
 const ManageUsers = () => {
   const { user } = useAuth();
@@ -344,12 +345,7 @@ const ManageUsers = () => {
 
   if (loading) {
     return (
-      <div className="flex items-center justify-center h-96">
-        <Loader
-          className="w-12 h-12 animate-spin"
-          style={{ color: "var(--primary)" }}
-        />
-      </div>
+     <Loading/>
     );
   }
 

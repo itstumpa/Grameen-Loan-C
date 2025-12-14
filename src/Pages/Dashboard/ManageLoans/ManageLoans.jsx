@@ -20,6 +20,7 @@ import { useNavigate } from "react-router";
 import { toast } from "react-toastify";
 import Swal from "sweetalert2";
 import useAuth from "../../../hooks/useAuth";
+import Loading from "../../../components/Loading";
 
 const ManageLoans = () => {
   const { user } = useAuth();
@@ -173,15 +174,7 @@ const ManageLoans = () => {
 
   if (loading) {
     return (
-      <div className="flex items-center justify-center h-96">
-        <div className="text-center">
-          <Loader
-            className="w-12 h-12 mx-auto mb-4 animate-spin"
-            style={{ color: "var(--primary)" }}
-          />
-          <p style={{ color: "var(--text-secondary)" }}>Loading loans...</p>
-        </div>
-      </div>
+     <Loading/>
     );
   }
 

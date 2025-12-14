@@ -11,15 +11,16 @@ import {
   Loader
 } from 'lucide-react';
 import useAxiosSecure from "../../../hooks/useAxiosSecure";
-import useAuth from "../../../hooks/useAuth"; // ← ADD THIS
+import useAuth from "../../../hooks/useAuth"; 
 import { useTheme } from '../../../components/ThemeContext';
+import Loading from "../../../components/Loading";
 
 const Payment = () => {
   const { loanId } = useParams();
   const navigate = useNavigate();
   const axiosSecure = useAxiosSecure();
   const { isDark } = useTheme();
-  const { user } = useAuth(); // ← ADD THIS
+  const { user } = useAuth(); 
   const [isAgreed, setIsAgreed] = useState(false);
 
   const { isLoading, data: application } = useQuery({
@@ -64,12 +65,7 @@ const Payment = () => {
 
   if (isLoading) {
     return (
-      <div className={`min-h-screen flex items-center justify-center ${isDark ? 'bg-slate-900' : 'bg-slate-50'}`}>
-        <div className="flex flex-col items-center gap-4">
-          <Loader className={`animate-spin ${isDark ? 'text-blue-400' : 'text-blue-600'}`} size={48} />
-          <p className={isDark ? 'text-slate-400' : 'text-slate-600'}>Loading payment details...</p>
-        </div>
-      </div>
+     <Loading/>
     );
   }
 

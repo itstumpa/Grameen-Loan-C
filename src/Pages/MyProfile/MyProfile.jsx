@@ -6,6 +6,7 @@ import { User, Mail, Camera, Shield, CheckCircle, Loader } from 'lucide-react';
 import useAuth from "../../hooks/useAuth";
 import { auth } from '../../firebase/firebase.config';
 import { useTheme } from '../../components/ThemeContext';
+import Loading from '../../components/Loading';
 
 const MyProfile = () => {
   const { user, loading } = useAuth();
@@ -24,12 +25,7 @@ const MyProfile = () => {
 
   if (loading) {
     return (
-      <div className={`flex justify-center items-center min-h-screen ${isDark ? 'bg-slate-900' : 'bg-slate-50'}`}>
-        <div className="flex flex-col items-center gap-4">
-          <Loader className={`animate-spin ${isDark ? 'text-blue-400' : 'text-blue-600'}`} size={48} />
-          <p className={isDark ? 'text-slate-400' : 'text-slate-600'}>Loading profile...</p>
-        </div>
-      </div>
+      <Loading/>
     );
   }
 

@@ -4,6 +4,7 @@ import { motion } from "framer-motion";
 import { CheckCircle, Copy, ArrowRight, Loader, AlertCircle } from "lucide-react";
 import useAxiosSecure from "../../../hooks/useAxiosSecure";
 import { useTheme } from "../../../components/ThemeContext";
+import Loading from "../../../components/Loading";
 
 const PaymentSuccess = () => {
   const [searchParams] = useSearchParams();
@@ -45,12 +46,7 @@ const PaymentSuccess = () => {
 
   if (loading) {
     return (
-      <div className={`min-h-screen flex items-center justify-center ${isDark ? 'bg-slate-900' : 'bg-slate-50'}`}>
-        <div className="flex flex-col items-center gap-4">
-          <Loader className={`animate-spin ${isDark ? 'text-blue-400' : 'text-blue-600'}`} size={48} />
-          <p className={isDark ? 'text-slate-400' : 'text-slate-600'}>Verifying payment...</p>
-        </div>
-      </div>
+     <Loading/>
     );
   }
 

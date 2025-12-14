@@ -20,9 +20,9 @@ import {
 } from "lucide-react";
 import { useEffect, useState } from "react";
 import Swal from "sweetalert2";
+import Loading from "../../../components/Loading";
 
 const ApprovedLoans = () => {
-  // ========== STATE ==========
   const [applications, setApplications] = useState([]);
   const [filteredApplications, setFilteredApplications] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -31,7 +31,6 @@ const ApprovedLoans = () => {
   const [showModal, setShowModal] = useState(false);
   const [selectedApplication, setSelectedApplication] = useState(null);
 
-  // ========== FETCH APPROVED APPLICATIONS ==========
   useEffect(() => {
     fetchApplications();
   }, []);
@@ -68,7 +67,6 @@ const ApprovedLoans = () => {
     }
   };
 
-  // ========== FILTER APPLICATIONS ==========
   useEffect(() => {
     let result = applications;
 
@@ -112,7 +110,6 @@ const ApprovedLoans = () => {
     setFilteredApplications(result);
   }, [searchQuery, dateFilter, applications]);
 
-  // ========== VIEW DETAILS ==========
   const handleViewDetails = (application) => {
     setSelectedApplication(application);
     setShowModal(true);
@@ -171,7 +168,6 @@ const ApprovedLoans = () => {
     });
   };
 
-  // ========== CALCULATE STATS ==========
   const stats = {
     totalApproved: applications.length,
     totalAmount: applications.reduce(
@@ -192,19 +188,12 @@ const ApprovedLoans = () => {
     }).length,
   };
 
-  // ========== LOADING STATE ==========
   if (loading) {
     return (
-      <div className="flex items-center justify-center h-96">
-        <Loader
-          className="w-12 h-12 animate-spin"
-          style={{ color: "var(--primary)" }}
-        />
-      </div>
+     <Loading/>
     );
   }
 
-  // ========== MAIN RENDER ==========
   return (
     <div>
       {/* Header */}

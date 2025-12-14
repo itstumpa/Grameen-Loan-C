@@ -9,29 +9,23 @@ import { useTheme } from '../../../components/ThemeContext';
 import Swal from "sweetalert2";
 
 const Login = () => {
-  // ========== HOOKS & CONTEXT ==========
   const navigate = useNavigate();
   const location = useLocation();
   const { isDark } = useTheme();
   const { signInUser, signInGoogle } = useAuth();
   
-  // ========== FORM STATE ==========
   const {
     register,
     handleSubmit,
     formState: { errors },
   } = useForm();
 
-  // ========== LOCAL STATE ==========
   const [showPassword, setShowPassword] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
 
-  // ✅ Get the redirect path from location state
   const from = location?.state?.from || '/';
 
-  console.log('Redirect path:', from); // Debug log
 
-  // ========== EMAIL/PASSWORD LOGIN ==========
   const handleLogin = async (data) => {
     try {
       setIsLoading(true);
@@ -48,11 +42,11 @@ const Login = () => {
         timer: 2000
       }).then(() => {
         console.log(from)
-        navigate(from, { replace: true }); // ✅ Fixed
+        navigate(from, { replace: true });
       });
       
     } catch (error) {
-      console.error('❌ Login Error:', error);
+      console.error('Login Error:', error);
       Swal.fire({
         icon: 'error',
         title: 'Login Failed',
@@ -64,7 +58,6 @@ const Login = () => {
     }
   };
 
-  // ========== GOOGLE LOGIN ==========
   const handleGoogleLogin = async () => {
     try {
       setIsLoading(true);
@@ -81,10 +74,10 @@ const Login = () => {
         showConfirmButton: false
       });
       
-      navigate(from, { replace: true }); // ✅ Fixed
+      navigate(from, { replace: true });
       
     } catch (error) {
-      console.error('❌ Google Login Error:', error);
+      console.error('Google Login Error:', error);
       Swal.fire({
         icon: 'error',
         title: 'Google Login Failed',
@@ -103,7 +96,7 @@ return (
       <div className="w-full max-w-5xl">
         <div className="grid lg:grid-cols-2 gap-8 items-center">
           
-          {/* ========== LEFT SIDE - BRANDING ========== */}
+          {/* left dide  */}
           <motion.div
             initial={{ opacity: 0, x: -30 }}
             animate={{ opacity: 1, x: 0 }}
@@ -167,7 +160,7 @@ return (
             </div>
           </motion.div>
 
-          {/* ========== RIGHT SIDE - LOGIN FORM ========== */}
+{/* right side  */}
           <motion.div
             initial={{ opacity: 0, x: 30 }}
             animate={{ opacity: 1, x: 0 }}
@@ -355,12 +348,7 @@ return (
               </div>
             </div>
 
-            {/* Trust Badge */}
-            {/* <div className="mt-6 text-center">
-              <p className={`text-xs ${isDark ? 'text-slate-500' : 'text-slate-500'}`}>
-                🔒 Your information is protected with bank-level security
-              </p>
-            </div> */}
+          
           </motion.div>
 
         </div>

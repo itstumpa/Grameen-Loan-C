@@ -11,6 +11,7 @@ import {
 } from 'lucide-react';
 import { useTheme } from '../../components/ThemeContext';
 import axios from 'axios';
+import Loading from '../../components/Loading';
 
 const AllLoans = () => {
   const { isDark } = useTheme();
@@ -67,12 +68,7 @@ const AllLoans = () => {
 
   if (loading) {
     return (
-      <div className={`min-h-screen flex items-center justify-center ${isDark ? 'bg-slate-900' : 'bg-slate-50'}`}>
-        <div className="flex flex-col items-center gap-4">
-          <Loader className={`animate-spin ${isDark ? 'text-blue-400' : 'text-blue-600'}`} size={48} />
-          <p className={isDark ? 'text-slate-400' : 'text-slate-600'}>Loading loans...</p>
-        </div>
-      </div>
+     <Loading/>
     );
   }
 

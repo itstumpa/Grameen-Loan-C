@@ -22,9 +22,9 @@ import { useForm } from "react-hook-form";
 import { useLocation, useNavigate, useParams } from "react-router";
 import Swal from "sweetalert2";
 import useAuth from "../../hooks/useAuth";
+import Loading from "../../components/Loading";
 
 const ApplyLoan = () => {
-  // ========== HOOKS ==========
   const { id } = useParams();
   const navigate = useNavigate();
   const location = useLocation();
@@ -37,25 +37,21 @@ const ApplyLoan = () => {
     setValue,
   } = useForm();
 
-  // ========== STATE ==========
   const [loan, setLoan] = useState(null);
   const [loading, setLoading] = useState(true);
   const [submitting, setSubmitting] = useState(false);
 
-  // ========== FETCH LOAN DETAILS ==========
   useEffect(() => {
     const fetchLoanDetails = async () => {
       try {
         setLoading(true);
 
-        // Try to get loan from location state first
         if (location.state?.loan) {
           setLoan(location.state.loan);
           setLoading(false);
           return;
         }
 
-        // Otherwise fetch from API
         const response = await axios.get(
           `http://localhost:3000/all-loans/${id}`
         );
@@ -78,12 +74,10 @@ const ApplyLoan = () => {
     }
   }, [id, location.state, navigate]);
 
-  // ========== HANDLE FORM SUBMISSION ==========
   const onSubmit = async (data) => {
     try {
       setSubmitting(true);
 
-      // Create application object
       const applicationData = {
         // Auto-filled data (read-only)
         userEmail: user.email,
@@ -103,7 +97,6 @@ const ApplyLoan = () => {
         address: data.address,
         extraNotes: data.extraNotes || "",
 
-        // System-generated fields
         status: "Pending",
         applicationFeeStatus: "Unpaid",
         appliedAt: new Date(),
@@ -115,7 +108,6 @@ const ApplyLoan = () => {
 
       console.log("Submitting application:", applicationData);
 
-      // Submit to backend
       const response = await axios.post(
         "http://localhost:3000/loan-applications",
         applicationData
@@ -155,35 +147,12 @@ const ApplyLoan = () => {
     }
   };
 
-  // ========== LOADING STATE ==========
   if (loading) {
     return (
-      <div
-        className="min-h-screen flex items-center justify-center"
-        style={{ backgroundColor: "var(--bg)" }}
-      >
-        <div className="text-center">
-          <motion.div
-            animate={{ rotate: 360 }}
-            transition={{ duration: 1, repeat: Infinity, ease: "linear" }}
-          >
-            <Loader
-              className="w-12 h-12 mx-auto mb-4"
-              style={{ color: "var(--primary)" }}
-            />
-          </motion.div>
-          <p
-            className="text-lg font-semibold"
-            style={{ color: "var(--text-primary)" }}
-          >
-            Loading application form...
-          </p>
-        </div>
-      </div>
+     <Loading/>
     );
   }
 
-  // ========== MAIN RENDER ==========
   return (
     <div
       className="min-h-screen py-20 px-4 md:px-8"

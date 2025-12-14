@@ -1,20 +1,11 @@
-// import Lottie from "react-lottie";
-// import loadingAnimation from "../assets/json/loading.json";
+import { Loader2 } from "lucide-react";
 
 const Loading = () => {
-    return (
-        <div className="flex flex-col items-center justify-center gap-5">
-            <div className="max-w-sm relative">
-                {/* <Lottie
-                    options={{
-                        animationData: loadingAnimation,
-                        autoplay: true,
-                        loop: true,
-                    }}
-                ></Lottie> */}
-            </div>
-        </div>
-    );
+  return (
+    <div className="flex items-center justify-center min-h-screen">
+      <Loader2 className="w-12 h-12 animate-spin text-blue-600" />
+    </div>
+  );
 };
 
 export default Loading;

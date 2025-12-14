@@ -18,6 +18,7 @@ import { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router";
 import Swal from "sweetalert2";
 import useAuth from "../../../hooks/useAuth";
+import Loading from "../../../components/Loading";
 
 const LoanApplications = () => {
   const { user } = useAuth();
@@ -134,28 +135,7 @@ const LoanApplications = () => {
 
   if (loading) {
     return (
-      <div
-        className="min-h-screen flex items-center justify-center"
-        style={{ backgroundColor: "var(--bg)" }}
-      >
-        <div className="text-center">
-          <motion.div
-            animate={{ rotate: 360 }}
-            transition={{ duration: 1, repeat: Infinity, ease: "linear" }}
-          >
-            <Loader
-              className="w-12 h-12 mx-auto mb-4"
-              style={{ color: "var(--primary)" }}
-            />
-          </motion.div>
-          <p
-            className="text-lg font-semibold"
-            style={{ color: "var(--text-primary)" }}
-          >
-            Loading your applications...
-          </p>
-        </div>
-      </div>
+     <Loading/>
     );
   }
 

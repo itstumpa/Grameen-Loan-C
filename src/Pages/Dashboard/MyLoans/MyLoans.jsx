@@ -24,12 +24,12 @@ import { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router";
 import Swal from "sweetalert2";
 import useAuth from "../../../hooks/useAuth";
+import Loading from "../../../components/Loading";
 
 const MyLoans = () => {
   const { user } = useAuth();
   const navigate = useNavigate();
 
-  // ========== STATE ==========
   const [applications, setApplications] = useState([]);
   const [filteredApplications, setFilteredApplications] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -37,7 +37,6 @@ const MyLoans = () => {
   const [selectedStatus, setSelectedStatus] = useState("All");
   const [searchQuery, setSearchQuery] = useState("");
 
-  // ========== FETCH APPLICATIONS ==========
   useEffect(() => {
     const fetchApplications = async () => {
       if (!user?.email) {
@@ -49,17 +48,14 @@ const MyLoans = () => {
         setLoading(true);
         setError(null);
 
-        console.log("🔄 Fetching applications for:", user.email);
-
         const response = await axios.get(
           `http://localhost:3000/loan-applications/user/${user.email}`
         );
 
-        console.log("✅ Applications fetched:", response.data);
         setApplications(response.data);
         setFilteredApplications(response.data);
       } catch (err) {
-        console.error("❌ Error fetching applications:", err);
+        console.error("Error fetching applications:", err);
         setError("Failed to load applications");
       } finally {
         setLoading(false);
@@ -69,7 +65,6 @@ const MyLoans = () => {
     fetchApplications();
   }, [user, navigate]);
 
-  // ========== FILTER APPLICATIONS ==========
   useEffect(() => {
     let result = applications;
 
@@ -91,7 +86,6 @@ const MyLoans = () => {
     setFilteredApplications(result);
   }, [selectedStatus, searchQuery, applications]);
 
-  // ========== STATUS BADGE ==========
   const getStatusBadge = (status) => {
     const statusConfig = {
       Pending: {
@@ -127,7 +121,6 @@ const MyLoans = () => {
     );
   };
 
-  // ========== DELETE LOAN (PENDING ONLY) ==========
 const handleDelete = async (application) => {
   if (application.status === 'Approved') {
     Swal.fire({
@@ -206,35 +199,12 @@ const handleViewDetails = (
     });
   };
 
-  // ========== LOADING STATE ==========
   if (loading) {
     return (
-      <div
-        className="min-h-screen flex items-center justify-center"
-        style={{ backgroundColor: "var(--bg)" }}
-      >
-        <div className="text-center">
-          <motion.div
-            animate={{ rotate: 360 }}
-            transition={{ duration: 1, repeat: Infinity, ease: "linear" }}
-          >
-            <Loader
-              className="w-12 h-12 mx-auto mb-4"
-              style={{ color: "var(--primary)" }}
-            />
-          </motion.div>
-          <p
-            className="text-lg font-semibold"
-            style={{ color: "var(--text-primary)" }}
-          >
-            Loading your applications...
-          </p>
-        </div>
-      </div>
+      <Loading/>
     );
   }
 
-  // ========== ERROR STATE ==========
   if (error) {
     return (
       <div
@@ -263,7 +233,6 @@ const handleViewDetails = (
     );
   }
 
-  // ========== MAIN RENDER ==========
   return (
     <div
       className="min-h-screen py-20 px-4 md:px-8"
@@ -556,7 +525,7 @@ const handleViewDetails = (
 
 
                        {application?.paymentStatus === 'Paid' ? (
-  // ✅ PAID STATE - Disabled/Badge Style
+  // PAID STATE - Disabled/Badge Style
   <button
     disabled
     className="flex items-center gap-2 px-4 py-2 rounded-lg font-semibold transition-all cursor-not-allowed opacity-75"
@@ -569,7 +538,7 @@ const handleViewDetails = (
     Paid
   </button>
 ) : (
-  // 💳 UNPAID STATE - Clickable Payment Link
+  // UNPAID STATE - Clickable Payment Link
   <Link to={`/dashboard/payment/${application._id}`}>
     <button
       className="flex items-center gap-2 px-4 py-2 rounded-lg font-semibold transition-all hover:opacity-90"

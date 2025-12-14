@@ -20,6 +20,7 @@ import {
 } from "lucide-react";
 import { useEffect, useState } from "react";
 import Swal from "sweetalert2";
+import Loading from "../../../components/Loading";
 
 const PendingLoans = () => {
 
@@ -47,7 +48,6 @@ const PendingLoans = () => {
         (app) => app.status === "Pending"
       );
 
-      console.log("✅ Pending applications:", pendingApps);
       setApplications(pendingApps);
       setFilteredApplications(pendingApps);
     } catch (error) {
@@ -199,12 +199,7 @@ const PendingLoans = () => {
 
   if (loading) {
     return (
-      <div className="flex items-center justify-center h-96">
-        <Loader
-          className="w-12 h-12 animate-spin"
-          style={{ color: "var(--primary)" }}
-        />
-      </div>
+      <Loading/>
     );
   }
 

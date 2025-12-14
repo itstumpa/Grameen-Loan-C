@@ -36,7 +36,6 @@ const AddLoan = () => {
   const [emiPlans, setEmiPlans] = useState(['6', '12']);
   const [newEmi, setNewEmi] = useState('');
 
-  // IMAGE UPLOAD 
   const handleImageUpload = async (e) => {
     const file = e.target.files[0];
     if (!file) return;

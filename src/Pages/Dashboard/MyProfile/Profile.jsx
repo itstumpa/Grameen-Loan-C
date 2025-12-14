@@ -27,6 +27,7 @@ import { toast } from "react-toastify";
 import Swal from "sweetalert2";
 import { auth } from "../../../firebase/firebase.config";
 import useAuth from "../../../hooks/useAuth";
+import Loading from "../../../components/Loading";
 
 const Profile = () => {
   const { user, logOut, loading: authLoading } = useAuth();
@@ -254,18 +255,7 @@ const Profile = () => {
 
   if (authLoading || loading) {
     return (
-      <div
-        className="flex items-center justify-center h-screen"
-        style={{ backgroundColor: "var(--bg)" }}
-      >
-        <div className="text-center">
-          <Loader
-            className="w-12 h-12 mx-auto mb-4 animate-spin"
-            style={{ color: "var(--primary)" }}
-          />
-          <p style={{ color: "var(--text-secondary)" }}>Loading profile...</p>
-        </div>
-      </div>
+     <Loading/>
     );
   }
 

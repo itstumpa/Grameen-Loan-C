@@ -6,13 +6,13 @@ import { ArrowLeft, Save, Loader } from 'lucide-react';
 import { useTheme } from '../../../components/ThemeContext';
 import axios from 'axios';
 import Swal from 'sweetalert2';
+import Loading from '../../../components/Loading';
 
 const UpdateLoan = () => {
   const { loanId } = useParams();
   const navigate = useNavigate();
   const { isDark } = useTheme();
   const { register, handleSubmit, setValue, formState: { errors } } = useForm();
-//   const [showModal, setShowModal] = useState(false);
 
   const [loading, setLoading] = useState(true);
   const [submitting, setSubmitting] = useState(false);
@@ -103,9 +103,7 @@ const UpdateLoan = () => {
 
   if (loading) {
     return (
-      <div className={`min-h-screen flex items-center justify-center ${isDark ? 'bg-slate-900' : 'bg-slate-50'}`}>
-        <Loader className="animate-spin text-blue-600" size={48} />
-      </div>
+     <Loading/>
     );
   }
 

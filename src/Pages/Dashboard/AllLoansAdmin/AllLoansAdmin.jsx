@@ -18,6 +18,7 @@ import { useEffect, useState } from "react";
 // import { useForm } from "react-hook-form";
 import { useNavigate } from "react-router";
 import Swal from "sweetalert2";
+import Loading from "../../../components/Loading";
 
 const AllLoansAdmin = () => {
 
@@ -150,12 +151,7 @@ const AllLoansAdmin = () => {
 
   if (loading) {
     return (
-      <div className="flex items-center justify-center h-96">
-        <Loader
-          className="w-12 h-12 animate-spin"
-          style={{ color: "var(--primary)" }}
-        />
-      </div>
+     <Loading/>
     );
   }
 
