@@ -102,7 +102,7 @@ const AllLoansAdmin = () => {
     setValue("category", loan.category);
     setValue("shortDescription", loan.shortDescription);
     setValue("description", loan.description);
-    setValue("maxLimit", loan.maxLimit?.replace(/[^0-9]/g, "") || "");
+    setValue("maxLimit", loan.maxLimit);
     setValue("interestRate", loan.interestRate);
     setValue("tenure", loan.tenure);
     setValue("emiPlans", loan.availableEMIPlans?.join(", ") || "");
@@ -629,7 +629,7 @@ const AllLoansAdmin = () => {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            className="fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center p-4 overflow-y-auto"
+            className="fixed inset-0 bg-black bg-opacity-50 pt-32 z-50 flex items-center justify-center p-4 overflow-y-auto"
           >
             <motion.div
               initial={{ scale: 0.9, opacity: 0 }}

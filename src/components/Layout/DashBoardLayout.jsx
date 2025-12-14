@@ -37,7 +37,6 @@ const DashboardLayout = () => {
   const [userRole, setUserRole] = useState('user');
   const [loading, setLoading] = useState(true);
 
-  // ========== FETCH USER ROLE ==========
   useEffect(() => {
     if (user?.email) {
       axios.get(`http://localhost:3000/users/${user.email}`)
@@ -54,7 +53,6 @@ const DashboardLayout = () => {
     }
   }, [user]);
 
-  // ========== NAVIGATION ITEMS ==========
   const navigationItems = [
     {
       name: "Dashboard",
@@ -129,7 +127,6 @@ const DashboardLayout = () => {
     item.roles.includes(userRole)
   );
 
-  // ========== HANDLE LOGOUT ==========
   const handleLogout = () => {
     Swal.fire({
       title: "Logout",
