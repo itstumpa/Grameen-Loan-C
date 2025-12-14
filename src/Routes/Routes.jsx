@@ -46,6 +46,7 @@ import AddLoan from "../Pages/Dashboard/AddLoan/AddLoan.jsx";
 import ManageLoans from "../Pages/Dashboard/ManageLoans/ManageLoans.jsx";
 import AdminRoute from "./AdminRoute.jsx";
 import ManagerRoute from "./ManagerRoute.jsx";
+import UpdateLoan from "../Pages/Dashboard/UpdateLoan/UpdateLoan.jsx";
 
 // Route definitions // Public routes
 const router = createBrowserRouter([
@@ -124,6 +125,7 @@ const router = createBrowserRouter([
       { path: "payment/:loanId", element: <Payment /> },
       { path: "payment-success", element: <PaymentSuccess /> },
       { path: "payment-cancel", element: <PaymentCancel /> },
+      { path: "update-loan/:loanId", element: <UpdateLoan /> },
       // { path: "payments-history", element: <PaymentsHistory /> },
       // { path: "approve-riders", element: <ApproveRiders /> },
 

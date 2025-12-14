@@ -25,7 +25,6 @@ const ManageLoans = () => {
   const { user } = useAuth();
   const navigate = useNavigate();
 
-  // ========== STATE ==========
   const [loans, setLoans] = useState([]);
   const [filteredLoans, setFilteredLoans] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -33,7 +32,7 @@ const ManageLoans = () => {
   const [selectedCategory, setSelectedCategory] = useState("All");
   const [deleting, setDeleting] = useState(null);
 
-  // ========== FETCH LOANS ==========
+
   useEffect(() => {
     fetchLoans();
   }, []);
@@ -43,11 +42,10 @@ const ManageLoans = () => {
       setLoading(true);
       const response = await axios.get("http://localhost:3000/all-loans");
 
-      console.log("✅ Loans fetched:", response.data);
       setLoans(response.data);
       setFilteredLoans(response.data);
     } catch (error) {
-      console.error("❌ Error fetching loans:", error);
+      console.error("Error fetching loans:", error);
       toast.error("Failed to load loans");
       Swal.fire({
         icon: "error",
@@ -59,7 +57,6 @@ const ManageLoans = () => {
     }
   };
 
-  // ========== FILTER LOANS ==========
   useEffect(() => {
     let result = loans;
 
@@ -83,15 +80,15 @@ const ManageLoans = () => {
     setFilteredLoans(result);
   }, [selectedCategory, searchQuery, loans]);
 
-  // ========== GET UNIQUE CATEGORIES ==========
   const categories = ["All", ...new Set(loans.map((loan) => loan.category))];
 
-  // ========== HANDLE UPDATE ==========
-  const handleUpdate = (loanId) => {
+  //- edit mode 
+  const handleEdit = (loanId) => {
+    
     navigate(`/dashboard/update-loan/${loanId}`);
   };
 
-  // ========== HANDLE DELETE ==========
+
   const handleDelete = (loan) => {
     Swal.fire({
       title: "Delete Loan?",
@@ -117,7 +114,7 @@ const ManageLoans = () => {
 
           return true;
         } catch (error) {
-          console.error("❌ Error deleting loan:", error);
+          console.error(" Error deleting loan:", error);
           Swal.showValidationMessage(
             `Delete failed: ${error.response?.data?.message || error.message}`
           );
@@ -141,7 +138,6 @@ const ManageLoans = () => {
     });
   };
 
-  // ========== TOGGLE VISIBILITY ==========
   const toggleVisibility = async (loan) => {
     try {
       const newStatus = !loan.showOnHome;
@@ -163,12 +159,11 @@ const ManageLoans = () => {
           : "Loan hidden from homepage"
       );
     } catch (error) {
-      console.error("❌ Error updating visibility:", error);
+      console.error("Error updating visibility:", error);
       toast.error("Failed to update visibility");
     }
   };
 
-  // ========== CALCULATE STATS ==========
   const stats = {
     total: loans.length,
     visible: loans.filter((l) => l.showOnHome).length,
@@ -176,7 +171,6 @@ const ManageLoans = () => {
     categories: new Set(loans.map((l) => l.category)).size,
   };
 
-  // ========== LOADING STATE ==========
   if (loading) {
     return (
       <div className="flex items-center justify-center h-96">
@@ -191,7 +185,6 @@ const ManageLoans = () => {
     );
   }
 
-  // ========== MAIN RENDER ==========
   return (
     <div>
       {/* Header */}
@@ -565,7 +558,7 @@ const ManageLoans = () => {
                         <motion.button
                           whileHover={{ scale: 1.1 }}
                           whileTap={{ scale: 0.9 }}
-                          onClick={() => handleUpdate(loan._id)}
+                          onClick={() => handleEdit(loan._id)}
                           className="p-2 rounded-lg"
                           style={{
                             backgroundColor: "var(--primary)",
