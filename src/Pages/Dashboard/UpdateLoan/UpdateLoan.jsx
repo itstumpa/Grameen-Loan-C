@@ -187,7 +187,7 @@ const UpdateLoan = () => {
                 Short Description
               </label>
               <input
-                {...register("shortDescription", { required: "Description is required" })}
+                {...register("shortDescription",)}
                 className={`w-full px-4 py-3 rounded-lg border-2 ${
                   isDark 
                     ? 'bg-slate-700 border-slate-600 text-white' 
@@ -204,7 +204,7 @@ const UpdateLoan = () => {
                 Full Description
               </label>
               <textarea
-                {...register("description", { required: "Description is required" })}
+                {...register("description",)}
                 rows={4}
                 className={`w-full px-4 py-3 rounded-lg border-2 ${
                   isDark 
