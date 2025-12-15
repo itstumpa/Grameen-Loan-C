@@ -8,6 +8,7 @@ import {
   CreditCard,
   DollarSign,
   FileText,
+  FileTextIcon,
   Loader,
   Mail,
   MapPin,
@@ -167,12 +168,12 @@ const ApplyLoan = () => {
         >
           <div
             className="inline-flex items-center gap-2 px-4 py-2 rounded-full mb-4"
-            style={{ backgroundColor: "var(--primary)", opacity: 0.1 }}
+            style={{ backgroundColor: "var(--primary)"}}
           >
-            <FileText className="w-4 h-4" style={{ color: "var(--primary)" }} />
+            <FileTextIcon className="w-4 h-4" style={{ color: "white" }} />
             <span
               className="text-sm font-semibold"
-              style={{ color: "var(--primary)" }}
+              style={{ color: "white" }}
             >
               Loan Application
             </span>

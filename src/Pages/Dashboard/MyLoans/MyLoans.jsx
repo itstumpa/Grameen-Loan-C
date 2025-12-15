@@ -448,12 +448,11 @@ const [loadingPayment, setLoadingPayment] = useState(false);
                         className="w-12 h-12 rounded-lg flex items-center justify-center flex-shrink-0"
                         style={{
                           backgroundColor: "var(--primary)",
-                          opacity: 0.1,
                         }}
                       >
                         <FileText
                           className="w-6 h-6"
-                          style={{ color: "var(--primary)" }}
+                          style={{ color: "white" }}
                         />
                       </div>
 

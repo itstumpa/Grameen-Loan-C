@@ -17,10 +17,8 @@ import { useTheme } from '../../components/ThemeContext';
 import Logo from '../Logo/Logo';
 
 const Footer = () => {
-  // ========== GET THEME FROM CONTEXT ==========
   const { isDark } = useTheme();
 
-  // ========== FOOTER DATA ==========
   const footerLinks = {
     quickLinks: [
       { label: 'Home', path: '/' },
@@ -62,7 +60,7 @@ const Footer = () => {
       {/* Top Border Accent */}
       <div className=" absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-blue-600 via-sky-500 to-blue-700"></div>
 
-      {/* ========== MAIN FOOTER CONTENT ========== */}
+{/* main footer content  */}
       <div className="container mx-auto px-4 sm:px-6 lg:px-8 pt-16 pb-8">
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-12 mb-12">
           
@@ -213,7 +211,7 @@ const Footer = () => {
             </ul>
           </div>
 
-          {/* ========== COLUMN 4: SUPPORT & COMPANY ========== */}
+{/* support and company col-4  */}
           <div>
             <h3 className={`text-lg font-bold mb-6 ${isDark ? 'text-white' : 'text-slate-900'}`}>
               Support
@@ -240,7 +238,6 @@ const Footer = () => {
           </div>
         </div>
 
-        {/* ========== NEWSLETTER SUBSCRIPTION (OPTIONAL) ========== */}
         <div className={`  rounded-xl p-8 mb-12 ${isDark ? 'bg-slate-800' : 'bg-white'}`}>
           <div className="grid md:grid-cols-2 gap-6 items-center">
             <div>
@@ -251,7 +248,7 @@ const Footer = () => {
                 Subscribe to our newsletter for the latest updates on loan products and financial tips.
               </p>
             </div>
-            <div className="flex gap-3">
+            <div className="flex gap-3 flex-col lg:flex-row">
               <input
                 type="email"
                 placeholder="Enter your email"
@@ -272,7 +269,6 @@ const Footer = () => {
           </div>
         </div>
 
-        {/* ========== BOTTOM BAR: COPYRIGHT ========== */}
         <div className={`pt-8 border-t ${isDark ? 'border-slate-800' : 'border-slate-200'}`}>
           <div className="flex flex-col md:flex-row justify-between items-center gap-4">
             
@@ -316,7 +312,7 @@ const Footer = () => {
         </div>
       </div>
 
-      {/* ========== BACK TO TOP BUTTON (OPTIONAL) ========== */}
+{/* backto top  */}
       <motion.button
         onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
         whileHover={{ scale: 1.1 }}

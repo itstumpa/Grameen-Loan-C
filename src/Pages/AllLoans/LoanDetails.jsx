@@ -10,6 +10,8 @@ import {
   FileText,
   Loader,
   Mail,
+  MonitorCheck,
+  MoveDownRight,
   Percent,
   Phone,
   Shield,
@@ -159,21 +161,7 @@ const LoanDetails = () => {
                 border: "2px solid var(--border)",
               }}
             >
-              {/* Category Badge */}
-              <div
-                className="inline-block px-4 py-1 rounded-full mb-4"
-                style={{
-                  backgroundColor: "var(--primary)",
-                  opacity: 0.1,
-                }}
-              >
-                <span
-                  className="text-sm font-semibold"
-                  style={{ color: "var(--primary)" }}
-                >
-                  {loan.category}
-                </span>
-              </div>
+              
 
               {/* Title */}
               <h1
@@ -226,11 +214,11 @@ const LoanDetails = () => {
                 <div className="flex items-center gap-3">
                   <div
                     className="w-12 h-12 rounded-lg flex items-center justify-center"
-                    style={{ backgroundColor: "var(--primary)", opacity: 0.1 }}
+                    style={{ backgroundColor: "var(--primary)"}}
                   >
                     <DollarSign
                       className="w-6 h-6"
-                      style={{ color: "var(--primary)" }}
+                      style={{ color: "white" }}
                     />
                   </div>
                   <div>
@@ -244,7 +232,7 @@ const LoanDetails = () => {
                       className="text-3xl font-black"
                       style={{ color: "var(--primary)" }}
                     >
-                      ${loan.maxLimit || loan.amount}
+                      ${loan.maxLimit}
                     </p>
                   </div>
                 </div>
@@ -271,12 +259,11 @@ const LoanDetails = () => {
                     className="w-10 h-10 rounded-lg flex items-center justify-center"
                     style={{
                       backgroundColor: "var(--secondary)",
-                      opacity: 0.1,
                     }}
                   >
                     <Percent
                       className="w-5 h-5"
-                      style={{ color: "var(--secondary)" }}
+                      style={{ color: "white" }}
                     />
                   </div>
                   <h3
@@ -305,11 +292,11 @@ const LoanDetails = () => {
                 <div className="flex items-center gap-3 mb-3">
                   <div
                     className="w-10 h-10 rounded-lg flex items-center justify-center"
-                    style={{ backgroundColor: "var(--accent)", opacity: 0.1 }}
+                    style={{ backgroundColor: "var(--accent)" }}
                   >
-                    <Percent
+                    <MoveDownRight
                       className="w-5 h-5"
-                      style={{ color: "var(--secondary)" }}
+                      style={{ color: "white" }}
                     />
                   </div>
                   <h3

@@ -126,12 +126,12 @@ const CustomerFeedback = () => {
             viewport={{ once: true }}
             transition={{ duration: 0.5, type: "spring" }}
             className="inline-flex items-center gap-2 px-4 py-2 rounded-full mb-6"
-            style={{ backgroundColor: "var(--accent)", opacity: 0.1 }}
+            style={{ backgroundColor: "var(--accent)" }}
           >
             <Star className="w-4 h-4" style={{ color: "var(--accent)" }} />
             <span
               className="text-sm font-semibold"
-              style={{ color: "var(--accent)" }}
+              style={{ color: "white" }}
             >
               Rated 4.9/5 by Our Customers
             </span>

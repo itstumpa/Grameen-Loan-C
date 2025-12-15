@@ -126,11 +126,11 @@ const HowItWorks = () => {
             viewport={{ once: true }}
             transition={{ duration: 0.5, type: "spring" }}
             className="inline-flex items-center gap-2 px-4 py-2 rounded-full mb-6"
-            style={{ backgroundColor: "var(--primary)", opacity: 0.1 }}
+            style={{ backgroundColor: "var(--primary)" }}
           >
             <span
               className="text-sm font-semibold"
-              style={{ color: "var(--primary)" }}
+              style={{ color: "white" }}
             >
               Simple Process
             </span>

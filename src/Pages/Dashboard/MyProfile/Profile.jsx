@@ -558,7 +558,7 @@ const Profile = () => {
                     }}
                   >
                     <Edit className="w-4 h-4" />
-                    Edit Profile
+                    Edit
                   </motion.button>
                 ) : (
                   <div className="flex gap-2">
