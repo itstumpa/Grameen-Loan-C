@@ -84,7 +84,7 @@
 *Professional hero section with loan categories and statistics*
 
 ### 💼 All Loans Page
-![All Loans](./screenshot/all-loans.png)
+![All Loans](./screenshot/all_loans.png)
 *Browse and filter available loan products*
 
 ### 📄 Loan Details
