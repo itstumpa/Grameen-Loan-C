@@ -19,6 +19,7 @@ import {
   SquaresIntersectIcon,
   Trash2Icon,
   XCircle,
+  X,
 } from "lucide-react";
 import { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router";
@@ -36,6 +37,9 @@ const MyLoans = () => {
   const [error, setError] = useState(null);
   const [selectedStatus, setSelectedStatus] = useState("All");
   const [searchQuery, setSearchQuery] = useState("");
+const [showPaymentModal, setShowPaymentModal] = useState(false);
+const [paymentDetails, setPaymentDetails] = useState(null);
+const [loadingPayment, setLoadingPayment] = useState(false);
 
   useEffect(() => {
     const fetchApplications = async () => {
@@ -121,61 +125,89 @@ const MyLoans = () => {
     );
   };
 
-const handleDelete = async (application) => {
-  if (application.status === 'Approved') {
-    Swal.fire({
-      icon: "error",
-      title: "Cannot Delete",
-      text: "Approved applications cannot be deleted. Please contact support if needed.",
-      confirmButtonColor: "var(--error)",
-    });
-    return;
-  }
-
- 
-  //  DELETE FOR PENDING APPLICATIONS
-  Swal.fire({
-    title: "Delete Application?",
-    text: `Are you sure you want to delete "${application.loanTitle}"?`,
-    icon: "warning",
-    showCancelButton: true,
-    confirmButtonText: "Yes, Delete",
-    confirmButtonColor: "var(--error)",
-    cancelButtonText: "Cancel",
-  }).then(async (result) => {
-    if (result.isConfirmed) {
-      try {
-        await axios.delete(
-          `http://localhost:3000/loan-applications/${application._id}`
-        );
-
-        setApplications(
-          applications.filter((a) => a._id !== application._id)
-        );
-        setFilteredApplications(
-          filteredApplications.filter((a) => a._id !== application._id)
-        );
-
-        Swal.fire({
-          icon: "success",
-          title: "Deleted!",
-          text: "Application deleted successfully",
-          timer: 2000,
-          showConfirmButton: false,
-        });
-      } catch (error) {
-        Swal.fire({
-          icon: "error",
-          title: "Failed",
-          text: error.response?.data?.message || "Could not delete application",
-        });
-      }
+  const handleDelete = async (application) => {
+    if (application.status === "Approved") {
+      Swal.fire({
+        icon: "error",
+        title: "Cannot Delete",
+        text: "Approved applications cannot be deleted. Please contact support if needed.",
+        confirmButtonColor: "var(--error)",
+      });
+      return;
     }
-  });
-};
 
-// view details 
-const handleViewDetails = (
+    //  DELETE FOR PENDING APPLICATIONS
+    Swal.fire({
+      title: "Delete Application?",
+      text: `Are you sure you want to delete "${application.loanTitle}"?`,
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonText: "Yes, Delete",
+      confirmButtonColor: "var(--error)",
+      cancelButtonText: "Cancel",
+    }).then(async (result) => {
+      if (result.isConfirmed) {
+        try {
+          await axios.delete(
+            `http://localhost:3000/loan-applications/${application._id}`
+          );
+
+          setApplications(
+            applications.filter((a) => a._id !== application._id)
+          );
+          setFilteredApplications(
+            filteredApplications.filter((a) => a._id !== application._id)
+          );
+
+          Swal.fire({
+            icon: "success",
+            title: "Deleted!",
+            text: "Application deleted successfully",
+            timer: 2000,
+            showConfirmButton: false,
+          });
+        } catch (error) {
+          Swal.fire({
+            icon: "error",
+            title: "Failed",
+            text:
+              error.response?.data?.message || "Could not delete application",
+          });
+        }
+      }
+    });
+  };
+
+
+
+
+  const handleViewPayment = async (applicationId) => {
+    try {
+      setLoadingPayment(true);
+      setShowPaymentModal(true);
+      
+      const response = await axios.get(`http://localhost:3000/payment-details/${applicationId}`);
+      setPaymentDetails(response.data);
+      
+    } catch (error) {
+      console.error("Error fetching payment:", error);
+      Swal.fire({
+        icon: "error",
+        title: "Failed",
+        text: "Could not load payment details",
+      });
+      setShowPaymentModal(false);
+    } finally {
+      setLoadingPayment(false);
+    }
+  };
+
+
+
+
+
+  // view details
+  const handleViewDetails = (
     applicationId,
     status,
     userEmail,
@@ -200,9 +232,7 @@ const handleViewDetails = (
   };
 
   if (loading) {
-    return (
-      <Loading/>
-    );
+    return <Loading />;
   }
 
   if (error) {
@@ -490,7 +520,6 @@ const handleViewDetails = (
                     {/* Actions */}
                     <td className="p-4">
                       <div className="flex items-center justify-center gap-2">
-                        {/* Edit button can be implemented similarly if needed */}
                         <motion.button
                           whileHover={{ scale: 1.1 }}
                           whileTap={{ scale: 0.9 }}
@@ -523,43 +552,40 @@ const handleViewDetails = (
                           />
                         </motion.button>
 
-
-                       {application?.paymentStatus === 'Paid' ? (
-  // PAID STATE - Disabled/Badge Style
-  <button
-    disabled
-    className="flex items-center gap-2 px-4 py-2 rounded-lg font-semibold transition-all cursor-not-allowed opacity-75"
+                        {application?.paymentStatus === "Paid" ? (
+                          // PAID STATE - Disabled/Badge Style
+                          <button
+    onClick={() => handleViewPayment(application._id)}
+    className="flex items-center gap-2 px-4 py-2 rounded-lg font-semibold transition-all hover:opacity-90 cursor-pointer"
     style={{
       backgroundColor: "var(--success)",
       color: "white",
     }}
+    title="Click to view payment details"
   >
     <CheckCircle2 className="w-4 h-4" />
     Paid
   </button>
 ) : (
-  // UNPAID STATE - Clickable Payment Link
-  <Link to={`/dashboard/payment/${application._id}`}>
-    <button
-      className="flex items-center gap-2 px-4 py-2 rounded-lg font-semibold transition-all hover:opacity-90"
-      style={{
-        backgroundColor: "var(--success)",
-        color: "white",
-      }}
-    >
-      <CircleDollarSign className="w-4 h-4" />
-      Pay ${application?.cost || '10'}
-    </button>
-  </Link>
-)}
-
+                          // UNPAID STATE 
+                          <Link to={`/dashboard/payment/${application._id}`}>
+                            <button
+                              className="flex items-center gap-2 px-4 py-2 rounded-lg font-semibold transition-all hover:opacity-90"
+                              style={{
+                                backgroundColor: "var(--success)",
+                                color: "white",
+                              }}
+                            >
+                              <CircleDollarSign className="w-4 h-4" />
+                              Pay ${application?.cost || "10"}
+                            </button>
+                          </Link>
+                        )}
                       </div>
                     </td>
                   </div>
                   <div className="flex flex-col items-end gap-3">
                     {getStatusBadge(application.status)}
-
-
 
                     <button
                       onClick={() =>
@@ -587,9 +613,218 @@ const handleViewDetails = (
             ))}
           </div>
         )}
+     {/* Payment Details Modal */}
+        {showPaymentModal && (
+          <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
+            <motion.div
+              initial={{ opacity: 0, scale: 0.9 }}
+              animate={{ opacity: 1, scale: 1 }}
+              exit={{ opacity: 0, scale: 0.9 }}
+              className="rounded-2xl max-w-md w-full max-h-[90vh] overflow-y-auto"
+              style={{ backgroundColor: "var(--surface)" }}
+            >
+              {/* Header */}
+              <div
+                className="p-6 text-white"
+                style={{ backgroundColor: "var(--success)" }}
+              >
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center gap-3">
+                    <CheckCircle2 size={32} />
+                    <h2 className="text-2xl font-bold">Payment Details</h2>
+                  </div>
+                  <button
+                    onClick={() => setShowPaymentModal(false)}
+                    className="hover:bg-white/20 p-2 rounded-lg transition"
+                  >
+                    <X size={24} />
+                  </button>
+                </div>
+              </div>
+
+              {/* Body */}
+              <div className="p-6">
+                {loadingPayment ? (
+                  <div className="flex flex-col items-center gap-4 py-8">
+                    <Loader
+                      className="animate-spin"
+                      size={48}
+                      style={{ color: "var(--primary)" }}
+                    />
+                    <p style={{ color: "var(--text-secondary)" }}>
+                      Loading payment details...
+                    </p>
+                  </div>
+                ) : paymentDetails ? (
+                  <div className="space-y-4">
+                    {/* Payment Status */}
+                    <div
+                      className="p-4 rounded-lg"
+                      style={{
+                        backgroundColor: "rgba(5, 150, 105, 0.1)",
+                      }}
+                    >
+                      <p
+                        className="text-sm"
+                        style={{ color: "var(--success)" }}
+                      >
+                        Payment Status
+                      </p>
+                      <p
+                        className="text-xl font-bold"
+                        style={{ color: "var(--success)" }}
+                      >
+                        ✓ {paymentDetails.paymentStatus || "Paid"}
+                      </p>
+                    </div>
+
+                    {/* Details Grid */}
+                    <div className="space-y-3">
+                      <div
+                        className="p-3 rounded-lg"
+                        style={{ backgroundColor: "var(--bg)" }}
+                      >
+                        <p
+                          className="text-xs font-semibold mb-1"
+                          style={{ color: "var(--text-secondary)" }}
+                        >
+                          Email
+                        </p>
+                        <p
+                          className="font-mono text-sm"
+                          style={{ color: "var(--text-primary)" }}
+                        >
+                          {paymentDetails.customer_email || "N/A"}
+                        </p>
+                      </div>
+
+                      <div
+                        className="p-3 rounded-lg"
+                        style={{ backgroundColor: "var(--bg)" }}
+                      >
+                        <p
+                          className="text-xs font-semibold mb-1"
+                          style={{ color: "var(--text-secondary)" }}
+                        >
+                          Transaction ID
+                        </p>
+                        <p
+                          className="font-mono text-sm break-all"
+                          style={{ color: "var(--text-primary)" }}
+                        >
+                          {paymentDetails.transactionId || "N/A"}
+                        </p>
+                      </div>
+
+                      <div
+                        className="p-3 rounded-lg"
+                        style={{ backgroundColor: "var(--bg)" }}
+                      >
+                        <p
+                          className="text-xs font-semibold mb-1"
+                          style={{ color: "var(--text-secondary)" }}
+                        >
+                          Application ID
+                        </p>
+                        <p
+                          className="font-mono text-sm break-all"
+                          style={{ color: "var(--text-primary)" }}
+                        >
+                          {paymentDetails.applicationId || "N/A"}
+                        </p>
+                      </div>
+
+                      <div
+                        className="p-3 rounded-lg"
+                        style={{ backgroundColor: "var(--bg)" }}
+                      >
+                        <p
+                          className="text-xs font-semibold mb-1"
+                          style={{ color: "var(--text-secondary)" }}
+                        >
+                          Tracking ID
+                        </p>
+                        <p
+                          className="font-mono text-sm"
+                          style={{ color: "var(--text-primary)" }}
+                        >
+                          {paymentDetails.trackingId || "N/A"}
+                        </p>
+                      </div>
+
+                      <div
+                        className="p-3 rounded-lg"
+                        style={{ backgroundColor: "var(--bg)" }}
+                      >
+                        <p
+                          className="text-xs font-semibold mb-1"
+                          style={{ color: "var(--text-secondary)" }}
+                        >
+                          Amount Paid
+                        </p>
+                        <p
+                          className="text-2xl font-bold"
+                          style={{ color: "var(--primary)" }}
+                        >
+                          ${paymentDetails.amount || "0"}
+                        </p>
+                      </div>
+
+                      <div
+                        className="p-3 rounded-lg"
+                        style={{ backgroundColor: "var(--bg)" }}
+                      >
+                        <p
+                          className="text-xs font-semibold mb-1"
+                          style={{ color: "var(--text-secondary)" }}
+                        >
+                          Payment Date
+                        </p>
+                        <p
+                          className="text-sm"
+                          style={{ color: "var(--text-primary)" }}
+                        >
+                          {paymentDetails.paidAt
+                            ? new Date(paymentDetails.paidAt).toLocaleString()
+                            : "N/A"}
+                        </p>
+                      </div>
+                    </div>
+                  </div>
+                ) : (
+                  <p
+                    className="text-center py-8"
+                    style={{ color: "var(--text-secondary)" }}
+                  >
+                    No payment details found
+                  </p>
+                )}
+              </div>
+
+              {/* Footer */}
+              <div
+                className="p-6 border-t"
+                style={{ borderColor: "var(--border)" }}
+              >
+                <button
+                  onClick={() => setShowPaymentModal(false)}
+                  className="w-full py-3 rounded-lg font-bold transition"
+                  style={{
+                    backgroundColor: "var(--bg)",
+                    color: "var(--text-primary)",
+                  }}
+                >
+                  Close
+                </button>
+              </div>
+            </motion.div>
+          </div>
+        )}
+
       </div>
     </div>
   );
 };
+
 
 export default MyLoans;
