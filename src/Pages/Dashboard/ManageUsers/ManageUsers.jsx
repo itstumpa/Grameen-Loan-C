@@ -49,7 +49,7 @@ const ManageUsers = () => {
   const fetchUsers = async () => {
     try {
       setLoading(true);
-      const response = await axiosSecure.get("http://localhost:3000/users");
+      const response = await axiosSecure.get("https://grameen-loan-server.vercel.app/users");
       setUsers(response.data);
       setFilteredUsers(response.data);
     } catch (error) {
@@ -135,7 +135,7 @@ const ManageUsers = () => {
       };
 
       await axios.patch(
-        `http://localhost:3000/users/${selectedUser.email}`,
+        `https://grameen-loan-server.vercel.app/users/${selectedUser.email}`,
         updateData
       );
 
@@ -179,7 +179,7 @@ const ManageUsers = () => {
     }).then(async (result) => {
       if (result.isConfirmed) {
         try {
-          await axios.patch(`http://localhost:3000/users/${userData.email}`, {
+          await axios.patch(`https://grameen-loan-server.vercel.app/users/${userData.email}`, {
             status: "suspended",
             updatedAt: new Date(),
           });
@@ -210,7 +210,7 @@ const ManageUsers = () => {
 
   const handleActivate = async (userData) => {
     try {
-      await axios.patch(`http://localhost:3000/users/${userData.email}`, {
+      await axios.patch(`https://grameen-loan-server.vercel.app/users/${userData.email}`, {
         status: "active",
         updatedAt: new Date(),
       });
@@ -249,7 +249,7 @@ const ManageUsers = () => {
     }).then(async (result) => {
       if (result.isConfirmed) {
         try {
-          await axios.delete(`http://localhost:3000/users/${userData.email}`);
+          await axios.delete(`https://grameen-loan-server.vercel.app/users/${userData.email}`);
 
           setUsers(users.filter((u) => u.email !== userData.email));
 

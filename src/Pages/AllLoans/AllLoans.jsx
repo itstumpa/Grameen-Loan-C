@@ -27,7 +27,7 @@ const AllLoans = () => {
 
   useEffect(() => {
     axios
-      .get("http://localhost:3000/all-loans")
+      .get("https://grameen-loan-server.vercel.app/all-loans")
       .then((res) => {
         setLoans(res.data);
         setFilteredLoans(res.data);

@@ -39,7 +39,7 @@ const DashboardLayout = () => {
 
   useEffect(() => {
     if (user?.email) {
-      axios.get(`http://localhost:3000/users/${user.email}`)
+      axios.get(`https://grameen-loan-server.vercel.app/users/${user.email}`)
         .then(response => {
           const userData = response.data.user || response.data;
           setUserRole(userData.role || 'user');

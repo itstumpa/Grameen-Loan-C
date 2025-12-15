@@ -53,7 +53,7 @@ const ApplyLoan = () => {
         }
 
         const response = await axios.get(
-          `http://localhost:3000/all-loans/${id}`
+          `https://grameen-loan-server.vercel.app/all-loans/${id}`
         );
         setLoan(response.data);
       } catch (error) {
@@ -109,7 +109,7 @@ const ApplyLoan = () => {
       console.log("Submitting application:", applicationData);
 
       const response = await axios.post(
-        "http://localhost:3000/loan-applications",
+        "https://grameen-loan-server.vercel.app/loan-applications",
         applicationData
       );
 

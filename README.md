@@ -193,7 +193,7 @@ VITE_FIREBASE_STORAGE_BUCKET=your_firebase_storage_bucket
 VITE_FIREBASE_MESSAGING_SENDER_ID=your_firebase_messaging_sender_id
 VITE_FIREBASE_APP_ID=your_firebase_app_id
 VITE_IMAGE_HOST_KEY=your_imgbb_api_key
-VITE_API_URL=http://localhost:3000
+VITE_API_URL=https://grameen-loan-server.vercel.app
 ```
 
 #### **Server `.env`:**
@@ -240,7 +240,7 @@ FIREBASE_ADMIN_PRIVATE_KEY=your_private_key
 ```bash
 cd server
 nodemon index.js
-# Server runs on http://localhost:3000
+# Server runs on https://grameen-loan-server.vercel.app
 ```
 
 #### **Start Frontend:**

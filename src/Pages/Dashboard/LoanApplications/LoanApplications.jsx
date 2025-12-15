@@ -44,7 +44,7 @@ const LoanApplications = () => {
 
 
         const response = await axios.get(
-          `http://localhost:3000/loan-applications`
+          `https://grameen-loan-server.vercel.app/loan-applications`
         );
 
         setApplications(response.data);

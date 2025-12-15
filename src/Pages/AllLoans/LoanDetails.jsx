@@ -44,7 +44,7 @@ const LoanDetails = () => {
         console.log("🔄 Fetching loan details for ID:", id);
 
         const response = await axios.get(
-          `http://localhost:3000/all-loans/${id}`
+          `https://grameen-loan-server.vercel.app/all-loans/${id}`
         );
 
         console.log("✅ Loan details:", response.data);

@@ -66,7 +66,7 @@ const Profile = () => {
     try {
       setLoading(true);
       const response = await axios.get(
-        `http://localhost:3000/users/${user.email}`
+        `https://grameen-loan-server.vercel.app/users/${user.email}`
       );
 
       const data = response.data.user || response.data;
@@ -91,7 +91,7 @@ const Profile = () => {
   const fetchUserStats = async () => {
     try {
       const response = await axios.get(
-        `http://localhost:3000/loan-applications/user/${user.email}`
+        `https://grameen-loan-server.vercel.app/loan-applications/user/${user.email}`
       );
       const applications = response.data;
 
@@ -131,7 +131,7 @@ const Profile = () => {
         photoURL: formData.photoURL,
       });
 
-      await axios.patch(`http://localhost:3000/users/${user.email}`, {
+      await axios.patch(`https://grameen-loan-server.vercel.app/users/${user.email}`, {
         name: formData.displayName,
         photoURL: formData.photoURL,
         phone: formData.phone,
@@ -220,7 +220,7 @@ const Profile = () => {
       await updateProfile(auth.currentUser, { photoURL });
 
       // Update database
-      await axios.patch(`http://localhost:3000/users/${user.email}`, {
+      await axios.patch(`https://grameen-loan-server.vercel.app/users/${user.email}`, {
         photoURL,
         updatedAt: new Date(),
       });

@@ -39,7 +39,7 @@ const ApprovedLoans = () => {
     try {
       setLoading(true);
       const response = await axios.get(
-        "http://localhost:3000/loan-applications"
+        "https://grameen-loan-server.vercel.app/loan-applications"
       );
 
       // Filter only approved applications

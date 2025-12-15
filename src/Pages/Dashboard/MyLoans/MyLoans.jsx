@@ -53,7 +53,7 @@ const [loadingPayment, setLoadingPayment] = useState(false);
         setError(null);
 
         const response = await axios.get(
-          `http://localhost:3000/loan-applications/user/${user.email}`
+          `https://grameen-loan-server.vercel.app/loan-applications/user/${user.email}`
         );
 
         setApplications(response.data);
@@ -149,7 +149,7 @@ const [loadingPayment, setLoadingPayment] = useState(false);
       if (result.isConfirmed) {
         try {
           await axios.delete(
-            `http://localhost:3000/loan-applications/${application._id}`
+            `https://grameen-loan-server.vercel.app/loan-applications/${application._id}`
           );
 
           setApplications(
@@ -186,7 +186,7 @@ const [loadingPayment, setLoadingPayment] = useState(false);
       setLoadingPayment(true);
       setShowPaymentModal(true);
       
-      const response = await axios.get(`http://localhost:3000/payment-details/${applicationId}`);
+      const response = await axios.get(`https://grameen-loan-server.vercel.app/payment-details/${applicationId}`);
       setPaymentDetails(response.data);
       
     } catch (error) {

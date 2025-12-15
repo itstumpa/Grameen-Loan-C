@@ -20,7 +20,7 @@ const UpdateLoan = () => {
 
   useEffect(() => {
     axios
-      .get(`http://localhost:3000/all-loans/${loanId}`)
+      .get(`https://grameen-loan-server.vercel.app/all-loans/${loanId}`)
       .then((res) => {
         const loan = res.data;
         
@@ -75,7 +75,7 @@ const UpdateLoan = () => {
       };
 
       await axios.patch(
-        `http://localhost:3000/all-loans/${loanId}`,
+        `https://grameen-loan-server.vercel.app/all-loans/${loanId}`,
         loanData
       );
 

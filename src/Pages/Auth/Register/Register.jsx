@@ -129,7 +129,7 @@ const Register = () => {
         createdAt: new Date()
       };
       
-      axios.post('http://localhost:3000/users', userInfo)
+      axios.post('https://grameen-loan-server.vercel.app/users', userInfo)
         .then((res) => {
           console.log('User saved to DB:', res.data);
         })

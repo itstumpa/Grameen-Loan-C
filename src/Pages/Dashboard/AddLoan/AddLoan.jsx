@@ -130,7 +130,7 @@ const AddLoan = () => {
       // console.log('Submitting loan data:', loanData);
 
       const response = await axios.post(
-        'http://localhost:3000/all-loans',
+        'https://grameen-loan-server.vercel.app/all-loans',
         loanData
       );
 

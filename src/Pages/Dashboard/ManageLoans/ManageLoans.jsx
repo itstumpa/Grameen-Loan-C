@@ -41,7 +41,7 @@ const ManageLoans = () => {
   const fetchLoans = async () => {
     try {
       setLoading(true);
-      const response = await axios.get("http://localhost:3000/all-loans");
+      const response = await axios.get("https://grameen-loan-server.vercel.app/all-loans");
 
       setLoans(response.data);
       setFilteredLoans(response.data);
@@ -108,7 +108,7 @@ const ManageLoans = () => {
         try {
           setDeleting(loan._id);
 
-          await axios.delete(`http://localhost:3000/all-loans/${loan._id}`);
+          await axios.delete(`https://grameen-loan-server.vercel.app/all-loans/${loan._id}`);
 
           // Remove from state
           setLoans(loans.filter((l) => l._id !== loan._id));
@@ -143,7 +143,7 @@ const ManageLoans = () => {
     try {
       const newStatus = !loan.showOnHome;
 
-      await axios.patch(`http://localhost:3000/all-loans/${loan._id}`, {
+      await axios.patch(`https://grameen-loan-server.vercel.app/all-loans/${loan._id}`, {
         showOnHome: newStatus,
       });
 

@@ -40,7 +40,7 @@ const PendingLoans = () => {
     try {
       setLoading(true);
       const response = await axios.get(
-        "http://localhost:3000/loan-applications"
+        "https://grameen-loan-server.vercel.app/loan-applications"
       );
 
       // Filter only pending applications
@@ -98,7 +98,7 @@ const PendingLoans = () => {
           setProcessing(true);
 
           await axios.patch(
-            `http://localhost:3000/loan-applications/${application._id}`,
+            `https://grameen-loan-server.vercel.app/loan-applications/${application._id}`,
             {
               status: "Approved",
               approvedAt: new Date(),
@@ -155,7 +155,7 @@ const PendingLoans = () => {
           setProcessing(true);
 
           await axios.patch(
-            `http://localhost:3000/loan-applications/${application._id}`,
+            `https://grameen-loan-server.vercel.app/loan-applications/${application._id}`,
             {
               status: "Rejected",
               rejectedAt: new Date(),
