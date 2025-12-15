@@ -1,12 +1,11 @@
 # 🏦 GrameenLoan - Microloan Management System
 
-![GrameenLoan Banner](./screenshots/banner.png)
+![GrameenLoan Banner](./screenshot/hero.png)
 
 <div align="center">
 
-[![Live Demo](https://img.shields.io/badge/Live-Demo-blue?style=for-the-badge)](YOUR_LIVE_LINK_HERE)
-[![GitHub](https://img.shields.io/badge/GitHub-Repository-black?style=for-the-badge&logo=github)](YOUR_GITHUB_REPO_HERE)
-[![License](https://img.shields.io/badge/License-MIT-green?style=for-the-badge)](./LICENSE)
+[![Live Demo](https://img.shields.io/badge/Live-Demo-blue?style=for-the-badge)](https://grameen-loan-c.netlify.app)
+[![GitHub](https://img.shields.io/badge/GitHub-Repository-black?style=for-the-badge&logo=github)](https://github.com/itstumpa/Grameen-Loan-C)
 
 **A modern, full-stack microfinance platform for seamless loan management**
 
@@ -39,7 +38,7 @@
 **GrameenLoan** is a comprehensive microfinance management system designed to streamline the loan application, approval, and repayment process. Built with the MERN stack, it provides a secure, user-friendly platform for borrowers to apply for loans and administrators to manage applications efficiently.
 
 ### 🎬 Live Demo
-👉 **[Visit Live Website](YOUR_LIVE_LINK_HERE)**
+👉 **[Visit Live Website](https://grameen-loan-c.netlify.app)**
 
 ### 🔗 Important Links
 - **Client Repository:** [GitHub - Frontend](https://github.com/itstumpa/Grameen-Loan-C)
@@ -81,35 +80,35 @@
 ## 📸 Screenshots
 
 ### 🏠 Landing Page
-![Landing Page](./screenshots/home.png)
+![Landing Page](./screenshot/dark_home.png)
 *Professional hero section with loan categories and statistics*
 
 ### 💼 All Loans Page
-![All Loans](./screenshots/all-loans.png)
+![All Loans](./screenshot/all-loans.png)
 *Browse and filter available loan products*
 
 ### 📄 Loan Details
-![Loan Details](./screenshots/loan-details.png)
+![Loan Details](./screenshot/loan_details.png)
 *Comprehensive loan information with EMI calculator*
 
 ### 📝 Loan Application Form
-![Application Form](./screenshots/application-form.png)
+![Application Form](./screenshot/application_form.png)
 *User-friendly multi-step application process*
 
 ### 💳 Payment Page
-![Payment](./screenshots/payment.png)
+![Payment](./screenshot/payment.png)
 *Secure payment gateway with Stripe integration*
 
 ### 👤 User Dashboard
-![User Dashboard](./screenshots/user-dashboard.png)
+![User Dashboard](./screenshot/user_dashboard.png)
 *Track application status and manage profile*
 
 ### 🛡️ Admin Dashboard
-![Admin Dashboard](./screenshots/admin-dashboard.png)
+![Admin Dashboard](./screenshot/admin_dashboard.png)
 *Comprehensive admin panel for managing applications*
 
 ### 🌙 Dark Mode
-![Dark Mode](./screenshots/dark-mode.png)
+![Dark Mode](./screenshot/light_home.png)
 *Elegant dark theme for comfortable viewing*
 
 ---
@@ -210,31 +209,7 @@ FIREBASE_ADMIN_CLIENT_EMAIL=your_client_email
 FIREBASE_ADMIN_PRIVATE_KEY=your_private_key
 ```
 
-### **4. Setup Firebase**
-
-1. Go to [Firebase Console](https://console.firebase.google.com/)
-2. Create a new project
-3. Enable **Authentication** (Email/Password & Google)
-4. Get your Web App credentials
-5. Download Firebase Admin SDK service account key
-
-### **5. Setup Stripe**
-
-1. Go to [Stripe Dashboard](https://dashboard.stripe.com/)
-2. Get your **Secret Key** from API keys
-3. Configure webhook endpoints (optional)
-
-### **6. Setup MongoDB**
-
-1. Create account on [MongoDB Atlas](https://www.mongodb.com/cloud/atlas)
-2. Create a new cluster
-3. Get connection string
-4. Whitelist your IP address
-
-### **7. Import Sample Data (Optional)**
-
-
-### **7. Run the Application**
+### **4. Run the Application**
 
 #### **Start Backend:**
 ```bash
@@ -250,7 +225,7 @@ npm run dev
 # Client runs on http://localhost:5173
 ```
 
-### **8. Build for Production**
+### **5. Build for Production**
 
 #### **Frontend:**
 ```bash
@@ -368,31 +343,6 @@ node index.js
 ---
 
 
-## 🔌 API Endpoints
-
-### **Authentication**
-- `POST /users` - Create new user
-- `GET /users/:email` - Get user by email
-
-### **Loans**
-- `GET /all-loans` - Get all loan products
-- `GET /all-loans/:id` - Get single loan by ID
-- `POST /all-loans` - Create new loan (Admin)
-- `PATCH /all-loans/:id` - Update loan (Admin)
-- `DELETE /all-loans/:id` - Delete loan (Admin)
-
-### **Applications**
-- `GET /loan-applications` - Get all applications (Admin)
-- `GET /loan-applications/:id` - Get single application
-- `POST /loan-applications` - Submit new application
-- `PATCH /loan-applications/:id` - Update application status (Admin)
-
-### **Payments**
-- `POST /create-checkout-session` - Create Stripe checkout session
-
-
----
-
 ## 👨‍💻 Author
 
 **Tumpa Das**
@@ -413,7 +363,7 @@ node index.js
 2. Connect repository to Vercel/Netlify
 3. Add environment variables
 4. Deploy
-
+### **Backend (Vercel):**
 
 <div align="center">
 

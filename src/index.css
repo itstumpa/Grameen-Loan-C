@@ -119,3 +119,15 @@ body {
   color: white;
   transform: translateY(-2px);
 }
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  overflow-x: hidden;
+}
+
+input, textarea, select {
+  max-width: 100%;
+}

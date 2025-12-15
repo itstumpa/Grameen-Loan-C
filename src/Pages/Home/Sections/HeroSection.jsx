@@ -82,7 +82,7 @@ const HeroSection = () => {
 
             {/* CTA Buttons */}
 
-            <div className="flex flex-col sm:flex-row gap-4 justify-center lg:justify-start mb-10">
+            <div className="flex gap-4 items-center justify-center lg:justify-start mb-10">
               <Link to="/all-loans">
                 <motion.button
                   whileHover={{ scale: 1.05 }}

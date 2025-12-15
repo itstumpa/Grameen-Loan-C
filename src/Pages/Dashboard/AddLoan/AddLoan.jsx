@@ -181,8 +181,8 @@ const AddLoan = () => {
 
   return (
     <>
-    <div className='items-center flex justify-center pt-5'>
-
+    <div className='min-h-screen w-full overflow-x-hidden px-4 pt-5'>
+<div className='max-w-4xl mx-auto'>
     
     <div className=''>
       {/* Header */}
@@ -201,17 +201,17 @@ const AddLoan = () => {
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         onSubmit={handleSubmit(onSubmit)}
-        className="max-w-4xl"
+        className="w-full"
       >
         <div className="space-y-8">
           
           {/* Basic Information Card */}
-          <div className="p-8 rounded-2xl"
+          <div className="p-4 md:p-6 lg:p-8  rounded-2xl"
                style={{
                  backgroundColor: 'var(--surface)',
                  border: '2px solid var(--border)'
                }}>
-            <h2 className="text-2xl font-black mb-6 flex items-center gap-3" 
+            <h2 className="text-xl md:text-2xl font-black mb-4 md:mb-6 flex items-center gap-2 md:gap-3 break-words" 
                 style={{ color: 'var(--text-primary)' }}>
               <FileText className="w-6 h-6" style={{ color: 'var(--primary)' }} />
               Basic Information
@@ -332,12 +332,12 @@ const AddLoan = () => {
           </div>
 
           {/* Loan Details Card */}
-          <div className="p-8 rounded-2xl"
+          <div className="p-4 md:p-6 lg:p-8  rounded-2xl"
                style={{
                  backgroundColor: 'var(--surface)',
                  border: '2px solid var(--border)'
                }}>
-            <h2 className="text-2xl font-black mb-6 flex items-center gap-3" 
+            <h2 className="text-xl md:text-2xl font-black mb-4 md:mb-6 flex items-center gap-2 md:gap-3 break-words" 
                 style={{ color: 'var(--text-primary)' }}>
               <DollarSign className="w-6 h-6" style={{ color: 'var(--success)' }} />
               Loan Details
@@ -432,19 +432,19 @@ const AddLoan = () => {
           </div>
 
           {/* Required Documents Card */}
-          <div className="p-8 rounded-2xl"
+          <div className="p-4 md:p-6 lg:p-8  rounded-2xl"
                style={{
                  backgroundColor: 'var(--surface)',
                  border: '2px solid var(--border)'
                }}>
-            <h2 className="text-2xl font-black mb-6 flex items-center gap-3" 
+            <h2 className="text-xl md:text-2xl font-black mb-4 md:mb-6 flex items-center gap-2 md:gap-3 break-words" 
                 style={{ color: 'var(--text-primary)' }}>
               <List className="w-6 h-6" style={{ color: 'var(--secondary)' }} />
               Required Documents
             </h2>
 
             {/* Add Document Input */}
-            <div className="flex gap-3 mb-4">
+            <div className="flex flex-col sm:flex-row gap-3 mb-4">
               <input
                 type="text"
                 value={newDoc}
@@ -499,19 +499,19 @@ const AddLoan = () => {
           </div>
 
           {/* EMI Plans Card */}
-          <div className="p-8 rounded-2xl"
+          <div className="p-4 md:p-6 lg:p-8  rounded-2xl"
                style={{
                  backgroundColor: 'var(--surface)',
                  border: '2px solid var(--border)'
                }}>
-            <h2 className="text-2xl font-black mb-6 flex items-center gap-3" 
+            <h2 className="text-xl md:text-2xl font-black mb-4 md:mb-6 flex items-center gap-2 md:gap-3 break-words" 
                 style={{ color: 'var(--text-primary)' }}>
               <DollarSign className="w-6 h-6" style={{ color: 'var(--accent)' }} />
               EMI Plans
             </h2>
 
             {/* Add EMI Input */}
-            <div className="flex gap-3 mb-4">
+            <div className="flex flex-col sm:flex-row gap-3 mb-4">
               <input
                 type="text"
                 value={newEmi}
@@ -565,12 +565,12 @@ const AddLoan = () => {
           </div>
 
           {/* Image Upload Card */}
-          <div className="p-8 rounded-2xl"
+          <div className="p-4 md:p-6 lg:p-8  rounded-2xl"
                style={{
                  backgroundColor: 'var(--surface)',
                  border: '2px solid var(--border)'
                }}>
-            <h2 className="text-2xl font-black mb-6 flex items-center gap-3" 
+            <h2 className="text-xl md:text-2xl font-black mb-4 md:mb-6 flex items-center gap-2 md:gap-3 break-words" 
                 style={{ color: 'var(--text-primary)' }}>
               <ImageIcon className="w-6 h-6" style={{ color: 'var(--primary)' }} />
               Loan Image
@@ -630,7 +630,7 @@ const AddLoan = () => {
           </div>
 
           {/* Show on Home Toggle */}
-          <div className="p-8 rounded-2xl"
+          <div className="p-4 md:p-6 lg:p-8  rounded-2xl"
                style={{
                  backgroundColor: 'var(--surface)',
                  border: '2px solid var(--border)'
@@ -676,7 +676,7 @@ const AddLoan = () => {
           </div>
 
           {/* Submit Buttons */}
-          <div className="flex gap-4">
+          <div className="flex flex-col sm:flex-row gap-4">
             <motion.button
               type="submit"
               disabled={submitting}
@@ -718,6 +718,7 @@ const AddLoan = () => {
           </div>
         </div>
       </motion.form>
+    </div>
     </div>
     </div>
   </>

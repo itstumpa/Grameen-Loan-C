@@ -1,4 +1,3 @@
-// ManageLoans.jsx
 import axios from "axios";
 import { motion } from "framer-motion";
 import {
@@ -61,12 +60,10 @@ const ManageLoans = () => {
   useEffect(() => {
     let result = loans;
 
-    // Filter by category
     if (selectedCategory !== "All") {
       result = result.filter((loan) => loan.category === selectedCategory);
     }
 
-    // Filter by search query
     if (searchQuery) {
       result = result.filter(
         (loan) =>
@@ -83,9 +80,7 @@ const ManageLoans = () => {
 
   const categories = ["All", ...new Set(loans.map((loan) => loan.category))];
 
-  //- edit mode 
   const handleEdit = (loanId) => {
-    
     navigate(`/dashboard/update-loan/${loanId}`);
   };
 
@@ -110,7 +105,6 @@ const ManageLoans = () => {
 
           await axios.delete(`https://grameen-loan-server.vercel.app/all-loans/${loan._id}`);
 
-          // Remove from state
           setLoans(loans.filter((l) => l._id !== loan._id));
 
           return true;
@@ -147,7 +141,6 @@ const ManageLoans = () => {
         showOnHome: newStatus,
       });
 
-      // Update local state
       setLoans(
         loans.map((l) =>
           l._id === loan._id ? { ...l, showOnHome: newStatus } : l
@@ -179,17 +172,16 @@ const ManageLoans = () => {
   }
 
   return (
-    <div>
-      {/* Header */}
-      <div className="flex flex-col md:flex-row md:items-center justify-between mb-8 gap-4">
+    <div className="w-full overflow-x-hidden p-2 sm:p-4 md:p-6 lg:p-0">
+      <div className="flex flex-col md:flex-row md:items-center justify-between mb-6 md:mb-8 gap-3 md:gap-4">
         <div>
           <h1
-            className="text-3xl md:text-4xl font-black mb-2"
+            className="text-2xl sm:text-3xl lg:text-4xl font-black mb-2"
             style={{ color: "var(--text-primary)" }}
           >
             Manage Loans
           </h1>
-          <p style={{ color: "var(--text-secondary)" }}>
+          <p className="text-sm md:text-base" style={{ color: "var(--text-secondary)" }}>
             View, edit, and manage all loan products
           </p>
         </div>
@@ -198,19 +190,18 @@ const ManageLoans = () => {
           whileHover={{ scale: 1.05 }}
           whileTap={{ scale: 0.95 }}
           onClick={() => navigate("/dashboard/add-loan")}
-          className="flex items-center gap-2 px-6 py-3 rounded-xl font-bold"
+          className="flex items-center gap-2 px-4 md:px-6 py-2.5 md:py-3 rounded-xl text-sm md:text-base font-bold w-full md:w-auto justify-center"
           style={{
             backgroundColor: "var(--primary)",
             color: "white",
           }}
         >
-          <Plus className="w-5 h-5" />
+          <Plus className="w-3 h-3 md:w-5 md:h-5" />
           Add New Loan
         </motion.button>
       </div>
 
-      {/* Stats Cards */}
-      <div className="grid md:grid-cols-4 gap-6 mb-8">
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-2 sm:gap-3 md:gap-6 mb-6 md:mb-8">
         {[
           {
             label: "Total Loans",
@@ -242,23 +233,23 @@ const ManageLoans = () => {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: index * 0.1 }}
-            className="p-6 rounded-xl"
+            className="p-3 sm:p-4 md:p-6 rounded-xl"
             style={{
               backgroundColor: "var(--surface)",
               border: "2px solid var(--border)",
             }}
           >
-            <div className="flex items-center justify-between mb-2">
-              <stat.icon className="w-6 h-6" style={{ color: stat.color }} />
+            <div className="flex items-center justify-between mb-1 md:mb-2">
+              <stat.icon className="w-5 h-5 md:w-6 md:h-6" style={{ color: stat.color }} />
               <span
-                className="text-3xl font-black"
+                className="text-xl sm:text-2xl md:text-3xl font-black"
                 style={{ color: stat.color }}
               >
                 {stat.value}
               </span>
             </div>
             <p
-              className="text-sm font-semibold"
+              className="text-xs sm:text-sm font-semibold"
               style={{ color: "var(--text-secondary)" }}
             >
               {stat.label}
@@ -267,12 +258,10 @@ const ManageLoans = () => {
         ))}
       </div>
 
-      {/* Filters */}
-      <div className="mb-6 flex flex-col md:flex-row gap-4">
-        {/* Search */}
+      <div className="mb-4 md:mb-6 flex flex-col md:flex-row gap-3 md:gap-4">
         <div className="flex-1 relative">
           <Search
-            className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5"
+            className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 md:w-5 md:h-5"
             style={{ color: "var(--text-secondary)" }}
           />
           <input
@@ -280,7 +269,7 @@ const ManageLoans = () => {
             placeholder="Search by title or category..."
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
-            className="w-full pl-10 pr-4 py-3 rounded-lg outline-none"
+            className="w-full pl-9 md:pl-10 pr-4 py-2.5 md:py-3 rounded-lg outline-none text-sm md:text-base"
             style={{
               backgroundColor: "var(--surface)",
               border: "2px solid var(--border)",
@@ -289,7 +278,6 @@ const ManageLoans = () => {
           />
         </div>
 
-        {/* Category Filter */}
         <div className="flex gap-2 flex-wrap">
           {categories.map((category) => (
             <motion.button
@@ -297,7 +285,7 @@ const ManageLoans = () => {
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}
               onClick={() => setSelectedCategory(category)}
-              className="px-4 py-2 rounded-lg font-semibold transition-all whitespace-nowrap"
+              className="px-3 py-1.5 md:px-4 md:py-2 rounded-lg text-xs sm:text-sm md:text-base font-semibold transition-all whitespace-nowrap"
               style={{
                 backgroundColor:
                   selectedCategory === category
@@ -320,12 +308,10 @@ const ManageLoans = () => {
         </div>
       </div>
 
-      {/* Results Count */}
-      <p className="mb-4 text-sm" style={{ color: "var(--text-secondary)" }}>
+      <p className="mb-3 md:mb-4 text-xs sm:text-sm" style={{ color: "var(--text-secondary)" }}>
         Showing {filteredLoans.length} of {loans.length} loans
       </p>
 
-      {/* Loans Table */}
       <div
         className="rounded-xl overflow-hidden"
         style={{
@@ -334,47 +320,47 @@ const ManageLoans = () => {
         }}
       >
         <div className="overflow-x-auto">
-          <table className="w-full">
+          <table className="w-full min-w-[700px]">
             <thead style={{ backgroundColor: "var(--bg)" }}>
               <tr>
                 <th
-                  className="text-left p-4 font-bold"
+                  className="text-left p-2 sm:p-3 md:p-4 text-xs sm:text-sm md:text-base font-bold"
                   style={{ color: "var(--text-primary)" }}
                 >
                   Image
                 </th>
                 <th
-                  className="text-left p-4 font-bold"
+                  className="text-left p-2 sm:p-3 md:p-4 text-xs sm:text-sm md:text-base font-bold"
                   style={{ color: "var(--text-primary)" }}
                 >
                   Title
                 </th>
                 <th
-                  className="text-left p-4 font-bold"
+                  className="text-left p-2 sm:p-3 md:p-4 text-xs sm:text-sm md:text-base font-bold"
                   style={{ color: "var(--text-primary)" }}
                 >
                   Category
                 </th>
                 <th
-                  className="text-left p-4 font-bold"
+                  className="text-left p-2 sm:p-3 md:p-4 text-xs sm:text-sm md:text-base font-bold hidden lg:table-cell"
                   style={{ color: "var(--text-primary)" }}
                 >
                   Interest Rate
                 </th>
                 <th
-                  className="text-left p-4 font-bold"
+                  className="text-left p-2 sm:p-3 md:p-4 text-xs sm:text-sm md:text-base font-bold"
                   style={{ color: "var(--text-primary)" }}
                 >
                   Max Loan
                 </th>
                 <th
-                  className="text-center p-4 font-bold"
+                  className="text-center p-2 sm:p-3 md:p-4 text-xs sm:text-sm md:text-base font-bold"
                   style={{ color: "var(--text-primary)" }}
                 >
                   Visibility
                 </th>
                 <th
-                  className="text-center p-4 font-bold"
+                  className="text-center p-2 sm:p-3 md:p-4 text-xs sm:text-sm md:text-base font-bold"
                   style={{ color: "var(--text-primary)" }}
                 >
                   Actions
@@ -384,12 +370,12 @@ const ManageLoans = () => {
             <tbody>
               {filteredLoans.length === 0 ? (
                 <tr>
-                  <td colSpan="7" className="text-center p-8">
+                  <td colSpan="7" className="text-center p-6 md:p-8">
                     <AlertCircle
-                      className="w-12 h-12 mx-auto mb-4 opacity-30"
+                      className="w-10 h-10 md:w-12 md:h-12 mx-auto mb-4 opacity-30"
                       style={{ color: "var(--text-secondary)" }}
                     />
-                    <p style={{ color: "var(--text-secondary)" }}>
+                    <p className="text-sm md:text-base" style={{ color: "var(--text-secondary)" }}>
                       {loans.length === 0
                         ? "No loans created yet. Create your first loan!"
                         : "No loans match your search criteria"}
@@ -399,7 +385,7 @@ const ManageLoans = () => {
                         whileHover={{ scale: 1.05 }}
                         whileTap={{ scale: 0.95 }}
                         onClick={() => navigate("/dashboard/add-loan")}
-                        className="mt-4 px-6 py-2 rounded-lg font-semibold"
+                        className="mt-4 px-4 md:px-6 py-2 rounded-lg text-sm md:text-base font-semibold"
                         style={{
                           backgroundColor: "var(--primary)",
                           color: "white",
@@ -420,10 +406,9 @@ const ManageLoans = () => {
                     className="border-t hover:bg-opacity-5"
                     style={{ borderColor: "var(--border)" }}
                   >
-                    {/* Image */}
-                    <td className="p-4">
+                    <td className="p-2 sm:p-3 md:p-4">
                       <div
-                        className="w-16 h-16 rounded-lg overflow-hidden"
+                        className="w-10 h-10 sm:w-12 sm:h-12 md:w-16 md:h-16 rounded-lg overflow-hidden"
                         style={{ backgroundColor: "var(--bg)" }}
                       >
                         {loan.loanImage ? (
@@ -435,7 +420,7 @@ const ManageLoans = () => {
                               e.target.style.display = "none";
                               e.target.parentElement.innerHTML = `
                                 <div class="w-full h-full flex items-center justify-center">
-                                  <svg class="w-6 h-6" style="color: var(--text-secondary)" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                  <svg class="w-4 h-4 md:w-6 md:h-6" style="color: var(--text-secondary)" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
                                   </svg>
                                 </div>
@@ -445,7 +430,7 @@ const ManageLoans = () => {
                         ) : (
                           <div className="w-full h-full flex items-center justify-center">
                             <ImageIcon
-                              className="w-6 h-6"
+                              className="w-4 h-4 md:w-6 md:h-6"
                               style={{ color: "var(--text-secondary)" }}
                             />
                           </div>
@@ -453,29 +438,26 @@ const ManageLoans = () => {
                       </div>
                     </td>
 
-                    {/* Title */}
-                    <td className="p-4">
+                    <td className="p-2 sm:p-3 md:p-4">
                       <p
-                        className="font-bold"
+                        className="font-bold text-xs sm:text-sm md:text-base"
                         style={{ color: "var(--text-primary)" }}
                       >
                         {loan.loanTitle}
                       </p>
                       <p
-                        className="text-sm line-clamp-1"
+                        className="text-xs sm:text-sm line-clamp-1"
                         style={{ color: "var(--text-secondary)" }}
                       >
                         {loan.shortDescription}
                       </p>
                     </td>
 
-                    {/* Category */}
-                    <td className="p-4">
+                    <td className="p-2 sm:p-3 md:p-4">
                       <span
-                        className="px-3 py-1 rounded-full text-sm font-semibold"
+                        className="px-2 py-0.5 md:px-3 md:py-1 rounded-full text-xs md:text-sm font-semibold"
                         style={{
                           backgroundColor: "var(--primary)",
-                          // opacity: 0.1,
                           color: "white",
                         }}
                       >
@@ -483,15 +465,14 @@ const ManageLoans = () => {
                       </span>
                     </td>
 
-                    {/* Interest Rate */}
-                    <td className="p-4">
+                    <td className="p-2 sm:p-3 md:p-4 hidden lg:table-cell">
                       <div className="flex items-center gap-2">
                         <Percent
-                          className="w-4 h-4"
+                          className="w-3 h-3 md:w-4 md:h-4"
                           style={{ color: "var(--secondary)" }}
                         />
                         <span
-                          className="font-semibold"
+                          className="font-semibold text-xs sm:text-sm md:text-base"
                           style={{ color: "var(--secondary)" }}
                         >
                           {loan.interestRate}
@@ -499,29 +480,26 @@ const ManageLoans = () => {
                       </div>
                     </td>
 
-                    {/* Max Loan */}
-                    <td className="p-4">
+                    <td className="p-2 sm:p-3 md:p-4">
                       <span
-                        className="font-bold text-lg"
+                        className="font-bold text-sm sm:text-base md:text-lg"
                         style={{ color: "var(--success)" }}
                       >
                         {loan.maxLimit}
                       </span>
                     </td>
 
-                    {/* Visibility Toggle */}
-                    <td className="p-4">
+                    <td className="p-2 sm:p-3 md:p-4">
                       <div className="flex justify-center">
                         <motion.button
                           whileHover={{ scale: 1.1 }}
                           whileTap={{ scale: 0.9 }}
                           onClick={() => toggleVisibility(loan)}
-                          className="p-2 rounded-lg"
+                          className="p-1.5 md:p-2 rounded-lg"
                           style={{
                             backgroundColor: loan.showOnHome
                               ? "var(--success)"
                               : "var(--text-secondary)",
-                            // opacity: 0.1,
                           }}
                           title={
                             loan.showOnHome
@@ -531,12 +509,12 @@ const ManageLoans = () => {
                         >
                           {loan.showOnHome ? (
                             <Eye
-                              className="w-5 h-5"
+                              className="w-4 h-4 md:w-5 md:h-5"
                               style={{ color: "white" }}
                             />
                           ) : (
                             <EyeOff
-                              className="w-5 h-5"
+                              className="w-4 h-4 md:w-5 md:h-5"
                               style={{ color: "white" }}
                             />
                           )}
@@ -544,48 +522,43 @@ const ManageLoans = () => {
                       </div>
                     </td>
 
-                    {/* Actions */}
-                    <td className="p-4">
-                      <div className="flex items-center justify-center gap-2">
-                        {/* Edit Button */}
+                    <td className="p-2 sm:p-3 md:p-4">
+                      <div className="flex items-center justify-center gap-1.5 md:gap-2">
                         <motion.button
                           whileHover={{ scale: 1.1 }}
                           whileTap={{ scale: 0.9 }}
                           onClick={() => handleEdit(loan._id)}
-                          className="p-2 rounded-lg"
+                          className="p-1.5 md:p-2 rounded-lg"
                           style={{
                             backgroundColor: "var(--primary)",
-                            // opacity: 0.1,
                           }}
                           title="Edit Loan"
                         >
                           <Edit
-                            className="w-4 h-4"
+                            className="w-3 h-3 md:w-4 md:h-4"
                             style={{ color: "white" }}
                           />
                         </motion.button>
 
-                        {/* Delete Button */}
                         <motion.button
                           whileHover={{ scale: 1.1 }}
                           whileTap={{ scale: 0.9 }}
                           onClick={() => handleDelete(loan)}
                           disabled={deleting === loan._id}
-                          className="p-2 rounded-lg disabled:opacity-50"
+                          className="p-1.5 md:p-2 rounded-lg disabled:opacity-50"
                           style={{
                             backgroundColor: "var(--error)",
-                            // opacity: 0.1,
                           }}
                           title="Delete Loan"
                         >
                           {deleting === loan._id ? (
                             <Loader
-                              className="w-4 h-4 animate-spin"
-                              style={{ color: "var(--error)" }}
+                              className="w-3 h-3 md:w-4 md:h-4 animate-spin"
+                              style={{ color: "white" }}
                             />
                           ) : (
                             <Trash2
-                              className="w-4 h-4"
+                              className="w-3 h-3 md:w-4 md:h-4"
                               style={{ color: "white" }}
                             />
                           )}
@@ -600,37 +573,36 @@ const ManageLoans = () => {
         </div>
       </div>
 
-      {/* Empty State Actions */}
       {loans.length === 0 && (
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
-          className="mt-8 text-center p-12 rounded-2xl"
+          className="mt-6 md:mt-8 text-center p-8 md:p-12 rounded-2xl"
           style={{
             backgroundColor: "var(--surface)",
             border: "2px dashed var(--border)",
           }}
         >
           <DollarSign
-            className="w-20 h-20 mx-auto mb-4 opacity-30"
+            className="w-16 h-16 md:w-20 md:h-20 mx-auto mb-4 opacity-30"
             style={{ color: "var(--primary)" }}
           />
           <h3
-            className="text-2xl font-bold mb-2"
+            className="text-xl md:text-2xl font-bold mb-2"
             style={{ color: "var(--text-primary)" }}
           >
             No Loans Created Yet
           </h3>
-          <p className="mb-6" style={{ color: "var(--text-secondary)" }}>
+          <p className="mb-4 md:mb-6 text-sm md:text-base" style={{ color: "var(--text-secondary)" }}>
             Start by creating your first loan product
           </p>
           <motion.button
             whileHover={{ scale: 1.05 }}
             whileTap={{ scale: 0.95 }}
             onClick={() => navigate("/dashboard/add-loan")}
-            className="btn-primary px-8 py-3"
+            className="btn-primary px-6 md:px-8 py-2.5 md:py-3 text-sm md:text-base"
           >
-            <Plus className="w-5 h-5 inline mr-2" />
+            <Plus className="w-4 h-4 md:w-5 md:h-5 inline mr-2" />
             Create First Loan
           </motion.button>
         </motion.div>
