@@ -127,12 +127,8 @@
 
 ## 🚀 Deployment
 
-### **Frontend (Netlify):**
-1. Push code to GitHub
-2. Connect repository to Vercel/Netlify
-3. Add environment variables
-4. Deploy
-### **Backend (Vercel):**
+### **Frontend (Netlify)**
+### **Backend (Vercel)**
 
 <div align="center">
 
