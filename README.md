@@ -117,7 +117,7 @@
 **Tumpa Das**
 
 - GitHub: [@itstumpa](https://github.com/itstumpa)
-- LinkedIn: [Your LinkedIn](https://linkedin.com/in/itstumpa)
+- LinkedIn: [LinkedIn](https://linkedin.com/in/itstumpa)
 - Portfolio: [Portfolio](https://itstumpa.netlify.app)
 - Email: itstumpaa@gmail.com
 
