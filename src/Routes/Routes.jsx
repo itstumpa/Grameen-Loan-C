@@ -47,6 +47,7 @@ import ManageLoans from "../Pages/Dashboard/ManageLoans/ManageLoans.jsx";
 import AdminRoute from "./AdminRoute.jsx";
 import ManagerRoute from "./ManagerRoute.jsx";
 import UpdateLoan from "../Pages/Dashboard/UpdateLoan/UpdateLoan.jsx";
+import Dashboard from "../Pages/Dashboard/Dashboard.jsx";
 
 // Route definitions // Public routes
 const router = createBrowserRouter([
@@ -145,6 +146,7 @@ const router = createBrowserRouter([
       // users 
       { path: "my-loans", element:  <MyLoans /> },
       { path: "profile", element:<Profile /> },
+      { path: "/dashboard", element:<Dashboard /> },
     ],
   },
 
